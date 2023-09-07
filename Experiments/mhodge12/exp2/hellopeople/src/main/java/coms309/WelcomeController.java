@@ -22,11 +22,7 @@ class WelcomeController {
             "<label for=\"telephone\">Phone Number: </label>" +
             "<input type=\"text\" id=\"telephone\" name=\"telephone\" required/><br><br><br>" +
             "<input type=\"submit\" value=\"Submit\"/>" +
-            "</form>" + "<br><br>" + "<h2>Remove Person</h2>" +
-            "<form action=\"/delete\" method=\"delete\">" +
-            "<label for=\"name\">Remove: </label>" +
-            "<input type=\"text\" id=\"name\" name=\"name\" required><br><br>" +
-            "<input type=\"submit\" value=\"Submit\">" +
+            "</form>" +
             "</div>";
     }
 
