@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title">PlanIt</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="log_in_btn">Log In</string>
+    <string name="welcome">Welcome %1$s!</string>
+    <string name="helloWorld">Hello World</string>
+</resources>
