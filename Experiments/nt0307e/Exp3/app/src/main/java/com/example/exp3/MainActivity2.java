@@ -8,20 +8,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_main2);
     }
 
-    // Define the method to be called when the FloatingActionButton is clicked
-    public void onSettingsButtonClick(View view) {
+
+    // Define the method to be called when the FloatingActionButton is clicked same thing but we just use the "home" button
+    public void onHomeButtonClick(View view) {
+        // Implement your button's functionality here
+        // For example, open a settings activity or perform some action
+        // when the button is clicked.
         Log.d("BUTTONS", "User tapped");
-        Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+        Intent intent = new Intent(MainActivity2.this, MainActivity.class);
         startActivity(intent); // Start MainActivity2 need this other wise im just calling an object lol
     }
-
 }
