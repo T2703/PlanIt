@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Toolbar at the bottom -->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="Settings"
+        android:textSize="60sp"
+        android:translationX="95dp" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/settingsButton"
+        android:layout_width="82dp"
+        android:layout_height="106dp"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/settingicon"
+        android:translationX="300dp"
+        android:translationY="-5dp" />
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/homeButton"
+        android:layout_width="82dp"
+        android:layout_height="106dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:onClick="onHomeButtonClick"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        android:translationX="-172dp"
+        android:translationY="0dp" />
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/chatButton"
+        android:layout_width="82dp"
+        android:layout_height="106dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:src="@android:drawable/sym_action_chat"
+        android:translationX="-290dp"
+        android:translationY="0dp" />
+
+    <Button
+        android:id="@+id/accountbutton"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/sym_contact_card"
+        android:text="My Account"
+        android:translationX="25dp"
+        android:translationY="250dp"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/lightmodebutton"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_edit"
+        android:text="Toggle Light or Dark Just think of this as the user interface page"
+        android:translationX="25dp"
+        android:translationY="320dp"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/aboutbutton"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_info_details"
+        android:text="About"
+        android:translationX="25dp"
+        android:translationY="400dp"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/logoutbutton"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_input_delete"
+        android:text="Logout"
+        android:translationX="25dp"
+        android:translationY="475dp"
+        android:visibility="visible" />
+
+</RelativeLayout>

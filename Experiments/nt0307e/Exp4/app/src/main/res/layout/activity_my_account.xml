@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/gobackbutton"
+        android:layout_width="45dp"
+        android:layout_height="50dp"
+        android:background="@android:drawable/ic_input_delete"
+        android:text=""
+        android:translationY="0dp"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:translationY="300dp" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:translationY="350dp" />
+
+    <Button
+        android:id="@+id/passwordChange"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:text="Change Password"
+        android:translationX="25dp"
+        android:translationY="400dp"
+        android:visibility="visible" />
+
+    <com.exmaple.misc.CircularImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/default_profile_image"
+        android:translationX="100dp"
+        android:translationY="50dp" />
+
+    <Button
+        android:id="@+id/changeImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="Change Profile Picture"
+        android:translationX="100sp" />
+
+</RelativeLayout>
