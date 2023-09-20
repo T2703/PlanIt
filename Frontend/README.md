@@ -4,9 +4,9 @@
 
 ## Side note
 
-The file `local.properties` is not added to GitLab as it contains the path to the SDK on your computer.
+The file `local.properties` is empty as it should contain the path to the SDK on your computer.
 
-Create this file and add the following line; replace with your username:
+Edit this file and add the following line; replace with your username:
 
 For Mac
 ```
