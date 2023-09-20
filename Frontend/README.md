@@ -8,6 +8,12 @@ The file `local.properties` is not added to GitLab as it contains the path to th
 
 Create this file and add the following line; replace with your username:
 
+For Mac
 ```
 sdk.dir=/Users/{your_user_name}/Library/Android/sdk
+```
+
+For Windows:
+```
+sdk.dir=C\:\\Users\\{your_user_name}\\AppData\\Local\\Android\\Sdk
 ```
