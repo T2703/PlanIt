@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NavBar">
+
+    <ImageButton
+        android:id="@+id/create_events_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="41dp"
+        android:layout_marginBottom="36dp"
+        android:background="@null"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:src="@android:drawable/ic_menu_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/message_button"
+        app:layout_constraintStart_toEndOf="@+id/calendar_button_nav"
+        app:tint="#FF5733" />
+
+    <ImageButton
+        android:id="@+id/calendar_button_nav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="43dp"
+        android:layout_marginBottom="4dp"
+        android:background="@null"
+        android:scaleX="1"
+        android:scaleY="1"
+        android:src="@android:drawable/ic_menu_today"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/create_events_button"
+        app:layout_constraintStart_toEndOf="@+id/home_button"
+        app:tint="#808080" />
+
+    <ImageButton
+        android:id="@+id/message_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="49dp"
+        android:layout_marginBottom="4dp"
+        android:background="@null"
+        android:src="@android:drawable/sym_action_chat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/profile_button"
+        app:layout_constraintStart_toEndOf="@+id/create_events_button"
+        app:tint="#808080" />
+
+    <ImageButton
+        android:id="@+id/home_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="53dp"
+        android:background="@null"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="@+id/calendar_button_nav"
+        app:layout_constraintEnd_toStartOf="@+id/calendar_button_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/calendar_button_nav"
+        app:srcCompat="@drawable/baseline_home_24"
+        app:tint="#808080"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/profile_button"
+        android:layout_width="0dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="4dp"
+        android:background="@null"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/message_button"
+        app:srcCompat="@drawable/baseline_person_24"
+        app:tint="#808080" />
+</androidx.constraintlayout.widget.ConstraintLayout>
