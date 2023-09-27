@@ -2,6 +2,8 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +14,30 @@ The main navbar for directing the user to certain locations on the app such as h
 There is also a center button used for creating the events.
  */
 public class NavBar extends AppCompatActivity {
+
+    /*
+    The button for the calendar.
+     */
     private ImageButton calendar_button;
+
+    /*
+    The button for the messages.
+     */
     private ImageButton messages_button;
+
+    /*
+    The button for the home.
+     */
     private ImageButton home_button;
+
+    /*
+    The button for the profile.
+     */
     private ImageButton profile_button;
+
+    /*
+    The button for creating events (yep this guy right here).
+     */
     private ImageButton create_event_button;
 
     @Override
@@ -30,7 +52,7 @@ public class NavBar extends AppCompatActivity {
         home_button = findViewById(R.id.home_button);
         profile_button = findViewById(R.id.profile_button);
 
-        // Set a click listeners for the corresponding buttons
+        // Set a click listeners for the corresponding buttons.
         calendar_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +75,7 @@ public class NavBar extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("TAG", "Messages");
                 setSelectedButton(messages_button);
+
             }
         });
 
@@ -61,6 +84,11 @@ public class NavBar extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("TAG", "Profile");
                 setSelectedButton(profile_button);
+
+                // Create an intent to navigate to another activity
+                Intent intent = new Intent(NavBar.this, CreateAccountPage.class);
+                startActivity(intent);
+
             }
         });
 
