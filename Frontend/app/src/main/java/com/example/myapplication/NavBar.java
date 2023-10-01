@@ -51,6 +51,7 @@ public class NavBar extends AppCompatActivity {
         create_event_button = findViewById(R.id.create_events_button);
         home_button = findViewById(R.id.home_button);
         profile_button = findViewById(R.id.profile_button);
+        create_event_button = findViewById(R.id.create_events_button);
 
         // Set a click listeners for the corresponding buttons.
         calendar_button.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +96,9 @@ public class NavBar extends AppCompatActivity {
         create_event_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAG", "Create event");
+                // Navigate to Create Events page
+                Intent intent = new Intent(NavBar.this, CreateEventPage.class);
+                startActivity(intent);
             }
         });
     }
