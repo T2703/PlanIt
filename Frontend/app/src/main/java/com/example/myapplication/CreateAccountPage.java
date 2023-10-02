@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 /*
 The create account page if the user does not have an account.
@@ -37,6 +38,8 @@ public class CreateAccountPage extends AppCompatActivity {
      */
     private EditText user_password;
 
+    private ImageButton return_login_button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,16 @@ public class CreateAccountPage extends AppCompatActivity {
         user_email = findViewById(R.id.input_email);
         user_password = findViewById(R.id.input_password);
         create_account_button.setEnabled(false); // Set this to false for checking the inputs of the user.
+        return_login_button = findViewById(R.id.return_login_button);
+
+        // Navigate to home page
+        return_login_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateAccountPage.this, Index.class);
+                startActivity(intent);
+            }
+        });
 
         // This should have user be in the main app after logging in.
         create_account_button.setOnClickListener(new View.OnClickListener() {
