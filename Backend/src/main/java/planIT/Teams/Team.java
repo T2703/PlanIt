@@ -1,4 +1,4 @@
-package planIT.Events;
+package planIT.Teams;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import planIT.Users.User;
-
 /**
  *
  * @author Melani Hodge
@@ -18,35 +16,27 @@ import planIT.Users.User;
  */
 
 @Entity
-public class Event {
+public class Team {
 
-    // Generated ID for each Event
+    // Generated ID for each Team
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // Name for each Event
+    // Name for each Team
     private String name;
 
-    // Description for each Event
+    // Description for each Team
     private String description;
 
-    // Start time for each Event
-    private Date startTime;
-
-    // End time for each Event
-    private Date endTime;
-
-    // Event constructor (with parameters)
-    public Event(String name, String description, Date startTime, Date endTime) {
+    // Team constructor (with parameters)
+    public Team(String name, String description) {
         this.name = name;
         this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
     }
 
-    // Event constructor (without parameters)
-    public Event() { }
+    // Team constructor (without parameters)
+    public Team() { }
 
     /* =============== GETTER & SETTER FUNCTIONS =============== */
 
@@ -67,13 +57,5 @@ public class Event {
     public String getDescription() { return description; }
 
     public void setDescription(String description) { this.description = description; }
-
-    public Date getStartTime() { return startTime; }
-
-    public void setStartTime(Date startTime) { this.startTime = startTime; }
-
-    public Date getEndTime() { return endTime; }
-
-    public void setEndTime(Date endTime) { this.endTime = endTime; }
 
 }
