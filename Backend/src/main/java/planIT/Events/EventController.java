@@ -11,46 +11,47 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ *
+ * @author Melani Hodge
+ *
+ */
+
 @RestController
 public class EventController {
 
+    // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
     @Autowired
-    EventRepository eventRepository;
+    private EventService eventService;
 
-    private String success = "{\"message\":\"success\"}";
-    private String failure = "{\"message\":\"failure\"}";
-
+    // GET method - retreives all events from the database.
     @GetMapping(path = "/events")
-    List<Event> getAllEvents(){
-        return eventRepository.findAll();
+    public List<Event> getAllEvents() {
+        return eventService.getAllEvents();
     }
 
+    // GET method - retreives a event from the database.
     @GetMapping(path = "/events/{id}")
-    Event getEventById(@PathVariable int id){
-        return eventRepository.findById(id);
+    public Event getEventById(@PathVariable int id) {
+        return eventService.getEventById(id);
     }
 
+    // POST method - adds an event to the database.
     @PostMapping(path = "/events")
-    String createEvent(@RequestBody Event Event){
-        if (Event == null)
-            return failure;
-        eventRepository.save(Event);
-        return success;
+    public String createEvent(@RequestBody Event event) {
+        return eventService.createEvent(event);
     }
 
+    // PUT method - updates an event in the database.
     @PutMapping(path = "/events/{id}")
-    Event updateEvent(@PathVariable int id, @RequestBody Event request){
-        Event event = eventRepository.findById(id);
-        if(event == null)
-            return null;
-        eventRepository.save(request);
-        return eventRepository.findById(id);
+    public Event updateEvent(@PathVariable int id, @RequestBody Event event) {
+        return eventService.updateEvent(id, event);
     }
 
+    // DELETE method - deletes an event from the database.
     @DeleteMapping(path = "/events/{id}")
-    String deleteEvent(@PathVariable int id){
-        eventRepository.deleteById(id);
-        return success;
+    public String deleteEvent(@PathVariable int id) {
+        return eventService.deleteEvent(id);
     }
-
 }
+
