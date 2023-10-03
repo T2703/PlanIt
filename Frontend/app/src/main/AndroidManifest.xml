@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".EventsListViewer"
+            android:exported="false" />
+        <activity
             android:name=".NavBar"
             android:exported="true">
             <intent-filter>
