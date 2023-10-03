@@ -77,13 +77,16 @@ public class NavBar extends AppCompatActivity {
                 Log.d("TAG", "Messages");
                 setSelectedButton(messages_button);
 
+                // For testing purposes only
+                Intent intent = new Intent(NavBar.this, EventsListViewer.class);
+                startActivity(intent);
+
             }
         });
 
         profile_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAG", "Profile");
                 setSelectedButton(profile_button);
 
                 // Create an intent to navigate to another activity
