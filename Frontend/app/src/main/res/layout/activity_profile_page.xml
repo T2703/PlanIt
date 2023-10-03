@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfilePage">
+
+    <Button
+        android:id="@+id/gobackbutton"
+        android:layout_width="45dp"
+        android:layout_height="50dp"
+        android:background="@drawable/baseline_arrow_back_24"
+        android:text=""
+        android:translationY="0dp"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Name"
+        android:translationX="100dp"
+        android:translationY="300dp" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:translationX="100dp"
+        android:translationY="400dp" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:translationX="100dp"
+        android:translationY="500dp" />
+
+    <com.example.myapplication.CircularImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/default_profile_image"
+        android:translationX="120dp"
+        android:translationY="50dp" />
+
+    <Button
+        android:id="@+id/changeImageButton"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="+"
+        android:textSize="16sp"
+        android:translationX="215sp"
+        android:translationY="180sp" />
+
+    <Button
+        android:id="@+id/delete_account_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Account"
+        android:translationX="130dp"
+        android:translationY="650dp" />
+
+    <Button
+        android:id="@+id/save_changes_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Changes"
+        android:translationX="130dp"
+        android:translationY="580dp" />
+
+</RelativeLayout>
