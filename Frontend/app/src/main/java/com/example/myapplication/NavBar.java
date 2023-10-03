@@ -77,6 +77,10 @@ public class NavBar extends AppCompatActivity {
                 Log.d("TAG", "Messages");
                 setSelectedButton(messages_button);
 
+                // For testing purposes only
+                Intent intent = new Intent(NavBar.this, EventsListViewer.class);
+                startActivity(intent);
+
             }
         });
 
