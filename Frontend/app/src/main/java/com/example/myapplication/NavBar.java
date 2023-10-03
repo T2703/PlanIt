@@ -83,7 +83,6 @@ public class NavBar extends AppCompatActivity {
         profile_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAG", "Profile");
                 setSelectedButton(profile_button);
 
                 // Create an intent to navigate to another activity

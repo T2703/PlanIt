@@ -13,6 +13,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /*
 The create account page if the user does not have an account.
 This is where the user can create their account for the app.
@@ -40,6 +51,8 @@ public class CreateAccountPage extends AppCompatActivity {
 
     private ImageButton return_login_button;
 
+    private static final String CREATE_ACCOUNT_URL = "coms-309-024.class.las.iastate.edu";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,14 +79,14 @@ public class CreateAccountPage extends AppCompatActivity {
         create_account_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // For logging checking the button clicks could be deleted later idk.
-                Log.d(TAG, "Logged in.");
-
                 // As stated in the SignInSignUpPage.java this is just to go to a new page for instance,
                 // should go into the main app page. Once everything for that is setup so this does not do
                 // anything yet.
-                //Intent intent = new Intent(SignInSignUpPage.this, LoginPage.class);
-                //startActivity(intent);
+
+//                createAccountRequest();
+
+                Intent intent = new Intent(CreateAccountPage.this, NavBar.class);
+                startActivity(intent);
             }
         });
 
@@ -124,6 +137,59 @@ public class CreateAccountPage extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
+    }
+
+    private void createAccountRequest() {
+        // Find the values of each field
+        EditText input_email = findViewById(R.id.input_email);
+        EditText input_username = findViewById(R.id.input_username);
+        EditText input_password = findViewById(R.id.input_password);
+
+        String input_email_value = input_email.getText().toString();
+        String input_username_value = input_username.getText().toString();
+        String input_password_value = input_password.getText().toString();
+
+        // Create JSON object
+        JSONObject requestBody = new JSONObject();
+
+        try {
+            requestBody.put("input_email", input_email_value);
+            requestBody.put("input_username", input_username_value);
+            requestBody.put("input_password", input_password_value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Making the request
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+                Request.Method.POST,
+                CREATE_ACCOUNT_URL,
+                requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Server response", response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Server error", "Error: " + error.getMessage());
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+
+                // Add headers
+                // headers.put("headername, headervalue")
+                return headers;
+            }
+        };
+
+        // Add to volley request queue
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);
     }
 
     /*
