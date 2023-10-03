@@ -72,8 +72,8 @@ public class CreateAccountPage extends AppCompatActivity {
                 // As stated in the SignInSignUpPage.java this is just to go to a new page for instance,
                 // should go into the main app page. Once everything for that is setup so this does not do
                 // anything yet.
-                //Intent intent = new Intent(SignInSignUpPage.this, LoginPage.class);
-                //startActivity(intent);
+                Intent intent = new Intent(CreateAccountPage.this, NavBar.class);
+                startActivity(intent);
             }
         });
 

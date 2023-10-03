@@ -87,7 +87,7 @@ public class NavBar extends AppCompatActivity {
                 setSelectedButton(profile_button);
 
                 // Create an intent to navigate to another activity
-                Intent intent = new Intent(NavBar.this, CreateAccountPage.class);
+                Intent intent = new Intent(NavBar.this, ProfilePage.class);
                 startActivity(intent);
 
             }
