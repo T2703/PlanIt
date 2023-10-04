@@ -29,6 +29,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.event_list = event_list;
     }
 
+    @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
@@ -38,7 +39,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = event_list.get(position);
-        holder.event_title.setText(event.getTitle());
+        holder.event_name.setText(event.getName());
         holder.event_description.setText(event.getDescription());
 
         // Set a click listener for the delete button.
@@ -62,16 +63,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             });
 
             // Makes the list function as button (plus null checker).
-            if (holder.itemView != null) {
-                // Set a click listener for the entire item view (in a nutshell each item acts like button)
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("TAG", "Item clicked: " + event.getTitle());
-                        // TO-DO: Add a page for this that show the event and such.
-                    }
-                });
-            }
+            // Set a click listener for the entire item view (in a nutshell each item acts like button)
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("TAG", "Item clicked: " + event.getName());
+                    // TO-DO: Add a page for this that show the event and such.
+                }
+            });
         }
 
     }
@@ -94,7 +93,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         /*
         The event title.
          */
-        TextView event_title;
+        TextView event_name;
 
         /*
         The event description (yeah).
@@ -106,7 +105,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
          */
         EventViewHolder(View item_view) {
             super(item_view);
-            event_title = item_view.findViewById(R.id.event_title);
+            event_name = item_view.findViewById(R.id.event_title);
             event_description = item_view.findViewById(R.id.event_description);
             delete_button = item_view.findViewById(R.id.delete_button);
         }
