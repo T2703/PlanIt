@@ -8,10 +8,23 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /*
 The events list viewer page where you can see all your events.
@@ -37,6 +50,8 @@ public class EventsListViewer extends AppCompatActivity {
      */
     private List<Event> event_list;
 
+    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
+
     /*
     The event adapter for the event list.
      */
@@ -57,23 +72,61 @@ public class EventsListViewer extends AppCompatActivity {
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
 
-        // Populate eventList with event data (do some calls to the backend).
-        // Add sample event data
-        event_list.add(new Event("Event 1", "Description for Event 1"));
-        event_list.add(new Event("Event 2", "Description for Event 2"));
-        event_list.add(new Event("Event 3", "Description for Event 3"));
+        // Request events from server
+        getEventsRequest();
 
         // Set a click listeners for the corresponding buttons.
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAG", "Back");
-
                 // Create an intent to navigate to go back to another page.
                 Intent intent = new Intent(EventsListViewer.this, NavBar.class);
                 startActivity(intent);
-
             }
         });
     }
-}
+
+    private void getEventsRequest() {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                URL_STRING_REQ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+                            responseArray = new JSONArray(response);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        // Iterate
+                        for (int i = 0; i < responseArray.length(); i++) {
+                            try {
+                                JSONObject jsonObject = responseArray.getJSONObject(i);
+                                String name = jsonObject.getString("name");
+                                String description = jsonObject.getString("description");
+
+                                event_list.add(new Event(name, description));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e("A server error has occurred", error.toString());
+                    }
+                }
+        );
+
+        // Adding request to request queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+};
