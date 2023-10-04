@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".NavBar">
 
+    <include layout="@layout/activity_homepage" />
+
     <ImageButton
         android:id="@+id/create_events_button"
         android:layout_width="wrap_content"

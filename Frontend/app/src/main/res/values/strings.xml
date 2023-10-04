@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="create_event">Create Event</string>
+    <string name="event_type">Event type</string>
+    <string name="event_name">Event name</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="enter_the_event_time">Enter the event time</string>
+    <string name="create_account_link">Create an account</string>
+    <string name="login">Log In</string>
+    <string name="homepage_title">Manage your life</string>
+    <string name="login_to_your_account">Login to your account</string>
+    <string name="username">Username</string>
+    <string name="user_email_hint">user@email.com</string>
+    <string name="password_hint">Password</string>
+    <string name="password">password</string>
+    <string name="welcome">Welcome</string>
 </resources>

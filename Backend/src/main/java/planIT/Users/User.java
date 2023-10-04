@@ -8,38 +8,43 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinColumn;
 
 import planIT.Events.Event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+/**
+ *
+ * @author Melani Hodge
+ *
+ */
 
 @Entity
 public class User {
 
+    // Generated ID for each User
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    // Username for each User
     private String username;
 
+    // Password for each User
     private String password;
 
+    // Email for each User
     private String email;
 
-    @ManyToMany
-    @JsonIgnore
-    private List<Event> events;
-
+    // User constructor (with parameters)
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
-        events = new ArrayList<Event>();
     }
 
-    public User() { events = new ArrayList<Event>(); }
+    // User constructor (with parameters)
+    public User() { }
+
+    /* =============== GETTER & SETTER FUNCTIONS =============== */
 
     public int getId() { return id; }
 
@@ -62,17 +67,5 @@ public class User {
     public String getEmail() { return email; }
 
     public void setEmail(String email) { this.email = email; }
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
-    public void addEvents(Event event){
-        this.events.add(event);
-    }
 
 }
