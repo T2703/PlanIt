@@ -2,6 +2,8 @@
 
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
+
 /*
 Class for handling events and it's characteristics.
  */
@@ -9,7 +11,7 @@ public class Event {
     /*
     The title.
      */
-    private String title;
+    private String name;
 
     /*
     The description.
@@ -19,16 +21,16 @@ public class Event {
     /*
     Constructor for the event so how it constructs.
      */
-    public Event(String title, String description) {
-        this.title = title;
+    public Event(String name, String description) {
+        this.name = name;
         this.description = description;
     }
 
     /*
     Gets the title of the event.
      */
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     /*
@@ -36,5 +38,11 @@ public class Event {
      */
     public String getDescription() {
         return description;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Event: " + name + ", Description: " + description;
     }
 }
