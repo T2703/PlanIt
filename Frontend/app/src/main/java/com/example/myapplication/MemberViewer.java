@@ -13,7 +13,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -92,6 +91,8 @@ public class MemberViewer extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("MemberViewer", "Number of members: " + member_list.size());
+                Intent intent = new Intent(MemberViewer.this, AddGroup.class);
+                startActivity(intent);
             }
         });
 

@@ -129,4 +129,5 @@ public class EventsListViewer extends AppCompatActivity {
         // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
+    
 };

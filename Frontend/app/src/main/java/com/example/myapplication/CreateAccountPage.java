@@ -57,7 +57,7 @@ public class CreateAccountPage extends AppCompatActivity {
 
         // Initialization
         create_account_button = findViewById(R.id.create_account_button);
-        username = findViewById(R.id.input_username);
+        username = findViewById(R.id.input_description);
         user_email = findViewById(R.id.input_email);
         user_password = findViewById(R.id.input_password);
         create_account_button.setEnabled(false); // Set this to false for checking the inputs of the user.
@@ -140,7 +140,7 @@ public class CreateAccountPage extends AppCompatActivity {
     private void createAccountRequest() {
         // Find the values of each field
         EditText input_email = findViewById(R.id.input_email);
-        EditText input_username = findViewById(R.id.input_username);
+        EditText input_username = findViewById(R.id.input_description);
         EditText input_password = findViewById(R.id.input_password);
 
         String input_email_value = input_email.getText().toString();
