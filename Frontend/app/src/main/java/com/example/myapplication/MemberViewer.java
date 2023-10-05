@@ -1,95 +1,121 @@
 // Author: Tristan Nono
+
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.view.View;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
-The events list viewer page where you can see all your events.
+The page for viewing the group members.
  */
-public class EventsListViewer extends AppCompatActivity {
+public class MemberViewer extends AppCompatActivity {
     /*
-    The button for going back.
-    */
+    this just is here for debugging.
+     */
+    private Button button;
+
     private ImageButton back_button;
 
     /*
-    Recycler view aka from what I know it's how we display the list of items.
+    Recycler view to display the list of items.
      */
     private RecyclerView recycler_view;
 
     /*
-    This manages the layout yeah I suppose. It says in the name.
+    Manages the layout as stated in the name.
      */
-    private LinearLayoutManager layout_manager;
+    private LinearLayoutManager layout_manger;
 
     /*
-    Array list for the event lists the list of them (List of a list please ignore this).
+    Array list for the members to display them.
      */
-    private List<Event> event_list;
-
-    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
+    private List<Member> member_list;
 
     /*
-    The event adapter for the event list.
+    Member adapter for the member list.
      */
-    private EventAdapter adapter;
+    private MemberAdapter adapter;
+
+    /*
+    The URL for making the calls.
+     */
+    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events_list_viewer);
+        setContentView(R.layout.activity_member_viewer);
 
         // Initialize
+        button = findViewById(R.id.button);
         back_button = findViewById(R.id.back_button);
-        recycler_view = findViewById(R.id.recyclerView);
-        event_list = new ArrayList<>();
-        adapter = new EventAdapter(event_list);
-        layout_manager = new LinearLayoutManager(this);
+        recycler_view = findViewById(R.id.recycler_view);
+        member_list = new ArrayList<>();
+        adapter = new MemberAdapter(member_list);
+        layout_manger = new LinearLayoutManager(this);
 
-        recycler_view.setLayoutManager(layout_manager);
+        recycler_view.setLayoutManager(layout_manger);
         recycler_view.setAdapter(adapter);
 
-        // Request events from server
-        getEventsRequest();
+        getGroupsRequest();
 
-        // Set a click listeners for the corresponding buttons.
-        back_button.setOnClickListener(new View.OnClickListener() {
+        // Sample data
+        //member_list.add(new Member("Group 1", "Hello"));
+        //member_list.add(new Member("Tristan", "Group 1", "Hello"));
+
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Create an intent to navigate to go back to another page.
-                Intent intent = new Intent(EventsListViewer.this, NavBar.class);
+                Log.d("MemberViewer", "Number of members: " + member_list.size());
+                Intent intent = new Intent(MemberViewer.this, AddGroup.class);
                 startActivity(intent);
             }
         });
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // For testing purposes only
+                Intent intent = new Intent(MemberViewer.this, NavBar.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
-    private void getEventsRequest() {
+    /*
+    This is the request for getting the data for groups.
+    This GETs the groups from the server.
+    */
+    private void getGroupsRequest() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                URL_STRING_REQ,
+                TEAMS_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -108,11 +134,13 @@ public class EventsListViewer extends AppCompatActivity {
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
 
-                                event_list.add(new Event(name, description));
+                                member_list.add(new Member(name, description));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
+
+                        Log.d("List", member_list.toString());
 
                         adapter.notifyDataSetChanged();
                     }
@@ -129,5 +157,5 @@ public class EventsListViewer extends AppCompatActivity {
         // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
-    
-};
+
+}

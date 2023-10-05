@@ -12,15 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +48,7 @@ public class CreateAccountPage extends AppCompatActivity {
 
     private ImageButton return_login_button;
 
-    private static final String CREATE_ACCOUNT_URL = "coms-309-024.class.las.iastate.edu";
+    private static final String CREATE_ACCOUNT_URL = "http://coms-309-024.class.las.iastate.edu:8080/users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,7 @@ public class CreateAccountPage extends AppCompatActivity {
 
         // Initialization
         create_account_button = findViewById(R.id.create_account_button);
-        username = findViewById(R.id.input_username);
+        username = findViewById(R.id.input_description);
         user_email = findViewById(R.id.input_email);
         user_password = findViewById(R.id.input_password);
         create_account_button.setEnabled(false); // Set this to false for checking the inputs of the user.
@@ -79,11 +76,8 @@ public class CreateAccountPage extends AppCompatActivity {
         create_account_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // As stated in the SignInSignUpPage.java this is just to go to a new page for instance,
-                // should go into the main app page. Once everything for that is setup so this does not do
-                // anything yet.
-
-//                createAccountRequest();
+                // Call this guy so we create account makes sense yes?
+                createAccountRequest();
 
                 Intent intent = new Intent(CreateAccountPage.this, NavBar.class);
                 startActivity(intent);
@@ -139,10 +133,14 @@ public class CreateAccountPage extends AppCompatActivity {
         });
     }
 
+    /*
+    This is the request for creating an account.
+    This POSTs the account on to the server.
+     */
     private void createAccountRequest() {
         // Find the values of each field
         EditText input_email = findViewById(R.id.input_email);
-        EditText input_username = findViewById(R.id.input_username);
+        EditText input_username = findViewById(R.id.input_description);
         EditText input_password = findViewById(R.id.input_password);
 
         String input_email_value = input_email.getText().toString();
@@ -152,6 +150,7 @@ public class CreateAccountPage extends AppCompatActivity {
         // Create JSON object
         JSONObject requestBody = new JSONObject();
 
+        // Puts in the values of these variables. 
         try {
             requestBody.put("input_email", input_email_value);
             requestBody.put("input_username", input_username_value);
@@ -183,7 +182,7 @@ public class CreateAccountPage extends AppCompatActivity {
                 Map<String, String> headers = new HashMap<>();
 
                 // Add headers
-                // headers.put("headername, headervalue")
+                headers.put("headername", "headervalue");
                 return headers;
             }
         };

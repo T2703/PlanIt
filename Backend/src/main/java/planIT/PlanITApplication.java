@@ -57,9 +57,9 @@ public class PlanITApplication {
             User user2 = new User("Jane", "password", "jane@somemail.com");
             User user3 = new User("Justin", "password", "justin@somemail.com");
 
-            Event event1 = new Event("Event 1", "Description 1", new Date(), new Date());
-            Event event2 = new Event("Event 2", "Description 2", new Date(), new Date());
-            Event event3 = new Event("Event 3", "Description 3", new Date(), new Date());
+            Event event1 = new Event("Event 1", "Description 1", "Location1", "Private", "10/05/2023", "4:30", "5:30");
+            Event event2 = new Event("Event 2", "Description 2", "Location2", "Private", "10/06/2023", "5:30", "7:30");
+            Event event3 = new Event("Event 3", "Description 3", "Location3", "Private", "09/05/2023", "3:00", "11:00");
 
             Message message1 = new Message("Message 1", new Date(), new Date());
             Message message2 = new Message("Message 2", new Date(), new Date());
