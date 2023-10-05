@@ -31,6 +31,12 @@ public class Event {
     // Description for each Event
     private String description;
 
+    // Location for each Event
+    private String location;
+
+    // Type for each Event
+    private String type;
+
     // Start time for each Event
     private Date startTime;
 
@@ -38,9 +44,11 @@ public class Event {
     private Date endTime;
 
     // Event constructor (with parameters)
-    public Event(String name, String description, Date startTime, Date endTime) {
+    public Event(String name, String description, String location, String type, Date startTime, Date endTime) {
         this.name = name;
         this.description = description;
+        this.location = location;
+        this.type = type;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -67,6 +75,14 @@ public class Event {
     public String getDescription() { return description; }
 
     public void setDescription(String description) { this.description = description; }
+
+    public String getLocation() { return location; }
+
+    public void setLocation(String location) { this.location = location; }
+
+    public String getType() { return type; }
+
+    public void setType(String type) { this.type = type; }
 
     public Date getStartTime() { return startTime; }
 
