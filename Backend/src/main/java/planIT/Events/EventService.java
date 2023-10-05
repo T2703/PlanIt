@@ -44,6 +44,8 @@ public class EventService {
 
         event.setName(request.getName());
         event.setDescription(request.getDescription());
+        event.setLocation(request.getLocation());
+        event.setType(request.getType());
         event.setStartTime(request.getStartTime());
         event.setEndTime(request.getEndTime());
 
