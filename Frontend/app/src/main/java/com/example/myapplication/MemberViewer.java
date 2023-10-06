@@ -75,7 +75,7 @@ public class MemberViewer extends AppCompatActivity {
         back_button = findViewById(R.id.back_button);
         recycler_view = findViewById(R.id.recycler_view);
         member_list = new ArrayList<>();
-        adapter = new MemberAdapter(member_list);
+        adapter = new MemberAdapter(member_list, this);
         layout_manger = new LinearLayoutManager(this);
 
         recycler_view.setLayoutManager(layout_manger);
@@ -133,14 +133,14 @@ public class MemberViewer extends AppCompatActivity {
                                 JSONObject jsonObject = responseArray.getJSONObject(i);
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
+                                String id = jsonObject.getString("id");
 
-                                member_list.add(new Member(name, description));
+                                member_list.add(new Member(name, description, id));
+                                Log.d("List", id);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-
-                        Log.d("List", member_list.toString());
 
                         adapter.notifyDataSetChanged();
                     }
