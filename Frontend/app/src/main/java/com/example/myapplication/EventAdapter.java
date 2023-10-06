@@ -2,14 +2,31 @@
 
 package com.example.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /*
@@ -21,11 +38,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     The list of the events.
      */
     private List<Event> event_list;
-
+    private Context context;
     /*
     Epic constructor. This is how we have this event list initialized.
      */
-    public EventAdapter(List<Event> event_list) {
+    public EventAdapter(Context context, List<Event> event_list) {
+        this.context = context;
         this.event_list = event_list;
     }
 
@@ -49,15 +67,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             holder.delete_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // We need this cause it's important and otherwise we get errors.
-                    // It just helps with positioning of certain items.
-                    int clickedPosition = holder.getAdapterPosition();
+                    int position = holder.getAdapterPosition();
 
-                    if (clickedPosition != RecyclerView.NO_POSITION) {
-                        // Remove the event from the list
-                        event_list.remove(clickedPosition);
-                        // Notify the adapter of the item removal
-                        notifyItemRemoved(clickedPosition);
+                    if (position != RecyclerView.NO_POSITION) {
+                        Event clickedEvent = event_list.get(position);
+
+                        String eventId = clickedEvent.getId();
+
+                        String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+
+                        makeDeleteRequest(delete_url, eventId);
                     }
                 }
             });
@@ -72,6 +91,33 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 }
             });
         }
+
+    }
+
+    private void makeDeleteRequest(String deleteUrl, String eventId) {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.DELETE,
+                deleteUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response", response);
+
+                        event_list.remove(Integer.parseInt(eventId));
+
+                        notifyItemRemoved(Integer.parseInt(eventId));
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e("A server error has occurred", error.toString());
+                    }
+                }
+        );
+
+        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
 
     }
 
