@@ -12,6 +12,11 @@ public class Member {
     private String username;
 
     /*
+    Group's ID number.
+    */
+    private String group_id;
+
+    /*
     Group's name.
      */
     private String group_name;
@@ -24,10 +29,11 @@ public class Member {
     /*
     Constructor for member.
      */
-    public Member(String group_name, String description) {
+    public Member(String group_name, String description, String group_id) {
         //this.username = username;
         this.group_name = group_name;
         this.description = description;
+        this.group_id = group_id;
     }
 
     /*
@@ -49,6 +55,13 @@ public class Member {
     */
     public String getDescription() {
         return description;
+    }
+
+    /*
+    Get the group ID.
+    */
+    public String getGroupId() {
+        return group_id;
     }
 
 
