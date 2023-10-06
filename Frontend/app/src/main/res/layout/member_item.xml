@@ -6,6 +6,14 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <Button
+        android:id="@+id/delete_group_button"
+        android:layout_width="111dp"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:translationX="250dp"
+        android:translationY="90dp" />
+
     <TextView
         android:id="@+id/username"
         android:layout_width="match_parent"
