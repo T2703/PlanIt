@@ -85,7 +85,7 @@ public class EditGroup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //updateGroup();
+                updateGroup();
                 Intent intent = new Intent(EditGroup.this, MemberViewer.class);
                 startActivity(intent);
             }
