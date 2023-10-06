@@ -57,6 +57,9 @@
         <activity
             android:name=".MemberViewer"
             android:exported="true" />
+        <activity
+            android:name=".EditEventPage"
+            android:exported="true" />
     </application>
 
 </manifest>
