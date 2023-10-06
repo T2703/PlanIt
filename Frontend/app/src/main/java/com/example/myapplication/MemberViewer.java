@@ -133,14 +133,14 @@ public class MemberViewer extends AppCompatActivity {
                                 JSONObject jsonObject = responseArray.getJSONObject(i);
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
+                                String id = jsonObject.getString("id");
 
-                                member_list.add(new Member(name, description));
+                                member_list.add(new Member(name, description, id));
+                                Log.d("List", id);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-
-                        Log.d("List", member_list.toString());
 
                         adapter.notifyDataSetChanged();
                     }

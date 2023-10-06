@@ -4,6 +4,8 @@
 
 package com.example.myapplication;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,35 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         //holder.username.setText(member.getUsername());
         holder.group_name.setText(member.getGroupName());
         holder.description.setText(member.getDescription());
+
+        // Makes the list function as button (plus null checker).
+        // Set a click listener for the entire item view (in a nutshell each item acts like button)
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "Item clicked: " + member.getGroupName());
+                //int group_id = Integer.parseInt(member.getGroupId());
+                // This gets the position of the item.
+                int position = holder.getAdapterPosition();
+
+                if (position != RecyclerView.NO_POSITION) {
+                    Member clicked_group = member_list.get(position);
+                    String group_id = clicked_group.getGroupId();
+                    String put_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + group_id;
+
+                }
+
+                Intent intent = new Intent(view.getContext(), EditGroup.class);
+
+                // This should pass the data into the next page
+                intent.putExtra("group_id", member.getGroupId());
+                intent.putExtra("name", member.getGroupName());
+                intent.putExtra("description", member.getDescription());
+
+                view.getContext().startActivity(intent);
+
+            }
+        });
 
     }
 
