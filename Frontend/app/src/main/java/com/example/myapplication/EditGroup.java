@@ -70,7 +70,7 @@ public class EditGroup extends AppCompatActivity {
         if (intent != null) {
             String name = intent.getStringExtra("name");
             String description = intent.getStringExtra("description");
-            group_id = intent.getStringExtra("id"); // Use getStringExtra for String values
+            group_id = intent.getStringExtra("group_id"); // Use getStringExtra for String values
 
             TextView group_name_view = findViewById(R.id.group_name);
             TextView group_description_view = findViewById(R.id.group_description);

@@ -73,6 +73,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                     String group_id = clicked_group.getGroupId();
                     String put_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + group_id;
 
+                    Log.d("TAG", group_id);
+
                 }
 
                 Intent intent = new Intent(view.getContext(), EditGroup.class);
