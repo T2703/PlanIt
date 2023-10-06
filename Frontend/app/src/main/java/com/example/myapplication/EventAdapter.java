@@ -60,9 +60,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.event_name.setText(event.getName());
         holder.event_description.setText(event.getDescription());
 
-        // Set a click listener for the delete button.
-        // Also I guess nullcheckers are nice but that's just me going crazy after finding out a
-        // variable wasn't initialized hahahahahaha man I love coding sometimes.
+
+        // Delete button is clicked
         if (holder.delete_button != null) {
             holder.delete_button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,20 +91,90 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             });
         }
 
+        if (holder.edit_button != null) {
+            holder.edit_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = holder.getAdapterPosition();
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        Event clickedEvent = event_list.get(position);
+
+                        String eventId = clickedEvent.getId();
+
+                        getEvent(eventId);
+                    }
+                }
+            });
+        }
     }
 
     private void makeDeleteRequest(String deleteUrl, String eventId) {
+        int positionToDelete = -1;
+
+        for (int i = 0; i < event_list.size(); i++) {
+            if (event_list.get(i).getId().equals(eventId)) {
+                positionToDelete = i;
+                break;
+            }
+        }
+
+        if (positionToDelete != -1) {
+            int finalPositionToDelete = positionToDelete;
+
+            StringRequest stringRequest = new StringRequest(
+                    Request.Method.DELETE,
+                    deleteUrl,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("response", response);
+
+                            event_list.remove(finalPositionToDelete);
+
+                            notifyItemRemoved(finalPositionToDelete);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle any errors that occur during the request
+                            Log.e("A server error has occurred", error.toString());
+                        }
+                    }
+            );
+        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
+        }
+
+    }
+
+    private void getEvent(String eventId) {
+        String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+
         StringRequest stringRequest = new StringRequest(
-                Request.Method.DELETE,
-                deleteUrl,
+                Request.Method.GET,
+                URL_STRING_REQ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Intent intent = new Intent(context, EditEventPage.class);
 
-                        event_list.remove(Integer.parseInt(eventId));
+                            intent.putExtra("type", jsonObject.getString("type"));
+                            intent.putExtra("name", jsonObject.getString("name"));
+                            intent.putExtra("date", jsonObject.getString("date"));
+                            intent.putExtra("startTime", jsonObject.getString("startTime"));
+                            intent.putExtra("endTime", jsonObject.getString("endTime"));
+                            intent.putExtra("location", jsonObject.getString("location"));
+                            intent.putExtra("description", jsonObject.getString("description"));
+                            intent.putExtra("id", jsonObject.getString("id"));
 
-                        notifyItemRemoved(Integer.parseInt(eventId));
+                            context.startActivity(intent);
+
+                        } catch(JSONException err) {
+                            err.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -117,8 +186,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 }
         );
 
+        // Adding request to request queue
         VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
-
     }
 
     @Override
@@ -135,6 +204,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         The delete button well it does as
          */
         Button delete_button;
+
+        Button edit_button;
 
         /*
         The event title.
@@ -153,6 +224,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             super(item_view);
             event_name = item_view.findViewById(R.id.event_title);
             event_description = item_view.findViewById(R.id.event_description);
+            edit_button = item_view.findViewById(R.id.edit_button);
             delete_button = item_view.findViewById(R.id.delete_button);
         }
     }
