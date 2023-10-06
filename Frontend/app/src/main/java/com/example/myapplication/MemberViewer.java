@@ -75,7 +75,7 @@ public class MemberViewer extends AppCompatActivity {
         back_button = findViewById(R.id.back_button);
         recycler_view = findViewById(R.id.recycler_view);
         member_list = new ArrayList<>();
-        adapter = new MemberAdapter(member_list);
+        adapter = new MemberAdapter(member_list, this);
         layout_manger = new LinearLayoutManager(this);
 
         recycler_view.setLayoutManager(layout_manger);
