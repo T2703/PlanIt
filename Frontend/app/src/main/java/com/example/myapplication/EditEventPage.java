@@ -41,6 +41,8 @@ public class EditEventPage extends AppCompatActivity {
     private String event_id;
     private Button edit_event_button;
 
+    private ImageButton back_button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,7 @@ public class EditEventPage extends AppCompatActivity {
         event_location = findViewById(R.id.edit_event_location);
         event_description = findViewById(R.id.edit_event_description);
         edit_event_button = findViewById(R.id.edit_event_button);
+        back_button = findViewById(R.id.back_button);
         // Auto fill fields
         Intent intent = getIntent();
 
@@ -92,6 +95,14 @@ public class EditEventPage extends AppCompatActivity {
 
                 sendPutRequest(event_name_text, event_description_text, event_location_text, event_type_selection, event_date_text, event_start_time_text, event_end_time_text);
 
+                Intent intent = new Intent(EditEventPage.this, EventsListViewer.class);
+                startActivity(intent);
+            }
+        });
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(EditEventPage.this, EventsListViewer.class);
                 startActivity(intent);
             }
