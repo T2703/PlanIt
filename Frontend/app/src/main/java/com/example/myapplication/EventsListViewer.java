@@ -3,6 +3,7 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,7 +50,6 @@ public class EventsListViewer extends AppCompatActivity {
     Array list for the event lists the list of them (List of a list please ignore this).
      */
     private List<Event> event_list;
-
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
 
     /*
@@ -66,7 +66,7 @@ public class EventsListViewer extends AppCompatActivity {
         back_button = findViewById(R.id.back_button);
         recycler_view = findViewById(R.id.recyclerView);
         event_list = new ArrayList<>();
-        adapter = new EventAdapter(event_list);
+        adapter = new EventAdapter(this, event_list);
         layout_manager = new LinearLayoutManager(this);
 
         recycler_view.setLayoutManager(layout_manager);
@@ -105,10 +105,11 @@ public class EventsListViewer extends AppCompatActivity {
                         for (int i = 0; i < responseArray.length(); i++) {
                             try {
                                 JSONObject jsonObject = responseArray.getJSONObject(i);
+                                String id = jsonObject.getString("id");
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
 
-                                event_list.add(new Event(name, description));
+                                event_list.add(new Event(id, name, description));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -129,5 +130,4 @@ public class EventsListViewer extends AppCompatActivity {
         // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
-    
 };

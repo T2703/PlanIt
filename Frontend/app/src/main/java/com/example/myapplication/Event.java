@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 Class for handling events and it's characteristics.
  */
 public class Event {
+    private String id;
     /*
     The title.
      */
@@ -21,7 +22,8 @@ public class Event {
     /*
     Constructor for the event so how it constructs.
      */
-    public Event(String name, String description) {
+    public Event(String id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
     }
@@ -38,6 +40,10 @@ public class Event {
      */
     public String getDescription() {
         return description;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     @NonNull
