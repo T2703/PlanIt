@@ -60,6 +60,9 @@ public class NavBar extends AppCompatActivity {
                 Log.d("TAG", "Calendar");
                 setSelectedButton(calendar_button);
 
+                Intent intent = new Intent(NavBar.this, CalendarMonthlyPage.class);
+                startActivity(intent);
+
             }
         });
 
