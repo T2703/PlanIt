@@ -4,7 +4,10 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import java.util.Calendar;
@@ -26,6 +29,11 @@ public class CalendarMonthlyPage extends AppCompatActivity {
      */
     private TextView date_view;
 
+    /*
+    I don't wanna do this man. :(
+     */
+    private Button back_button;
+
     @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,16 @@ public class CalendarMonthlyPage extends AppCompatActivity {
         // Initialize
         calendar_display = findViewById(R.id.calendar_view);
         date_view = findViewById(R.id.date_change);
+        back_button = findViewById(R.id.button_back);
+
+        // :(
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CalendarMonthlyPage.this, NavBar.class);
+                startActivity(intent);
+            }
+        });
 
 
         // Set the on date change listener (so when the user clicks on the date, it does something).
