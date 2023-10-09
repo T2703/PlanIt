@@ -152,9 +152,9 @@ public class CreateAccountPage extends AppCompatActivity {
 
         // Puts in the values of these variables. 
         try {
-            requestBody.put("input_email", input_email_value);
-            requestBody.put("input_username", input_username_value);
-            requestBody.put("input_password", input_password_value);
+            requestBody.put("email", input_email_value);
+            requestBody.put("username", input_username_value);
+            requestBody.put("password", input_password_value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
