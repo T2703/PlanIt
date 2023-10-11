@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.view.View;
 import android.os.Bundle;
@@ -64,6 +65,11 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
     Hi there navbar, fancy seeing you here. Yeah, it's the same one.l
     */
     private NavBarView navbar_view;
+
+    /*
+    This is for the transitioning between pages.
+    */
+    private ActivityOptions options;
 
     /*
     The URL for making the calls.
@@ -170,12 +176,15 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
     @Override
     public void onCalendarButtonClick() {
         Intent intent = new Intent(MemberViewer.this, CalendarMonthlyPage.class);
-        startActivity(intent);
+        options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());
     }
 
     @Override
     public void onHomeButtonClick() {
-
+        /*Intent intent = new Intent(MemberViewer.this, CalendarMonthlyPage.class);
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());*/
     }
 
     @Override
@@ -188,7 +197,8 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
     @Override
     public void onProfileButtonClick() {
         Intent intent = new Intent(MemberViewer.this, ProfilePage.class);
-        startActivity(intent);
+        options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());
     }
 
     @Override

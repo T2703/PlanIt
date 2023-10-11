@@ -5,6 +5,7 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +50,11 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
     It's our navbar. Once again.
     */
     private NavBarView navbar_view;
+
+    /*
+    This is for the transitioning between pages.
+     */
+    private ActivityOptions options;
 
     /*
     The image loader.
@@ -138,18 +144,22 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
     @Override
     public void onCalendarButtonClick() {
         Intent intent = new Intent(ProfilePage.this, CalendarMonthlyPage.class);
-        startActivity(intent);
+        options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());
     }
 
     @Override
     public void onHomeButtonClick() {
-
+        /*Intent intent = new Intent(ProfilePage.this, CalendarMonthlyPage.class);
+        options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());*/
     }
 
     @Override
     public void onMessagesButtonClick() {
         Intent intent = new Intent(ProfilePage.this, MemberViewer.class);
-        startActivity(intent);
+        options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());
     }
 
     @Override

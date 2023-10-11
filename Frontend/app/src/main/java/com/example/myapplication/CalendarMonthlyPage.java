@@ -4,17 +4,14 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.Calendar;
-import com.example.myapplication.NavBarView;
 
 /*
 The calendar page, basically the monthly view to be more precise,
@@ -42,6 +39,11 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     It's our navbar.
      */
     private NavBarView navbar_view;
+
+    /*
+    This is for the transitioning between pages.
+     */
+    private ActivityOptions options;
 
     @SuppressLint("ResourceType")
     @Override
@@ -99,19 +101,23 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
 
     @Override
     public void onHomeButtonClick() {
-
+        /*Intent intent = new Intent(CalendarMonthlyPage.this, MemberViewer.class);
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());*/
     }
 
     @Override
     public void onMessagesButtonClick() {
         Intent intent = new Intent(CalendarMonthlyPage.this, MemberViewer.class);
-        startActivity(intent);
+        options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());
     }
 
     @Override
     public void onProfileButtonClick() {
         Intent intent = new Intent(CalendarMonthlyPage.this, ProfilePage.class);
-        startActivity(intent);
+        options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());
     }
 
     @Override
