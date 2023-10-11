@@ -30,7 +30,7 @@ import org.json.JSONObject;
 /*
 The events list viewer page where you can see all your events.
  */
-public class EventsListViewer extends AppCompatActivity {
+public class EventsListViewer extends AppCompatActivity  {
     /*
     The button for going back.
     */
@@ -130,4 +130,5 @@ public class EventsListViewer extends AppCompatActivity {
         // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
+
 };

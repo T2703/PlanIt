@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -28,6 +29,11 @@ public class AddGroup extends AppCompatActivity {
     This button creates the group.
      */
     private Button create_group_button;
+
+    /*
+    We go back.
+    */
+    private ImageButton back_button;
 
     /*
     The group name input from the user.
@@ -53,6 +59,7 @@ public class AddGroup extends AppCompatActivity {
         create_group_button = findViewById(R.id.create_button);
         group_name = findViewById(R.id.group_name);
         group_description = findViewById(R.id.group_description);
+        back_button = findViewById(R.id.back_button);
         create_group_button.setEnabled(false); // Set the initial state to disabled
 
         // Sets the on click listener for the creating group button. So, we can
@@ -61,6 +68,16 @@ public class AddGroup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createGroup();
+                Intent intent = new Intent(AddGroup.this, MemberViewer.class);
+                startActivity(intent);
+            }
+        });
+
+        // How we go back the functionally/behind the scenes.
+        // Oh yeah this just functions the same without creating the group.
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(AddGroup.this, MemberViewer.class);
                 startActivity(intent);
             }

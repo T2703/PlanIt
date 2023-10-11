@@ -32,11 +32,11 @@ import java.util.Map;
 /*
 The page for viewing the group members.
  */
-public class MemberViewer extends AppCompatActivity {
+public class MemberViewer extends AppCompatActivity implements NavBarView.OnButtonClickListener {
     /*
-    this just is here for debugging.
+    Create group button for creating groups
      */
-    private Button button;
+    private ImageButton create_group_button;
 
     private ImageButton back_button;
 
@@ -61,6 +61,11 @@ public class MemberViewer extends AppCompatActivity {
     private MemberAdapter adapter;
 
     /*
+    Hi there navbar, fancy seeing you here. Yeah, it's the same one.l
+    */
+    private NavBarView navbar_view;
+
+    /*
     The URL for making the calls.
      */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
@@ -71,23 +76,27 @@ public class MemberViewer extends AppCompatActivity {
         setContentView(R.layout.activity_member_viewer);
 
         // Initialize
-        button = findViewById(R.id.button);
+        create_group_button = findViewById(R.id.create_button_add);
         back_button = findViewById(R.id.back_button);
         recycler_view = findViewById(R.id.recycler_view);
         member_list = new ArrayList<>();
         adapter = new MemberAdapter(member_list, this);
         layout_manger = new LinearLayoutManager(this);
+        navbar_view = findViewById(R.id.navbar);
+        navbar_view.setOnButtonClickListener(this);
 
         recycler_view.setLayoutManager(layout_manger);
         recycler_view.setAdapter(adapter);
 
+        navbar_view.setSelectedButton(navbar_view.getMessagesButton());
+
         getGroupsRequest();
 
         // Sample data
-        //member_list.add(new Member("Group 1", "Hello"));
-        //member_list.add(new Member("Tristan", "Group 1", "Hello"));
+        //member_list.add(new Member("Group 1", "Hello", "2"));
+        //member_list.add(new Member("Tristan", "Group 1", "1"));
 
-        button.setOnClickListener(new View.OnClickListener() {
+        create_group_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("MemberViewer", "Number of members: " + member_list.size());
@@ -158,4 +167,34 @@ public class MemberViewer extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
+    @Override
+    public void onCalendarButtonClick() {
+        Intent intent = new Intent(MemberViewer.this, CalendarMonthlyPage.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onHomeButtonClick() {
+
+    }
+
+    @Override
+    public void onMessagesButtonClick() {
+        /*
+        Do nothing why should you.
+         */
+    }
+
+    @Override
+    public void onProfileButtonClick() {
+        Intent intent = new Intent(MemberViewer.this, ProfilePage.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onCreateEventButtonClick() {
+        //Log.d("MemberViewer", "Create Event button clicked.");
+        Intent intent = new Intent(MemberViewer.this, CreateEventPage.class);
+        startActivity(intent);
+    }
 }
