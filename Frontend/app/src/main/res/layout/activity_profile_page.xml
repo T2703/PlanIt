@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ProfilePage">
 
+    <com.example.myapplication.NavBarView
+        android:id="@+id/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
     <Button
         android:id="@+id/gobackbutton"
         android:layout_width="45dp"
@@ -66,7 +75,7 @@
         android:layout_height="wrap_content"
         android:text="Delete Account"
         android:translationX="130dp"
-        android:translationY="650dp" />
+        android:translationY="605dp" />
 
     <Button
         android:id="@+id/save_changes_button"
@@ -74,6 +83,6 @@
         android:layout_height="wrap_content"
         android:text="Save Changes"
         android:translationX="130dp"
-        android:translationY="580dp" />
+        android:translationY="550dp" />
 
 </RelativeLayout>

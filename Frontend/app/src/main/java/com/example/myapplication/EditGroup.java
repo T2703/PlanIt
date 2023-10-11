@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -33,6 +34,11 @@ public class EditGroup extends AppCompatActivity {
     This button edits the group.
      */
     private Button edit_group_button;
+
+    /*
+    We go back.
+    */
+    private ImageButton back_button;
 
     /*
     The group name input from the user.
@@ -63,6 +69,7 @@ public class EditGroup extends AppCompatActivity {
         edit_group_button = findViewById(R.id.edit_button);
         group_name = findViewById(R.id.group_name);
         group_description = findViewById(R.id.group_description);
+        back_button = findViewById(R.id.back_button);
         edit_group_button.setEnabled(false); // Set the initial state to disabled
 
         // How we retrieve the group id.
@@ -86,6 +93,14 @@ public class EditGroup extends AppCompatActivity {
             public void onClick(View v) {
 
                 updateGroup();
+                Intent intent = new Intent(EditGroup.this, MemberViewer.class);
+                startActivity(intent);
+            }
+        });
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(EditGroup.this, MemberViewer.class);
                 startActivity(intent);
             }
