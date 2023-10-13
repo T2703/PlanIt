@@ -1,10 +1,9 @@
 // Author: Tristan Nono
 
-package com.example.myapplication;
+package profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,6 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
+
+import groups.MemberViewer;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
+
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
 
 /*
 The account/profile page. This is where the user can change/edit

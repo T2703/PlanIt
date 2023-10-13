@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import profile.CreateAccountPage;
+import profile.LoginFormPage;
+
 /*
     This class represents the page an unsigned user will see,
     not to be confused by the homepage once the user is signed in
