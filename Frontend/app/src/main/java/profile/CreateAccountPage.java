@@ -1,5 +1,5 @@
 // Author: Tristan Nono
-package com.example.myapplication;
+package profile;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.myapplication.Index;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.R;
+import api.VolleySingleton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;

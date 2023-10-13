@@ -9,6 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
+import events.EventsListViewer;
+import groups.MemberViewer;
+import profile.ProfilePage;
+
 /*
 The main navbar for directing the user to certain locations on the app such as home, calendar, messages/chats, & profile.
 There is also a center button used for creating the events.

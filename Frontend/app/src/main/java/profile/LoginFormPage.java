@@ -1,13 +1,15 @@
-package com.example.myapplication;
+package profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myapplication.NavBar;
+import com.example.myapplication.R;
 
 public class LoginFormPage extends AppCompatActivity {
 
