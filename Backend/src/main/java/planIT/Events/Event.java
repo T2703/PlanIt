@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import planIT.Users.User;
 
@@ -46,8 +47,17 @@ public class Event {
     // End time for each Event
     private String endTime;
 
+    // UserId for each Event
+    private int userId;
+
+    /*
+     * @OneToMany creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
+     */
+    @OneToMany
+    private List<User> users;
+
     // Event constructor (with parameters)
-    public Event(String name, String description, String location, String type, String date, String startTime, String endTime) {
+    public Event(String name, String description, String location, String type, String date, String startTime, String endTime, int userId) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -55,26 +65,22 @@ public class Event {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.userId = userId;
+        users = new ArrayList<>();
     }
 
     // Event constructor (without parameters)
-    public Event() { }
+    public Event() { users = new ArrayList<>(); }
 
     /* =============== GETTER & SETTER FUNCTIONS =============== */
 
     public int getId() { return id; }
 
-    public void setId(int id){
-        this.id = id;
-    }
+    public void setId(int id){ this.id = id; }
 
-    public String getName(){
-        return name;
-    }
+    public String getName(){ return name; }
 
-    public void setName(String name){
-        this.name = name;
-    }
+    public void setName(String name){ this.name = name; }
 
     public String getDescription() { return description; }
 
@@ -99,5 +105,15 @@ public class Event {
     public String getEndTime() { return endTime; }
 
     public void setEndTime(String endTime) { this.endTime = endTime; }
+
+    public int getUserId() { return userId; }
+
+    public void setUserId(int userId) { this.userId = userId; }
+
+    public List<User> getUsers() { return users; }
+
+    public void setUsers(List<User> users) { this.users = users; }
+
+    public void addUsers(User user){ this.users.add(user); }
 
 }
