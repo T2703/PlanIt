@@ -49,7 +49,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        events = new ArrayList();
+        events = new ArrayList<>();
     }
 
     // User constructor (with parameters)
