@@ -3,12 +3,17 @@ package planIT.Events;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 
 import planIT.Users.User;
 
@@ -47,17 +52,14 @@ public class Event {
     // End time for each Event
     private String endTime;
 
-    // UserId for each Event
-    private int userId;
+    private int manager;
 
-    /*
-     * @OneToMany creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
-     */
-    @OneToMany
-    private List<User> users;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_event", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
 
     // Event constructor (with parameters)
-    public Event(String name, String description, String location, String type, String date, String startTime, String endTime, int userId) {
+    public Event(String name, String description, String location, String type, String date, String startTime, String endTime, int manager) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -65,12 +67,11 @@ public class Event {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.userId = userId;
-        users = new ArrayList<>();
+        this.manager = manager;
     }
 
     // Event constructor (without parameters)
-    public Event() { users = new ArrayList<>(); }
+    public Event() { }
 
     /* =============== GETTER & SETTER FUNCTIONS =============== */
 
@@ -106,14 +107,12 @@ public class Event {
 
     public void setEndTime(String endTime) { this.endTime = endTime; }
 
-    public int getUserId() { return userId; }
+    public int getManager() { return manager; }
 
-    public void setUserId(int userId) { this.userId = userId; }
+    public void setManager(int manager) { this.manager = manager; }
 
-    public List<User> getUsers() { return users; }
-
-    public void setUsers(List<User> users) { this.users = users; }
-
-    public void addUsers(User user){ this.users.add(user); }
+    public Set<User> getUsers() {
+        return users;
+    }
 
 }

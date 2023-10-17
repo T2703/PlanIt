@@ -3,14 +3,14 @@ package planIT.Users;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.ManyToMany;
 
 import planIT.Events.Event;
 
@@ -37,23 +37,18 @@ public class User {
     // Email for each User
     private String email;
 
-    /*
-     * @OneToMany creates a relation between the current entity/table(Laptop) with the entity/table defined below it(User)
-     * @JsonIgnore is to assure that there is no infinite loop while returning either user/laptop objects (laptop->user->laptop->...)
-     */
-    @OneToMany
-    private List<Event> events;
+    @ManyToMany(mappedBy = "users")
+    private Set<Event> events = new HashSet<>();
 
     // User constructor (with parameters)
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
-        events = new ArrayList<>();
     }
 
     // User constructor (with parameters)
-    public User() { events = new ArrayList<>(); }
+    public User() { }
 
     /* =============== GETTER & SETTER FUNCTIONS =============== */
 
@@ -79,16 +74,8 @@ public class User {
 
     public void setEmail(String email) { this.email = email; }
 
-    public List<Event> getEvents() {
+    public Set<Event> getEvents() {
         return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
-    public void addEvents(Event event){
-        this.events.add(event);
     }
 
 }
