@@ -1,6 +1,6 @@
 // Author: Tristan Nono
 
-package com.example.myapplication;
+package events;
 
 import androidx.annotation.NonNull;
 

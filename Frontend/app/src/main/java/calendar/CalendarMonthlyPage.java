@@ -1,5 +1,5 @@
 // Author: Tristan Nono
-package com.example.myapplication;
+package calendar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TextView;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,6 +25,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import api.VolleySingleton;
+import events.CreateEventPage;
+import events.Event;
+import groups.MemberViewer;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.NavBarView;
+import profile.ProfilePage;
+import com.example.myapplication.R;
 import java.util.Calendar;
 import java.util.List;
 

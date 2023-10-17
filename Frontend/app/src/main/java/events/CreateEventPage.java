@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package events;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,6 +1,6 @@
 // Author: Tristan Nono
 
-package com.example.myapplication;
+package groups;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,24 +11,27 @@ import android.content.Intent;
 import android.view.View;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import api.VolleySingleton;
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
+import profile.ProfilePage;
 
 /*
 The page for viewing the group members.

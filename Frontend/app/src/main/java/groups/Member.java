@@ -1,6 +1,6 @@
 // Author: Tristan Nono
 
-package com.example.myapplication;
+package groups;
 
 /*
 A member for the list of members.
