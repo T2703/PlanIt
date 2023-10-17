@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,14 +20,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class CreateEventPage extends AppCompatActivity {
     private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/events";
@@ -58,7 +49,7 @@ public class CreateEventPage extends AppCompatActivity {
         event_start_time = findViewById(R.id.event_start_time);
         event_end_time = findViewById(R.id.event_end_time);
         event_location = findViewById(R.id.event_location);
-        event_description = findViewById(R.id.event_description);
+        event_description = findViewById(R.id.event_title);
 
         // Return to homepage button
         back_button.setOnClickListener(new View.OnClickListener() {
