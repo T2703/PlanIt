@@ -51,7 +51,7 @@ public class CreateEventPage extends AppCompatActivity {
         event_start_time = findViewById(R.id.event_start_time);
         event_end_time = findViewById(R.id.event_end_time);
         event_location = findViewById(R.id.event_location);
-        event_description = findViewById(R.id.event_description);
+        event_description = findViewById(R.id.event_title);
 
         // Return to homepage button
         back_button.setOnClickListener(new View.OnClickListener() {

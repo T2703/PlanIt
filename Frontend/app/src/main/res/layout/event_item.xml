@@ -7,14 +7,14 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/event_title"
+        android:id="@+id/event_time_month"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/event_description"
+        android:id="@+id/event_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"/>

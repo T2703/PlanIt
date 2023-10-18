@@ -22,18 +22,14 @@
             android:background="@null"
             android:translationX="350dp"
             app:srcCompat="@drawable/baseline_add_box_24" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="415dp"
+            android:layout_height="560dp"
+            android:layout_marginTop="84dp" />
     </com.example.myapplication.NavBarView>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="415dp"
-        android:layout_height="471dp"
-        android:layout_marginTop="84dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/back_button"

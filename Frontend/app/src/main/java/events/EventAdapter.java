@@ -20,10 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 import api.VolleySingleton;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.List;
 
 /*
@@ -219,8 +217,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
          */
         EventViewHolder(View item_view) {
             super(item_view);
-            event_name = item_view.findViewById(R.id.event_title);
-            event_description = item_view.findViewById(R.id.event_description);
+            event_name = item_view.findViewById(R.id.event_time_month);
+            event_description = item_view.findViewById(R.id.event_title);
             edit_button = item_view.findViewById(R.id.edit_button);
             delete_button = item_view.findViewById(R.id.delete_button);
         }
