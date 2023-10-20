@@ -43,14 +43,11 @@ public class Event {
     // Type for each Event
     private String type;
 
-    // Date for each Event
-    private String date;
-
     // Start time for each Event
-    private String startTime;
+    private Date startDate;
 
     // End time for each Event
-    private String endTime;
+    private Date endDate;
 
     private int manager;
 
@@ -59,14 +56,13 @@ public class Event {
     private Set<User> users = new HashSet<>();
 
     // Event constructor (with parameters)
-    public Event(String name, String description, String location, String type, String date, String startTime, String endTime, int manager) {
+    public Event(String name, String description, String location, String type, Date startDate, Date endDate, int manager) {
         this.name = name;
         this.description = description;
         this.location = location;
         this.type = type;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.manager = manager;
     }
 
@@ -95,17 +91,13 @@ public class Event {
 
     public void setType(String type) { this.type = type; }
 
-    public String getDate() { return date; }
+    public Date getStartDate() { return startDate; }
 
-    public void setDate(String date) { this.date = date; }
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
 
-    public String getStartTime() { return startTime; }
+    public Date getEndDate() { return endDate; }
 
-    public void setStartTime(String startTime) { this.startTime = startTime; }
-
-    public String getEndTime() { return endTime; }
-
-    public void setEndTime(String endTime) { this.endTime = endTime; }
+    public void setEndDate(Date endDate) { this.endDate = endDate; }
 
     public int getManager() { return manager; }
 

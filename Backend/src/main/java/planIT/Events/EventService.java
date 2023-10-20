@@ -51,9 +51,8 @@ public class EventService {
         event.setDescription(request.getDescription());
         event.setLocation(request.getLocation());
         event.setType(request.getType());
-        event.setDate(request.getDate());
-        event.setStartTime(request.getStartTime());
-        event.setEndTime(request.getEndTime());
+        event.setStartDate(request.getStartDate());
+        event.setEndDate(request.getEndDate());
         event.setManager(request.getManager());
 
         eventRepository.save(event);
