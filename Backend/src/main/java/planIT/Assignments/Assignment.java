@@ -21,8 +21,6 @@ public class Assignment {
 
     private Date dueDate;
 
-    private int userID;
-
     public Assignment(String title, String description, String course, Date dueDate) {
         this.title = title;
         this.description = description;

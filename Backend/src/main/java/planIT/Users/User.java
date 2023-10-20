@@ -3,11 +3,14 @@ package planIT.Users;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import planIT.Events.Event;
 
@@ -33,6 +36,9 @@ public class User {
 
     // Email for each User
     private String email;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Event> events = new HashSet<>();
 
     // User constructor (with parameters)
     public User(String username, String password, String email) {
@@ -67,5 +73,9 @@ public class User {
     public String getEmail() { return email; }
 
     public void setEmail(String email) { this.email = email; }
+
+    public Set<Event> getEvents() {
+        return events;
+    }
 
 }
