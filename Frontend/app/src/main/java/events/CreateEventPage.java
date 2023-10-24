@@ -90,7 +90,7 @@ public class CreateEventPage extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Date date = new Date();
 
-                        String pattern = year + "-" + (month + 1) + "-" + dayOfMonth;
+                        String pattern = year + "-" + ((month < 9) ? "0" + (month + 1) : (month + 1)) + "-" + ((dayOfMonth < 10) ? "0" + dayOfMonth : dayOfMonth);
                         SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.US);
                         String formattedDate = sdf.format(date);
 
@@ -115,7 +115,7 @@ public class CreateEventPage extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Date date = new Date();
 
-                        String pattern = year + "-" + (month + 1) + "-" + dayOfMonth;
+                        String pattern = year + "-" + ((month < 9) ? "0" + (month + 1) : (month + 1)) + "-" + ((dayOfMonth < 10) ? "0" + dayOfMonth : dayOfMonth);
                         SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.US);
                         String formattedDate = sdf.format(date);
 
@@ -136,7 +136,10 @@ public class CreateEventPage extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(createEventPageContext, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String formattedTime = String.valueOf(hourOfDay) + ":" + String.valueOf(minute);
+                        String eventHour = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
+                        String eventMinute = minute < 10 ? "0" + minute : String.valueOf(minute);
+                        String formattedTime = eventHour + ":" + eventMinute;
+
                         event_start_time.setText(formattedTime);
                     }
                 }, mHour, mMinute, false);
@@ -154,7 +157,10 @@ public class CreateEventPage extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(createEventPageContext, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String formattedTime = String.valueOf(hourOfDay) + ":" + String.valueOf(minute);
+                        String eventHour = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
+                        String eventMinute = minute < 10 ? "0" + minute : String.valueOf(minute);
+                        String formattedTime = eventHour + ":" + eventMinute;
+
                         event_end_time.setText(formattedTime);
                     }
                 }, mHour, mMinute, false);
@@ -177,9 +183,6 @@ public class CreateEventPage extends AppCompatActivity {
                 String event_description_value = event_description.getText().toString();
 
                 sendPostRequest(event_name_value, event_description_value, event_location_value, event_type_value, event_start_date, event_end_date);
-
-                Intent intent = new Intent(CreateEventPage.this, EventsListViewer.class);
-                startActivity(intent);
             }
         });
     }
@@ -209,6 +212,9 @@ public class CreateEventPage extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Toast.makeText(getApplicationContext(), "New event created", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(CreateEventPage.this, EventsListViewer.class);
+                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
