@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import api.VolleySingleton;
@@ -35,7 +37,9 @@ import com.example.myapplication.NavBarView;
 import profile.ProfilePage;
 import com.example.myapplication.R;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /*
 The calendar page, basically the monthly view to be more precise,
@@ -94,6 +98,8 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     */
     private EventCalendarMonthlyAdapter adapter;
 
+    private String formattedDate;
+
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
 
     @SuppressLint("ResourceType")
@@ -139,7 +145,12 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                     // and the year is 2023 the date should display 9/21/2023.
                     @Override
                     public void onSelectedDayChange(@NonNull CalendarView calendar_view, int year, int month, int day_of_month) {
-                        date_getter = String.format("%02d/%02d/%04d", month + 1, day_of_month, year);
+                        //month = month - 1;
+
+                        Calendar selectedDate = Calendar.getInstance();
+                        selectedDate.set(year, month, day_of_month);
+
+                        date_getter = String.format("%04d-%02d-%02d", year, month + 1, day_of_month);
                         date_view.setText(date_getter);
                         // Request here everytime when a day is selected.
                         getEventsRequest();
@@ -154,7 +165,7 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         int month = currentDate.get(Calendar.MONTH) + 1;
         int day = currentDate.get(Calendar.DAY_OF_MONTH);
 
-        date_getter = String.format("%02d/%02d/%04d", month, day, year);
+        date_getter = String.format("%04d-%02d-%02d", year, month, day);
 
         date_view.setText(date_getter);
 
@@ -173,6 +184,7 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         /*Intent intent = new Intent(this, CalendarMonthlyPage.class);
         startActivity(intent);*/
         //Log.d("Date", date_getter);
+        Log.d("TAG", formattedDate);
     }
 
     @Override
@@ -228,18 +240,27 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                                 String id = jsonObject.getString("id");
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
-                                String date = jsonObject.getString("date");
-                                String start_time = jsonObject.getString("startTime");
-                                String end_time = jsonObject.getString("endTime");
+                                String startDateStr  = jsonObject.getString("startDate");
+                                String endDateStr  = jsonObject.getString("endDate");
 
-                                //event_list.add(new Event(id, name, description, date, start_time, end_time));
+                                SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                                Date startDate = inputDateFormat.parse(startDateStr);
+                                Date endDate = inputDateFormat.parse(endDateStr);
+                                
+                                //event_list.add(new Event(id, name, description, start_date, end_date));
+                                SimpleDateFormat militaryTimeFormat = new SimpleDateFormat("HH:mm");
+                                String startTime = militaryTimeFormat.format(startDate);
+                                String endTime = militaryTimeFormat.format(endDate);
+                                Log.d("START", startDateStr);
 
-                                if (date_getter.equals(date)) {
-                                    event_list.add(new Event(id, name, description, date, start_time, end_time));
+                                if (startDateStr.startsWith(date_getter)) {
+                                    event_list.add(new Event(id, name, description, startTime, endTime));
                                 }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
                             }
                         }
 

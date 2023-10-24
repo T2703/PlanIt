@@ -27,28 +27,23 @@ public class Event {
     /*
     The start time.
     */
-    private String start_time;
+    private String start_date;
 
     /*
     The end time.
     */
-    private String end_time;
+    private String end_date;
 
-    /*
-    The date.
-    */
-    private String date;
 
     /*
     Constructor for the event so how it constructs.
      */
-    public Event(String id, String name, String description, String date, String start_time, String end_time) {
+    public Event(String id, String name, String description, String start_date, String end_date) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.date = date;
-        this.start_time = start_time;
-        this.end_time = end_time;
+        this.start_date = start_date;
+        this.end_date = end_date;
     }
 
     /*
@@ -70,11 +65,11 @@ public class Event {
     }
 
     public String getStartTime() {
-        return this.start_time;
+        return this.start_date;
     }
 
     public String getEndTime() {
-        return this.end_time;
+        return this.end_date;
     }
 
     @NonNull

@@ -1,10 +1,16 @@
 // Author: Tristan Nono
 package calendar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +20,7 @@ import com.example.myapplication.R;
 
 import java.util.List;
 
+import events.EditEventPage;
 import events.Event;
 
 /*
@@ -52,6 +59,29 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         holder.event_name.setText(event.getName());
         holder.event_start_time.setText(event.getStartTime());
         holder.event_end_time.setText(event.getEndTime());
+
+        holder.options_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(context, v);
+                popup_menu.getMenuInflater().inflate(R.menu.options_menu, popup_menu.getMenu());
+
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.edit_option) {
+
+                        }
+                        else if(menuItem.getItemId() == R.id.delete_button) {
+
+                        }
+                        return true;
+                    }
+                });
+                // Show the popup menu
+                popup_menu.show();
+            }
+        });
     }
 
     @Override
@@ -76,6 +106,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         TextView event_end_time;
 
         /*
+        The button for the options for the event items (Edit or Delete).
+         */
+        ImageButton options_button;
+
+        /*
         This holds all the variables in place for the events.
          */
         EventViewHolder(View item_view) {
@@ -83,6 +118,7 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
             event_name = item_view.findViewById(R.id.event_title);
             event_start_time = item_view.findViewById(R.id.event_start_time);
             event_end_time = item_view.findViewById(R.id.event_end_time);
+            options_button = item_view.findViewById(R.id.menu_button);
         }
     }
 }
