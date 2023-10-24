@@ -18,6 +18,7 @@ import planIT.Events.*;
 import planIT.Users.*;
 import planIT.Teams.*;
 import planIT.Messages.*;
+import planIT.Notifications.*;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -35,7 +36,7 @@ public class PlanITApplication {
     }
 
     @Bean
-    CommandLineRunner initUser(TeamRepository teamRepository, EventRepository eventRepository, MessageRepository messageRepository, UserRepository userRepository, AssignmentRepository assignmentRepository, ToDoRepository toDoRepository, TagRepository tagRepository) {
+    CommandLineRunner initUser(TeamRepository teamRepository, EventRepository eventRepository, MessageRepository messageRepository, UserRepository userRepository, AssignmentRepository assignmentRepository, ToDoRepository toDoRepository, TagRepository tagRepository, NotificationRepository notificationRepository) {
         return args -> {
             //Assignment(String title, String description, String course, Date dueDate)
             Assignment assignment1 = new Assignment("Title1", "Desc1", "Course1", new Date());
@@ -68,6 +69,10 @@ public class PlanITApplication {
             Team team2 = new Team("Group 2", "Description 2");
             Team team3 = new Team("Group 3", "Description 3");
 
+            Notification notification1 = new Notification("Notification 1", "Description 1");
+            Notification notification2 = new Notification("Notification 2", "Description 2");
+            Notification notification3 = new Notification("Notification 3", "Description 3");
+
             assignmentRepository.save(assignment1);
             assignmentRepository.save(assignment2);
             assignmentRepository.save(assignment3);
@@ -95,6 +100,10 @@ public class PlanITApplication {
             teamRepository.save(team1);
             teamRepository.save(team2);
             teamRepository.save(team3);
+
+            notificationRepository.save(notification1);
+            notificationRepository.save(notification2);
+            notificationRepository.save(notification3);
         };
     }
 }

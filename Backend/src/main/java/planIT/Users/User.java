@@ -11,8 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import planIT.Events.Event;
+import planIT.Notifications.Notification;
 
 /**
  *
@@ -40,15 +42,19 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private Set<Event> events = new HashSet<>();
 
+    @OneToMany
+    private List<Notification> notifications;
+
     // User constructor (with parameters)
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+        notifications = new ArrayList<>();
     }
 
     // User constructor (with parameters)
-    public User() { }
+    public User() { notifications = new ArrayList<>(); }
 
     /* =============== GETTER & SETTER FUNCTIONS =============== */
 
@@ -76,6 +82,19 @@ public class User {
 
     public Set<Event> getEvents() {
         return events;
+    }
+
+    // Methods for User-Notifications
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotification(Notification notification){
+        this.notifications.add(notification);
     }
 
 }
