@@ -158,9 +158,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
                             intent.putExtra("type", jsonObject.getString("type"));
                             intent.putExtra("name", jsonObject.getString("name"));
-                            intent.putExtra("date", jsonObject.getString("date"));
-                            intent.putExtra("startTime", jsonObject.getString("startTime"));
-                            intent.putExtra("endTime", jsonObject.getString("endTime"));
+                            intent.putExtra("startDate", jsonObject.getString("startDate"));
+                            intent.putExtra("endDate", jsonObject.getString("endDate"));
                             intent.putExtra("location", jsonObject.getString("location"));
                             intent.putExtra("description", jsonObject.getString("description"));
                             intent.putExtra("id", jsonObject.getString("id"));

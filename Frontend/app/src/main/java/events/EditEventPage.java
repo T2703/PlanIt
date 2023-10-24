@@ -98,8 +98,11 @@ public class EditEventPage extends AppCompatActivity {
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditEventPage.this, EventsListViewer.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(EditEventPage.this, EventsListViewer.class);
+                startActivity(intent);*/
+
+                // This makes the back button now return to a previous page.
+                finish();
             }
         });
 
