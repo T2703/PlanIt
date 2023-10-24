@@ -78,7 +78,7 @@ public class NavBar extends AppCompatActivity {
                 Log.d("TAG", "Home");
                 setSelectedButton(home_button);
 
-                Intent intent = new Intent(NavBar.this, MemberViewer.class);
+                Intent intent = new Intent(NavBar.this, EventsListViewer.class);
                 startActivity(intent);
 
             }

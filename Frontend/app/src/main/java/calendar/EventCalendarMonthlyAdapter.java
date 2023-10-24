@@ -4,6 +4,7 @@ package calendar;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +17,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
+import api.VolleySingleton;
 import events.EditEventPage;
 import events.Event;
 
@@ -32,6 +41,7 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
     */
     private List<Event> event_list;
     private Context context;
+
 
     /*
     Constructs the apdater.
@@ -70,10 +80,30 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.edit_option) {
+                            int position = holder.getAdapterPosition();
 
+                            if (position != RecyclerView.NO_POSITION) {
+                                Event clickedEvent = event_list.get(position);
+
+                                String eventId = clickedEvent.getId();
+
+                                getEvent(eventId);
+                            }
                         }
-                        else if(menuItem.getItemId() == R.id.delete_button) {
+                        else if(menuItem.getItemId() == R.id.delete_option) {
+                            int position = holder.getAdapterPosition();
 
+                            if (position != RecyclerView.NO_POSITION) {
+                                Event clickedEvent = event_list.get(position);
+
+                                String eventId = clickedEvent.getId();
+
+                                String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+
+                                makeDeleteRequest(delete_url, eventId);
+
+                                Log.d("DELETE", "Delete");
+                            }
                         }
                         return true;
                     }
@@ -82,6 +112,86 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                 popup_menu.show();
             }
         });
+    }
+
+    private void makeDeleteRequest(String deleteUrl, String eventId) {
+        int positionToDelete = -1;
+
+        for (int i = 0; i < event_list.size(); i++) {
+            if (event_list.get(i).getId().equals(eventId)) {
+                positionToDelete = i;
+                break;
+            }
+        }
+
+        if (positionToDelete != -1) {
+            int finalPositionToDelete = positionToDelete;
+
+            StringRequest stringRequest = new StringRequest(
+                    Request.Method.DELETE,
+                    deleteUrl,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("response", response);
+
+                            event_list.remove(finalPositionToDelete);
+
+                            notifyItemRemoved(finalPositionToDelete);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle any errors that occur during the request
+                            Log.e("A server error has occurred", error.toString());
+                        }
+                    }
+            );
+            VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
+        }
+
+    }
+
+    private void getEvent(String eventId) {
+        String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                URL_STRING_REQ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Intent intent = new Intent(context, EditEventPage.class);
+
+                            intent.putExtra("type", jsonObject.getString("type"));
+                            intent.putExtra("name", jsonObject.getString("name"));
+                            intent.putExtra("startDate", jsonObject.getString("startDate"));
+                            intent.putExtra("endDate", jsonObject.getString("endDate"));
+                            intent.putExtra("location", jsonObject.getString("location"));
+                            intent.putExtra("description", jsonObject.getString("description"));
+                            intent.putExtra("id", jsonObject.getString("id"));
+
+                            context.startActivity(intent);
+
+                        } catch(JSONException err) {
+                            err.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e("A server error has occurred", error.toString());
+                    }
+                }
+        );
+
+        // Adding request to request queue
+        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
     @Override
