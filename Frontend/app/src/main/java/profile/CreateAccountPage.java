@@ -44,7 +44,7 @@ public class CreateAccountPage extends AppCompatActivity {
     private Button create_account_button;
 
     /*
-    The email that the user will use.
+    The user's username that the user will use.
     */
     private EditText user_username;
 
