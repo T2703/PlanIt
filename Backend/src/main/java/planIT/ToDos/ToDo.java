@@ -21,9 +21,6 @@ public class ToDo {
 
     private Date dueDate;
     
-    private int userID;
-
-
     public ToDo(String name, String description, Date remindTime, Date dueDate) {
         this.name = name;
         this.description = description;

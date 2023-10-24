@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import planIT.Users.*;
+
 /**
  *
  * @author Melani Hodge
@@ -20,6 +22,9 @@ public class EventService {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -46,12 +51,24 @@ public class EventService {
         event.setDescription(request.getDescription());
         event.setLocation(request.getLocation());
         event.setType(request.getType());
-        event.setDate(request.getDate());
-        event.setStartTime(request.getStartTime());
-        event.setEndTime(request.getEndTime());
+        event.setStartDate(request.getStartDate());
+        event.setEndDate(request.getEndDate());
+        event.setManager(request.getManager());
 
         eventRepository.save(event);
         return eventRepository.findById(id);
+    }
+
+    public String addUserToEvent(int userId, int eventId) {
+        User user = userRepository.findById(userId);
+        Event event = eventRepository.findById(eventId);
+
+        user.getEvents().add(event);
+        event.getUsers().add(user);
+
+        eventRepository.save(event);
+
+        return success;
     }
 
     public String deleteEvent(int id) {

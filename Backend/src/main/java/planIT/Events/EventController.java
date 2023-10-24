@@ -42,6 +42,12 @@ public class EventController {
         return eventService.createEvent(event);
     }
 
+    // POST method - adds an event to the database.
+    @PostMapping(path = "/users/{userId}/events/{eventId}")
+    public String addUserToEvent(@PathVariable int userId, @PathVariable int eventId) {
+        return eventService.addUserToEvent(userId, eventId);
+    }
+
     // PUT method - updates an event in the database.
     @PutMapping(path = "/events/{id}")
     public Event updateEvent(@PathVariable int id, @RequestBody Event event) {
