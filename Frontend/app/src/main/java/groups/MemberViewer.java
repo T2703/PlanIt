@@ -31,6 +31,7 @@ import java.util.List;
 import api.VolleySingleton;
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
+import homepage.HomePage;
 import profile.ProfilePage;
 
 /*
@@ -185,9 +186,9 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
 
     @Override
     public void onHomeButtonClick() {
-        /*Intent intent = new Intent(MemberViewer.this, CalendarMonthlyPage.class);
+        Intent intent = new Intent(MemberViewer.this, HomePage.class);
         ActivityOptions options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);
-        startActivity(intent, options.toBundle());*/
+        startActivity(intent, options.toBundle());
     }
 
     @Override

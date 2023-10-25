@@ -24,6 +24,8 @@ import com.example.myapplication.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import homepage.HomePage;
+
 public class LoginFormPage extends AppCompatActivity {
 
     private TextView create_account_button;
@@ -61,7 +63,7 @@ public class LoginFormPage extends AppCompatActivity {
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginFormPage.this, NavBar.class);
+                Intent intent = new Intent(LoginFormPage.this, HomePage.class);
                 startActivity(intent);
             }
         });

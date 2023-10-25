@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 
 import api.VolleySingleton;
+import homepage.HomePage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,7 +95,7 @@ public class CreateAccountPage extends AppCompatActivity {
 
                 sendPostRequest(username, password, email);
 
-                Intent intent = new Intent(CreateAccountPage.this, NavBar.class);
+                Intent intent = new Intent(CreateAccountPage.this, HomePage.class);
                 startActivity(intent);
             }
         });

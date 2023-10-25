@@ -13,21 +13,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.List;
-
 import api.VolleySingleton;
 import events.EditEventPage;
 import events.Event;
@@ -199,7 +194,7 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         return event_list.size();
     }
 
-    static class EventViewHolder extends RecyclerView.ViewHolder {
+    public static class EventViewHolder extends RecyclerView.ViewHolder {
         /*
         The event title.
          */

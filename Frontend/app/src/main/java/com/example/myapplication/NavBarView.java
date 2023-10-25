@@ -75,6 +75,14 @@ public class NavBarView extends RelativeLayout {
         create_event_button = findViewById(R.id.create_events_button);
 
         // Set a click listeners for the corresponding buttons.
+        home_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSelectedButton(home_button);
+                button_click_listener.onHomeButtonClick();
+            }
+        });
+
         calendar_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,5 +165,9 @@ public class NavBarView extends RelativeLayout {
 
     public ImageButton getProfileButton() {
         return profile_button;
+    }
+
+    public ImageButton getHomeButton() {
+        return home_button;
     }
 }
