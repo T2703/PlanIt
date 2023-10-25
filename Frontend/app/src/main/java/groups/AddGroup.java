@@ -1,10 +1,8 @@
 // Author: Tristan Nono
 
-package com.example.myapplication;
+package groups;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,26 +11,32 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.example.myapplication.R;
+import api.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 /*
-Where the user or someone can edit the group stuff.
+Welcome to the add group page where we can add groups by creating them ofc!
+Overall, this is where the new groups gets created.
  */
-public class EditGroup extends AppCompatActivity {
+public class AddGroup extends AppCompatActivity {
     /*
-    This button edits the group.
+    This button creates the group.
      */
-    private Button edit_group_button;
+    private Button create_group_button;
+
+    /*
+    We go back.
+    */
+    private ImageButton back_button;
 
     /*
     The group name input from the user.
@@ -45,11 +49,6 @@ public class EditGroup extends AppCompatActivity {
     private EditText group_description;
 
     /*
-    Group id number.
-     */
-    private String group_id;
-
-    /*
     The URL for making the calls.
     */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
@@ -57,36 +56,32 @@ public class EditGroup extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_group);
+        setContentView(R.layout.activity_add_group);
 
         // Initialization
-        edit_group_button = findViewById(R.id.edit_button);
+        create_group_button = findViewById(R.id.create_button);
         group_name = findViewById(R.id.group_name);
         group_description = findViewById(R.id.group_description);
-        edit_group_button.setEnabled(false); // Set the initial state to disabled
-
-        // How we retrieve the group id.
-        Intent intent = getIntent();
-        if (intent != null) {
-            String name = intent.getStringExtra("name");
-            String description = intent.getStringExtra("description");
-            group_id = intent.getStringExtra("group_id"); // Use getStringExtra for String values
-
-            TextView group_name_view = findViewById(R.id.group_name);
-            TextView group_description_view = findViewById(R.id.group_description);
-
-            group_name_view.setText(name);
-            group_description_view.setText(description);
-        }
+        back_button = findViewById(R.id.back_button);
+        create_group_button.setEnabled(false); // Set the initial state to disabled
 
         // Sets the on click listener for the creating group button. So, we can
         // an epic group.
-        edit_group_button.setOnClickListener(new View.OnClickListener() {
+        create_group_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                createGroup();
+                Intent intent = new Intent(AddGroup.this, MemberViewer.class);
+                startActivity(intent);
+            }
+        });
 
-                updateGroup();
-                Intent intent = new Intent(EditGroup.this, MemberViewer.class);
+        // How we go back the functionally/behind the scenes.
+        // Oh yeah this just functions the same without creating the group.
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddGroup.this, MemberViewer.class);
                 startActivity(intent);
             }
         });
@@ -123,6 +118,7 @@ public class EditGroup extends AppCompatActivity {
             }
         });
 
+
     }
 
     /*
@@ -134,19 +130,19 @@ public class EditGroup extends AppCompatActivity {
         String group_description_input = group_description.getText().toString();
 
         if (!group_name_input.isEmpty() && !group_description_input.isEmpty()) {
-            edit_group_button.setEnabled(true);
+            create_group_button.setEnabled(true);
         }
 
         else {
-            edit_group_button.setEnabled(false);
+            create_group_button.setEnabled(false);
         }
     }
 
     /*
-    This is the request for updating a group (well we call it teams or whatever).
-    This PUTs the group on to the server.
+    This is the request for creating a group (well we call it teams or whatever).
+    This POSTs the group on to the server.
     */
-    private void updateGroup() {
+    private void createGroup() {
         // Find the values of each field
         EditText input_group_name = findViewById(R.id.group_name);
         EditText input_group_description = findViewById(R.id.group_description);
@@ -159,18 +155,16 @@ public class EditGroup extends AppCompatActivity {
 
         // Puts in the values of these variables.
         try {
-            requestBody.put("id", group_id);
             requestBody.put("name", input_group_value);
             requestBody.put("description", input_group_description_value);
-            Log.d("TAG",requestBody.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         // Making the request
         JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
-                Request.Method.PUT,  // Use PUT method instead of POST
-                TEAMS_URL + "/" + group_id,  // Specify the specific group ID in the URL
+                Request.Method.POST,
+                TEAMS_URL,
                 requestBody,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -188,48 +182,7 @@ public class EditGroup extends AppCompatActivity {
 
         };
 
-        // Add the request to the RequestQueue
-        Volley.newRequestQueue(this).add(jsonObjectReq);
+        // Add to volley request queue
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);
     }
-
-    /*
-    Fetches the group id.
-     */
-    /*private void fetchGroupId(String groupName) {
-        // Create a request to fetch the group_id based on the group's name
-        String fetchUrl = TEAMS_URL + groupName; // Adjust the URL accordingly
-
-        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
-                Request.Method.GET,
-                fetchUrl,
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Parse the response to get the group_id
-                            int fetchedGroupId = response.getInt("group_id");
-
-                            // Now you have the correct group_id
-                            group_id = fetchedGroupId;
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Server error", "Error: " + error.getMessage());
-                    }
-                }
-
-        );
-
-        // Add the request to the RequestQueue
-        Volley.newRequestQueue(this).add(jsonObjectReq);
-    }*/
-
-
 }

@@ -1,5 +1,5 @@
 // Author: Tristan Nono
-package com.example.myapplication;
+package profile;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,17 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.myapplication.Index;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.R;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import android.widget.Toast;
+
+
+import api.VolleySingleton;
+import homepage.HomePage;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -26,15 +37,17 @@ The create account page if the user does not have an account.
 This is where the user can create their account for the app.
  */
 public class CreateAccountPage extends AppCompatActivity {
+    private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/users";
+
     /*
     The create account button
      */
     private Button create_account_button;
 
     /*
-    The email that the user will use.
+    The user's username that the user will use.
     */
-    private EditText username;
+    private EditText user_username;
 
     /*
     The email that the user will use.
@@ -57,7 +70,7 @@ public class CreateAccountPage extends AppCompatActivity {
 
         // Initialization
         create_account_button = findViewById(R.id.create_account_button);
-        username = findViewById(R.id.group_description);
+        user_username = findViewById(R.id.group_description);
         user_email = findViewById(R.id.input_email);
         user_password = findViewById(R.id.input_password);
         create_account_button.setEnabled(false); // Set this to false for checking the inputs of the user.
@@ -76,16 +89,19 @@ public class CreateAccountPage extends AppCompatActivity {
         create_account_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Call this guy so we create account makes sense yes?
-                createAccountRequest();
+                String username = user_username.getText().toString();
+                String password = user_password.getText().toString();
+                String email = user_email.getText().toString();
 
-                Intent intent = new Intent(CreateAccountPage.this, NavBar.class);
+                sendPostRequest(username, password, email);
+
+                Intent intent = new Intent(CreateAccountPage.this, HomePage.class);
                 startActivity(intent);
             }
         });
 
         // This is for the user's name to see if anything is in it or not.
-        username.addTextChangedListener(new TextWatcher() {
+        user_username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -137,58 +153,38 @@ public class CreateAccountPage extends AppCompatActivity {
     This is the request for creating an account.
     This POSTs the account on to the server.
      */
-    private void createAccountRequest() {
-        // Find the values of each field
-        EditText input_email = findViewById(R.id.input_email);
-        EditText input_username = findViewById(R.id.group_description);
-        EditText input_password = findViewById(R.id.input_password);
+    private void sendPostRequest(String username, String password, String email) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JSONObject body = new JSONObject();
 
-        String input_email_value = input_email.getText().toString();
-        String input_username_value = input_username.getText().toString();
-        String input_password_value = input_password.getText().toString();
-
-        // Create JSON object
-        JSONObject requestBody = new JSONObject();
-
-        // Puts in the values of these variables. 
         try {
-            requestBody.put("input_email", input_email_value);
-            requestBody.put("input_username", input_username_value);
-            requestBody.put("input_password", input_password_value);
+            body.put("username", username);
+            body.put("password", password);
+            body.put("email", email);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        // Making the request
-        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+        // Make the request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
-                CREATE_ACCOUNT_URL,
-                requestBody,
+                URL_POST_REQUEST,
+                body,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("Server response", response.toString());
+                        Toast.makeText(getApplicationContext(), "New User created", Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Server error", "Error: " + error.getMessage());
+                        Toast.makeText(getApplicationContext(), "POST request failed", Toast.LENGTH_SHORT).show();
                     }
                 }
-        ) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
+        );
 
-                // Add headers
-                headers.put("headername", "headervalue");
-                return headers;
-            }
-        };
-
-        // Add to volley request queue
-        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);
+        requestQueue.add(jsonObjectRequest);
     }
 
     /*
@@ -196,7 +192,7 @@ public class CreateAccountPage extends AppCompatActivity {
    if there's nothing in both the email and password then, it shouldn't go through.
     */
     private void checkFieldsForEmptyValues() {
-        String username_login = username.getText().toString();
+        String username_login = user_username.getText().toString();
         String user_email_login = user_email.getText().toString();
         String password = user_password.getText().toString();
 

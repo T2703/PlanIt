@@ -1,9 +1,8 @@
 // Author: Tristan Nono
-package com.example.myapplication;
+package events;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +16,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.R;
+import api.VolleySingleton;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -30,7 +31,7 @@ import org.json.JSONObject;
 /*
 The events list viewer page where you can see all your events.
  */
-public class EventsListViewer extends AppCompatActivity {
+public class EventsListViewer extends AppCompatActivity  {
     /*
     The button for going back.
     */
@@ -108,8 +109,10 @@ public class EventsListViewer extends AppCompatActivity {
                                 String id = jsonObject.getString("id");
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
+                                String start_date = jsonObject.getString("startDate");
+                                String end_date = jsonObject.getString("endDate");
 
-                                event_list.add(new Event(id, name, description));
+                                event_list.add(new Event(id, name, description, start_date, end_date));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -130,4 +133,5 @@ public class EventsListViewer extends AppCompatActivity {
         // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
+
 };

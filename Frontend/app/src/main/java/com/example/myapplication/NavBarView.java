@@ -1,26 +1,20 @@
-// Author: Tristan Nono
 package com.example.myapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.SharedPreferences;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-
-import calendar.CalendarMonthlyPage;
-import events.CreateEventPage;
-import events.EventsListViewer;
-import groups.MemberViewer;
-import profile.ProfilePage;
+import android.widget.RelativeLayout;
 
 /*
-The main navbar for directing the user to certain locations on the app such as home, calendar, messages/chats, & profile.
-There is also a center button used for creating the events.
+The navbar view this is the main functionally of the navbar and
+should display on every page.
  */
-public class NavBar extends AppCompatActivity {
-
+public class NavBarView extends RelativeLayout {
     /*
     The button for the calendar.
      */
@@ -46,10 +40,31 @@ public class NavBar extends AppCompatActivity {
      */
     private ImageButton create_event_button;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navbar);
+    /*
+    This variable checks if a button has been clicked.
+     */
+    private OnButtonClickListener button_click_listener;
+
+    /*
+    An interface mainly used for calling these methods for the navbar
+    since, we can't just use intent here it won't work.
+     */
+    public interface OnButtonClickListener {
+        void onCalendarButtonClick();
+        void onHomeButtonClick();
+        void onMessagesButtonClick();
+        void onProfileButtonClick();
+        void onCreateEventButtonClick();
+    }
+
+
+    /*
+    Constructor for the navbar view.
+     */
+    public NavBarView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        LayoutInflater.from(context).inflate(R.layout.activity_navbar, this);
 
         // Initialize
         calendar_button = findViewById(R.id.calendar_button_nav);
@@ -60,52 +75,19 @@ public class NavBar extends AppCompatActivity {
         create_event_button = findViewById(R.id.create_events_button);
 
         // Set a click listeners for the corresponding buttons.
-        calendar_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("TAG", "Calendar");
-                setSelectedButton(calendar_button);
-
-                Intent intent = new Intent(NavBar.this, CalendarMonthlyPage.class);
-                startActivity(intent);
-
-            }
-        });
-
         home_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAG", "Home");
                 setSelectedButton(home_button);
-
-                Intent intent = new Intent(NavBar.this, EventsListViewer.class);
-                startActivity(intent);
-
+                button_click_listener.onHomeButtonClick();
             }
         });
 
-        messages_button.setOnClickListener(new View.OnClickListener() {
+        calendar_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("TAG", "Messages");
-                setSelectedButton(messages_button);
-
-                // For testing purposes only
-                Intent intent = new Intent(NavBar.this, EventsListViewer.class);
-                startActivity(intent);
-
-            }
-        });
-
-        profile_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setSelectedButton(profile_button);
-
-                // Create an intent to navigate to another activity
-                Intent intent = new Intent(NavBar.this, ProfilePage.class);
-                startActivity(intent);
-
+                setSelectedButton(calendar_button);
+                button_click_listener.onCalendarButtonClick();
             }
         });
 
@@ -113,8 +95,23 @@ public class NavBar extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Navigate to Create Events page
-                Intent intent = new Intent(NavBar.this, CreateEventPage.class);
-                startActivity(intent);
+                button_click_listener.onCreateEventButtonClick();
+            }
+        });
+
+        messages_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSelectedButton(messages_button);
+                button_click_listener.onMessagesButtonClick();
+            }
+        });
+
+        profile_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setSelectedButton(profile_button);
+                button_click_listener.onProfileButtonClick();
             }
         });
     }
@@ -122,8 +119,8 @@ public class NavBar extends AppCompatActivity {
     /*
     This method here sets the color of the selected button on the navbar depending on what is clicked.
     Example: if calendar button is clicked then the calendar button is lit up.
-     */
-    private void setSelectedButton(ImageButton button) {
+    */
+    public void setSelectedButton(ImageButton button) {
         // Deselect all buttons
         calendar_button.setSelected(false);
         messages_button.setSelected(false);
@@ -145,5 +142,32 @@ public class NavBar extends AppCompatActivity {
 
         profile_button.setColorFilter(getResources().getColor(
                 profile_button.isSelected() ? R.color.selected_tint : R.color.deselected_tint));
+
+    }
+
+    /*
+    Sets the button click listener.
+     */
+    public void setOnButtonClickListener(OnButtonClickListener listener) {
+        this.button_click_listener = listener;
+    }
+
+    /*
+    All of these are gets so, we don't want to take away private.
+     */
+    public ImageButton getCalendarButton() {
+        return calendar_button;
+    }
+
+    public ImageButton getMessagesButton() {
+        return messages_button;
+    }
+
+    public ImageButton getProfileButton() {
+        return profile_button;
+    }
+
+    public ImageButton getHomeButton() {
+        return home_button;
     }
 }

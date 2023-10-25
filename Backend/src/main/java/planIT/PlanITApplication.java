@@ -18,6 +18,7 @@ import planIT.Events.*;
 import planIT.Users.*;
 import planIT.Teams.*;
 import planIT.Messages.*;
+import planIT.Notifications.*;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -35,7 +36,7 @@ public class PlanITApplication {
     }
 
     @Bean
-    CommandLineRunner initUser(TeamRepository teamRepository, EventRepository eventRepository, MessageRepository messageRepository, UserRepository userRepository, AssignmentRepository assignmentRepository, ToDoRepository toDoRepository, TagRepository tagRepository) {
+    CommandLineRunner initUser(TeamRepository teamRepository, EventRepository eventRepository, MessageRepository messageRepository, UserRepository userRepository, AssignmentRepository assignmentRepository, ToDoRepository toDoRepository, TagRepository tagRepository, NotificationRepository notificationRepository) {
         return args -> {
 
             Assignment assignment1 = new Assignment("Title1", "Desc1", "Course1", new Date());
@@ -54,9 +55,9 @@ public class PlanITApplication {
             User user2 = new User("Jane", "password", "jane@somemail.com");
             User user3 = new User("Justin", "password", "justin@somemail.com");
 
-            Event event1 = new Event("Event 1", "Description 1", "Location1", "Private", "10/05/2023", "4:30", "5:30");
-            Event event2 = new Event("Event 2", "Description 2", "Location2", "Private", "10/06/2023", "5:30", "7:30");
-            Event event3 = new Event("Event 3", "Description 3", "Location3", "Private", "09/05/2023", "3:00", "11:00");
+            Event event1 = new Event("Event 1", "Description 1", "Location1", "Private", new Date(), new Date(), 1);
+            Event event2 = new Event("Event 2", "Description 2", "Location2", "Private", new Date(), new Date(), 2);
+            Event event3 = new Event("Event 3", "Description 3", "Location3", "Private", new Date(), new Date(), 1);
 
             Message message1 = new Message("Message 1", new Date(), new Date());
             Message message2 = new Message("Message 2", new Date(), new Date());
@@ -65,6 +66,10 @@ public class PlanITApplication {
             Team team1 = new Team("Group 1", "Description 1");
             Team team2 = new Team("Group 2", "Description 2");
             Team team3 = new Team("Group 3", "Description 3");
+
+            Notification notification1 = new Notification("Notification 1", "Description 1");
+            Notification notification2 = new Notification("Notification 2", "Description 2");
+            Notification notification3 = new Notification("Notification 3", "Description 3");
 
             assignmentRepository.save(assignment1);
             assignmentRepository.save(assignment2);
@@ -78,13 +83,13 @@ public class PlanITApplication {
             tagRepository.save(tag2);
             tagRepository.save(tag3);
 
-            eventRepository.save(event1);
-            eventRepository.save(event2);
-            eventRepository.save(event3);
-
             userRepository.save(user1);
             userRepository.save(user2);
             userRepository.save(user3);
+
+            eventRepository.save(event1);
+            eventRepository.save(event2);
+            eventRepository.save(event3);
 
             messageRepository.save(message1);
             messageRepository.save(message2);
@@ -94,6 +99,9 @@ public class PlanITApplication {
             teamRepository.save(team2);
             teamRepository.save(team3);
 
+            notificationRepository.save(notification1);
+            notificationRepository.save(notification2);
+            notificationRepository.save(notification3);
         };
     }
 }

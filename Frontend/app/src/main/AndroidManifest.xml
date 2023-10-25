@@ -16,13 +16,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".EditGroup"
+            android:name="homepage.HomePage"
             android:exported="false" />
         <activity
-            android:name=".AddGroup"
+            android:name="calendar.CalendarMonthlyPage"
             android:exported="false" />
         <activity
-            android:name=".ProfilePage"
+            android:name="groups.EditGroup"
+            android:exported="false" />
+        <activity
+            android:name="groups.AddGroup"
+            android:exported="false" />
+        <activity
+            android:name="profile.ProfilePage"
             android:exported="false" />
         <activity
             android:name=".Index"
@@ -34,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EventsListViewer"
+            android:name="events.EventsListViewer"
             android:exported="false" />
         <activity
             android:name=".NavBar"
@@ -46,19 +52,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CreateAccountPage"
+            android:name="profile.CreateAccountPage"
             android:exported="true" />
         <activity
-            android:name=".CreateEventPage"
+            android:name="events.CreateEventPage"
             android:exported="true" />
         <activity
-            android:name=".LoginFormPage"
+            android:name="profile.LoginFormPage"
             android:exported="true" />
         <activity
-            android:name=".MemberViewer"
+            android:name="groups.MemberViewer"
             android:exported="true" />
         <activity
-            android:name=".EditEventPage"
+            android:name="events.EditEventPage"
             android:exported="true" />
     </application>
 

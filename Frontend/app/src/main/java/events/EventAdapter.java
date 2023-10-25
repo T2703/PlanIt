@@ -1,6 +1,6 @@
 // Author Tristan Nono
 
-package com.example.myapplication;
+package events;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,23 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
+import com.example.myapplication.R;
+import api.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.List;
 
 /*
@@ -163,9 +158,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
                             intent.putExtra("type", jsonObject.getString("type"));
                             intent.putExtra("name", jsonObject.getString("name"));
-                            intent.putExtra("date", jsonObject.getString("date"));
-                            intent.putExtra("startTime", jsonObject.getString("startTime"));
-                            intent.putExtra("endTime", jsonObject.getString("endTime"));
+                            intent.putExtra("startDate", jsonObject.getString("startDate"));
+                            intent.putExtra("endDate", jsonObject.getString("endDate"));
                             intent.putExtra("location", jsonObject.getString("location"));
                             intent.putExtra("description", jsonObject.getString("description"));
                             intent.putExtra("id", jsonObject.getString("id"));
@@ -222,8 +216,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
          */
         EventViewHolder(View item_view) {
             super(item_view);
-            event_name = item_view.findViewById(R.id.event_title);
-            event_description = item_view.findViewById(R.id.event_description);
+            event_name = item_view.findViewById(R.id.event_time_month);
+            event_description = item_view.findViewById(R.id.event_title);
             edit_button = item_view.findViewById(R.id.edit_button);
             delete_button = item_view.findViewById(R.id.delete_button);
         }

@@ -3,11 +3,17 @@ package planIT.Events;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 
 import planIT.Users.User;
 
@@ -37,24 +43,27 @@ public class Event {
     // Type for each Event
     private String type;
 
-    // Date for each Event
-    private String date;
-
     // Start time for each Event
-    private String startTime;
+    private Date startDate;
 
     // End time for each Event
-    private String endTime;
+    private Date endDate;
+
+    private int manager;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_event", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
 
     // Event constructor (with parameters)
-    public Event(String name, String description, String location, String type, String date, String startTime, String endTime) {
+    public Event(String name, String description, String location, String type, Date startDate, Date endDate, int manager) {
         this.name = name;
         this.description = description;
         this.location = location;
         this.type = type;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.manager = manager;
     }
 
     // Event constructor (without parameters)
@@ -64,17 +73,11 @@ public class Event {
 
     public int getId() { return id; }
 
-    public void setId(int id){
-        this.id = id;
-    }
+    public void setId(int id){ this.id = id; }
 
-    public String getName(){
-        return name;
-    }
+    public String getName(){ return name; }
 
-    public void setName(String name){
-        this.name = name;
-    }
+    public void setName(String name){ this.name = name; }
 
     public String getDescription() { return description; }
 
@@ -88,16 +91,20 @@ public class Event {
 
     public void setType(String type) { this.type = type; }
 
-    public String getDate() { return date; }
+    public Date getStartDate() { return startDate; }
 
-    public void setDate(String date) { this.date = date; }
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
 
-    public String getStartTime() { return startTime; }
+    public Date getEndDate() { return endDate; }
 
-    public void setStartTime(String startTime) { this.startTime = startTime; }
+    public void setEndDate(Date endDate) { this.endDate = endDate; }
 
-    public String getEndTime() { return endTime; }
+    public int getManager() { return manager; }
 
-    public void setEndTime(String endTime) { this.endTime = endTime; }
+    public void setManager(int manager) { this.manager = manager; }
+
+    public Set<User> getUsers() {
+        return users;
+    }
 
 }

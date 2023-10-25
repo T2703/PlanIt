@@ -2,6 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="selected_tint">#FF5733</color>
+    <color name="selected_tint">#DA5A5A</color>
     <color name="deselected_tint">#808080</color>
 </resources>
