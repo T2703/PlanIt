@@ -34,6 +34,8 @@ import events.Event;
 import groups.MemberViewer;
 import com.example.myapplication.NavBar;
 import com.example.myapplication.NavBarView;
+
+import homepage.HomePage;
 import profile.ProfilePage;
 import com.example.myapplication.R;
 import java.util.Calendar;
@@ -184,14 +186,13 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         /*Intent intent = new Intent(this, CalendarMonthlyPage.class);
         startActivity(intent);*/
         //Log.d("Date", date_getter);
-        Log.d("TAG", formattedDate);
     }
 
     @Override
     public void onHomeButtonClick() {
-        /*Intent intent = new Intent(CalendarMonthlyPage.this, MemberViewer.class);
+        Intent intent = new Intent(CalendarMonthlyPage.this, HomePage.class);
         ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
-        startActivity(intent, options.toBundle());*/
+        startActivity(intent, options.toBundle());
     }
 
     @Override

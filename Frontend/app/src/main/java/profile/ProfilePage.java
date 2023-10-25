@@ -21,6 +21,7 @@ import com.example.myapplication.R;
 
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
+import homepage.HomePage;
 
 /*
 The account/profile page. This is where the user can change/edit
@@ -157,9 +158,9 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
 
     @Override
     public void onHomeButtonClick() {
-        /*Intent intent = new Intent(ProfilePage.this, CalendarMonthlyPage.class);
+        Intent intent = new Intent(ProfilePage.this, HomePage.class);
         options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);
-        startActivity(intent, options.toBundle());*/
+        startActivity(intent, options.toBundle());
     }
 
     @Override
