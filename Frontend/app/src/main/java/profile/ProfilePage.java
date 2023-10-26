@@ -30,11 +30,6 @@ And delete their account.
  */
 public class ProfilePage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
     /*
-    The back button.
-     */
-    private Button back_button;
-
-    /*
     The button for changing the pfp.
      */
     private Button change_pfp_button;
@@ -75,7 +70,6 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         setContentView(R.layout.activity_profile_page);
 
         // Initialize
-        back_button = findViewById(R.id.gobackbutton);
         change_pfp_button = findViewById(R.id.changeImageButton);
         profile_image_view = findViewById(R.id.profileImageView);
         save_changes_button = findViewById(R.id.save_changes_button);
@@ -90,15 +84,6 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         // Apply the circular mask
         profile_image_view.setBackgroundResource(R.drawable.circular_background);
 
-        // Set a click listener for the back button
-        back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // This will handle the button click.
-                Intent intent = new Intent(ProfilePage.this, NavBar.class);
-                startActivity(intent); // Start MainActivity2 need this other wise im just calling an object lol
-            }
-        });
 
         // Set a click listener for the change pfp button
         change_pfp_button.setOnClickListener(new View.OnClickListener() {
