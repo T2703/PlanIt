@@ -66,11 +66,6 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     private static String date_getter;
 
     /*
-    I don't wanna do this man. :(
-     */
-    private Button back_button;
-
-    /*
     It's our navbar.
      */
     private NavBarView navbar_view;
@@ -113,7 +108,6 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         // Initialize
         calendar_display = findViewById(R.id.calendar_view);
         date_view = findViewById(R.id.date_change);
-        back_button = findViewById(R.id.button_back);
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
         event_list = new ArrayList<>();
@@ -125,17 +119,6 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         recycler_view.setAdapter(adapter);
 
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
-
-
-        // :(
-        back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CalendarMonthlyPage.this, NavBar.class);
-                startActivity(intent);
-
-            }
-        });
 
 
         // Set the on date change listener (so when the user clicks on the date, it does something).

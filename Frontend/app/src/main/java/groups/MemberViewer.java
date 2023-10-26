@@ -43,8 +43,6 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
      */
     private ImageButton create_group_button;
 
-    private ImageButton back_button;
-
     /*
     Recycler view to display the list of items.
      */
@@ -87,7 +85,6 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
 
         // Initialize
         create_group_button = findViewById(R.id.create_button_add);
-        back_button = findViewById(R.id.back_button);
         recycler_view = findViewById(R.id.recycler_view);
         member_list = new ArrayList<>();
         adapter = new MemberAdapter(member_list, this);
@@ -111,16 +108,6 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
             public void onClick(View view) {
                 Log.d("MemberViewer", "Number of members: " + member_list.size());
                 Intent intent = new Intent(MemberViewer.this, AddGroup.class);
-                startActivity(intent);
-            }
-        });
-
-        back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // For testing purposes only
-                Intent intent = new Intent(MemberViewer.this, NavBar.class);
                 startActivity(intent);
             }
         });
