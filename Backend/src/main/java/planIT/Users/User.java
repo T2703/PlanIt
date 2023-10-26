@@ -88,6 +88,10 @@ public class User {
         return events;
     }
 
+    public Set<Chat> getChats() {
+        return chats;
+    }
+
     // Methods for User-Notifications
     public List<Notification> getNotifications() {
         return notifications;
