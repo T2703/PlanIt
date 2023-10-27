@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import planIT.Chats.Chat;
 import planIT.Events.Event;
 import planIT.Notifications.Notification;
 
@@ -41,6 +42,9 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private Set<Event> events = new HashSet<>();
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Chat> chats = new HashSet<>();
 
     @OneToMany
     private List<Notification> notifications;
@@ -82,6 +86,10 @@ public class User {
 
     public Set<Event> getEvents() {
         return events;
+    }
+
+    public Set<Chat> getChats() {
+        return chats;
     }
 
     // Methods for User-Notifications
