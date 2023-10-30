@@ -26,6 +26,10 @@
     <string name="edit">Edit</string>
     <string name="edit_event">Edit Event</string>
     <string name="Save">Save</string>
+    <string name="user_avatar">user avatar</string>
+    <string name="green_dot">green_dot</string>
+    <string name="online_indicator">Online Indicator</string>
+    <string name="home">Home</string>
     <string-array name="event_types">
         <item>Private</item>
         <item>Public</item>

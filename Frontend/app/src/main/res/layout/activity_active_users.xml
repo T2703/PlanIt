@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onlineUsers"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp"
+    tools:showIn="@layout/activity_homepage">
+
+    <ImageView
+        android:id="@+id/userAvatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/icons8_avatar_48" />
+
+    <ImageView
+        android:id="@+id/onlineIndicator"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/icons8_green_dot_48"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

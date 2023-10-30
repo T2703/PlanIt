@@ -42,7 +42,6 @@ import com.example.myapplication.R;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /*
 The calendar page, basically the monthly view to be more precise,
