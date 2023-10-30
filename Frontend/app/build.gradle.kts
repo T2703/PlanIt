@@ -33,6 +33,7 @@ android {
 
 dependencies {
 
+    implementation ("org.java-websocket:Java-WebSocket:1.5.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")

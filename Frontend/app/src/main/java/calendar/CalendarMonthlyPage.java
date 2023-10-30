@@ -36,6 +36,7 @@ import com.example.myapplication.NavBar;
 import com.example.myapplication.NavBarView;
 
 import homepage.HomePage;
+import profile.LoginFormPage;
 import profile.ProfilePage;
 import com.example.myapplication.R;
 import java.util.Calendar;
@@ -97,6 +98,8 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
 
     private String formattedDate;
 
+    private Button buttonThing;
+
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
 
     @SuppressLint("ResourceType")
@@ -109,6 +112,7 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         calendar_display = findViewById(R.id.calendar_view);
         date_view = findViewById(R.id.date_change);
         navbar_view = findViewById(R.id.navbar);
+        buttonThing = findViewById(R.id.button);
         navbar_view.setOnButtonClickListener(this);
         event_list = new ArrayList<>();
         adapter = new EventCalendarMonthlyAdapter(this, event_list);
@@ -119,6 +123,14 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         recycler_view.setAdapter(adapter);
 
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
+
+        buttonThing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CalendarMonthlyPage.this, CalendarWeeklyPage.class);
+                startActivity(intent);
+            }
+        });
 
 
         // Set the on date change listener (so when the user clicks on the date, it does something).
