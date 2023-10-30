@@ -3,7 +3,6 @@
 package profile;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;

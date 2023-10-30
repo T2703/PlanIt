@@ -11,9 +11,12 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -31,11 +34,13 @@ import java.util.ArrayList;
 import api.VolleySingleton;
 import events.CreateEventPage;
 import events.Event;
+import groups.GroupInfo;
 import groups.MemberViewer;
 import com.example.myapplication.NavBar;
 import com.example.myapplication.NavBarView;
 
 import homepage.HomePage;
+import messages.MessageView;
 import profile.LoginFormPage;
 import profile.ProfilePage;
 import com.example.myapplication.R;
@@ -96,9 +101,12 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     */
     private EventCalendarMonthlyAdapter adapter;
 
-    private String formattedDate;
+    /*
+    The button that brings up the popup menu displaying the views of the calendars.
+    */
+    private ImageButton menu_button;
 
-    private Button buttonThing;
+    private String formattedDate;
 
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
 
@@ -112,25 +120,16 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         calendar_display = findViewById(R.id.calendar_view);
         date_view = findViewById(R.id.date_change);
         navbar_view = findViewById(R.id.navbar);
-        buttonThing = findViewById(R.id.button);
         navbar_view.setOnButtonClickListener(this);
         event_list = new ArrayList<>();
         adapter = new EventCalendarMonthlyAdapter(this, event_list);
         layout_manager = new LinearLayoutManager(this);
-
+        menu_button = findViewById(R.id.menu_calendar_button);
         recycler_view = findViewById(R.id.recycler_view);
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
 
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
-
-        buttonThing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CalendarMonthlyPage.this, CalendarWeeklyPage.class);
-                startActivity(intent);
-            }
-        });
 
 
         // Set the on date change listener (so when the user clicks on the date, it does something).
@@ -155,6 +154,30 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                     }
                 }
         );
+
+        menu_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup_menu = new PopupMenu(CalendarMonthlyPage.this, view);
+                popup_menu.getMenuInflater().inflate(R.menu.options_menu_calendar, popup_menu.getMenu());
+                popup_menu.show();
+
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.weekly_view) {
+                            Intent intent = new Intent(CalendarMonthlyPage.this, CalendarWeeklyPage.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
+                        return true;
+                    }
+                });
+
+                popup_menu.show();
+            }
+        });
 
         // Get the current date just so it has the current date right away.
         Calendar currentDate = Calendar.getInstance();

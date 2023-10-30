@@ -16,6 +16,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
+        <ImageButton
+            android:id="@+id/menu_calendar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:translationX="360dp"
+            app:srcCompat="@drawable/baseline_menu_24" />
+
     <!-- Sunday -->
 
     <!-- Monday -->
