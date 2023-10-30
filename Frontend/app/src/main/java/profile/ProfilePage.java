@@ -3,7 +3,6 @@
 package profile;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +17,8 @@ import groups.MemberViewer;
 import com.example.myapplication.NavBar;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
+
+import java.io.File;
 
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
@@ -117,7 +118,7 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
 
     // Handle the result of the image picker
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Checks if the requestCode matches the constant RESULT_LOAD_IMG the resultCode is RESULT_OK, and the data is not null.
@@ -132,7 +133,9 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
                 e.printStackTrace();
             }
         }
+
     }
+
 
     @Override
     public void onCalendarButtonClick() {
@@ -168,4 +171,5 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         Intent intent = new Intent(ProfilePage.this, CreateEventPage.class);
         startActivity(intent);
     }
+
 }

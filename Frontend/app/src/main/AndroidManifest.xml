@@ -32,6 +32,9 @@
             android:name="calendar.CalendarMonthlyPage"
             android:exported="false" />
         <activity
+            android:name="calendar.CalendarWeeklyPage"
+            android:exported="false" />
+        <activity
             android:name="groups.EditGroup"
             android:exported="false" />
         <activity

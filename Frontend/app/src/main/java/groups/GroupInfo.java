@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.VolleySingleton;
+import messages.MessageView;
 
 /*
 This is where the group info is shown like their profile picture and the just
@@ -124,8 +125,8 @@ public class GroupInfo extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.to_chat_option) {
-                            Log.d("Name", getting_group_name);
-                            Log.d("DESC", getting_group_desc);
+                            Intent intent = new Intent(GroupInfo.this, MessageView.class);
+                            startActivity(intent);
                         }
                         else if (menuItem.getItemId() == R.id.edit_option) {
                             Intent editIntent = new Intent(GroupInfo.this, EditGroup.class);
