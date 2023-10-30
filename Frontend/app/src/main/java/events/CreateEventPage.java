@@ -37,6 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import homepage.HomePage;
+
 public class CreateEventPage extends AppCompatActivity {
     private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/events";
     // Form fields
@@ -71,9 +73,7 @@ public class CreateEventPage extends AppCompatActivity {
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Create an intent to navigate to home page
-                Intent intent = new Intent(CreateEventPage.this, NavBar.class);
-                startActivity(intent);
+                finish();
             }
         });
 
