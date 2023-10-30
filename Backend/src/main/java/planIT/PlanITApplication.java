@@ -38,17 +38,15 @@ public class PlanITApplication {
     @Bean
     CommandLineRunner initUser(TeamRepository teamRepository, EventRepository eventRepository, MessageRepository messageRepository, UserRepository userRepository, AssignmentRepository assignmentRepository, ToDoRepository toDoRepository, TagRepository tagRepository, NotificationRepository notificationRepository) {
         return args -> {
-            //Assignment(String title, String description, String course, Date dueDate)
+
             Assignment assignment1 = new Assignment("Title1", "Desc1", "Course1", new Date());
             Assignment assignment2 = new Assignment("Title2", "Desc2", "Course2", new Date());
             Assignment assignment3 = new Assignment("Title3", "Desc3", "Course3", new Date());
-
-            //ToDo(String name, String description, Date startTime, Date dueDate)
+            
             ToDo toDo1 = new ToDo("name1", "desc1", new Date(), new Date());
             ToDo toDo2 = new ToDo("name2", "desc2", new Date(), new Date());
             ToDo toDo3 = new ToDo("name3", "desc3", new Date(), new Date());
 
-            //Tag(String name, String description)
             Tag tag1 = new Tag("name1", "desc1");
             Tag tag2 = new Tag("name2", "desc2");
             Tag tag3 = new Tag("name3", "desc3");

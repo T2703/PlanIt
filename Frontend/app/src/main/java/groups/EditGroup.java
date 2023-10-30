@@ -55,6 +55,16 @@ public class EditGroup extends AppCompatActivity {
     private String group_id;
 
     /*
+    Gets the group name.
+    */
+    private String getting_group_name;
+
+    /*
+    Gets the group description.
+     */
+    private String getting_group_desc;
+
+    /*
     The URL for making the calls.
     */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
@@ -71,18 +81,22 @@ public class EditGroup extends AppCompatActivity {
         back_button = findViewById(R.id.back_button);
         edit_group_button.setEnabled(false); // Set the initial state to disabled
 
+        getting_group_name = getIntent().getStringExtra("group_name");
+        getting_group_desc = getIntent().getStringExtra("group_description");
+
         // How we retrieve the group id.
         Intent intent = getIntent();
         if (intent != null) {
-            String name = intent.getStringExtra("name");
-            String description = intent.getStringExtra("description");
+            getting_group_name = intent.getStringExtra("group_name");
+            getting_group_desc = intent.getStringExtra("group_description");
             group_id = intent.getStringExtra("group_id"); // Use getStringExtra for String values
 
             TextView group_name_view = findViewById(R.id.group_name);
             TextView group_description_view = findViewById(R.id.group_description);
 
-            group_name_view.setText(name);
-            group_description_view.setText(description);
+
+            group_name_view.setText(getting_group_name);
+            group_description_view.setText(getting_group_desc);
         }
 
         // Sets the on click listener for the creating group button. So, we can
@@ -92,15 +106,16 @@ public class EditGroup extends AppCompatActivity {
             public void onClick(View v) {
 
                 updateGroup();
-                Intent intent = new Intent(EditGroup.this, MemberViewer.class);
-                startActivity(intent);
             }
         });
 
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditGroup.this, MemberViewer.class);
+                Intent intent = new Intent(EditGroup.this, GroupInfo.class);
+                intent.putExtra("group_id", group_id);
+                intent.putExtra("group_name", getting_group_name);
+                intent.putExtra("group_description", getting_group_desc);
                 startActivity(intent);
             }
         });
@@ -190,6 +205,12 @@ public class EditGroup extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Server response", response.toString());
+
+                        Intent data = new Intent(EditGroup.this, GroupInfo.class);
+                        data.putExtra("group_name", input_group_value);
+                        data.putExtra("group_description", input_group_description_value);
+
+                        startActivity(data);
                     }
                 },
                 new Response.ErrorListener() {
@@ -205,45 +226,5 @@ public class EditGroup extends AppCompatActivity {
         // Add the request to the RequestQueue
         Volley.newRequestQueue(this).add(jsonObjectReq);
     }
-
-    /*
-    Fetches the group id.
-     */
-    /*private void fetchGroupId(String groupName) {
-        // Create a request to fetch the group_id based on the group's name
-        String fetchUrl = TEAMS_URL + groupName; // Adjust the URL accordingly
-
-        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
-                Request.Method.GET,
-                fetchUrl,
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Parse the response to get the group_id
-                            int fetchedGroupId = response.getInt("group_id");
-
-                            // Now you have the correct group_id
-                            group_id = fetchedGroupId;
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Server error", "Error: " + error.getMessage());
-                    }
-                }
-
-        );
-
-        // Add the request to the RequestQueue
-        Volley.newRequestQueue(this).add(jsonObjectReq);
-    }*/
-
 
 }

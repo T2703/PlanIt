@@ -1,13 +1,14 @@
 package planIT.Messages;
 
+import planIT.Notifications.Notification;
+import planIT.Chats.Chat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 
 /**
  *
@@ -22,6 +23,9 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne
+    private Chat chat;
 
     // Body for each Message
     private String body;

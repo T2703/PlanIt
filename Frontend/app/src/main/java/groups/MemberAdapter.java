@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +36,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     The list of the events.
      */
     private List<Member> member_list;
+
+
 
     /*
     The context variable.
@@ -80,12 +84,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
                 }
 
-                Intent intent = new Intent(view.getContext(), EditGroup.class);
 
-                // This should pass the data into the next page
+                Intent intent = new Intent(view.getContext(), GroupInfo.class);
+
+                //This should pass the data into the next page.
                 intent.putExtra("group_id", member.getGroupId());
-                intent.putExtra("name", member.getGroupName());
-                intent.putExtra("description", member.getDescription());
+                intent.putExtra("group_name", member.getGroupName());
+                intent.putExtra("group_description", member.getDescription());
 
                 view.getContext().startActivity(intent);
 
@@ -149,6 +154,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
                             // Notify the adapter that the item has been removed
                             notifyItemRemoved(finalPositionToDelete);
+
+                            Toast.makeText(context.getApplicationContext(), "Group Deleted", Toast.LENGTH_SHORT).show();
                         }
                     },
                     new Response.ErrorListener() {
@@ -156,6 +163,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                         public void onErrorResponse(VolleyError error) {
                             // Handle any errors that occur during the request
                             Log.e("A server error has occurred", error.toString());
+                            Toast.makeText(context.getApplicationContext(), "Something went wrong. Please try again", Toast.LENGTH_SHORT).show();
                         }
                     }
             );

@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.NavBar;
 import com.example.myapplication.R;
 import api.VolleySingleton;
+import calendar.CalendarMonthlyPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class EventsListViewer extends AppCompatActivity  {
             @Override
             public void onClick(View view) {
                 // Create an intent to navigate to go back to another page.
-                Intent intent = new Intent(EventsListViewer.this, NavBar.class);
+                Intent intent = new Intent(EventsListViewer.this, CalendarMonthlyPage.class);
                 startActivity(intent);
             }
         });
