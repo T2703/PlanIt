@@ -8,16 +8,20 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name="calendar.CalendarWeeklyPage"
-            android:exported="false" />
+            android:name="com.example.myapplication.SplashScreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="groups.GroupInfo"
             android:exported="false" />
@@ -71,9 +75,6 @@
             android:exported="true" />
         <activity
             android:name="events.EditEventPage"
-            android:exported="true" />
-        <activity
-            android:name="messages.MessageView"
             android:exported="true" />
     </application>
 
