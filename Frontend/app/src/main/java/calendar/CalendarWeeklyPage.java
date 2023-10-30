@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,6 +112,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     */
     private static String date_getter;
 
+    /*
+    The button that brings up the popup menu displaying the views of the calendars.
+    */
+    private ImageButton menu_button;
+
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
 
     @Override
@@ -126,6 +134,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         satDate = findViewById(R.id.satDate);
         currentMonth = findViewById(R.id.month_text_view);
         currentYear = findViewById(R.id.year_text_view);
+        menu_button = findViewById(R.id.menu_calendar_button);
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
@@ -199,13 +208,29 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         date_getter = getCurrentDateForDay(Calendar.SUNDAY);
 
 
-        /*button2.setOnClickListener(new View.OnClickListener() {
+        menu_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
-                updateCalendarView();
+            public void onClick(View view) {
+                PopupMenu popup_menu = new PopupMenu(CalendarWeeklyPage.this, view);
+                popup_menu.getMenuInflater().inflate(R.menu.options_menu_calendar, popup_menu.getMenu());
+                popup_menu.show();
+
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.monthly_view) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, CalendarMonthlyPage.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
+                        return true;
+                    }
+                });
+
+                popup_menu.show();
             }
-        });*/
+        });
 
         sunDate.setOnClickListener(new View.OnClickListener() {
             @Override

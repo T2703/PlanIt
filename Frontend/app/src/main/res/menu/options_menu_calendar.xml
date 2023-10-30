@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/monthly_view"
+        android:title="Monthly"
+        />
+    <item
+        android:id="@+id/weekly_view"
+        android:title="Weekly"
+        />
+    <item
+        android:id="@+id/daily_view"
+        android:title="Daily"
+        />
+</menu>
