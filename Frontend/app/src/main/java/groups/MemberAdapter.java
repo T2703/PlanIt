@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -23,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 
+import java.util.Collections;
 import java.util.List;
 
 import api.VolleySingleton;
@@ -31,7 +34,7 @@ import api.VolleySingleton;
 This is responsible for implementing/inflating the item layout.
 Also, treats the functionally of said individual list.
  */
-public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> {
+public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> implements ItemTouchHelperAdapter {
     /*
     The list of the events.
      */
@@ -56,6 +59,20 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     public MemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_item, parent, false);
         return new MemberViewHolder(view);
+    }
+
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        // Reorder your list items when an item is dragged and dropped
+        Collections.swap(member_list, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        // If needed.
     }
 
     @Override
@@ -199,6 +216,11 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         Button delete_button;
 
         /*
+        Drag handle man.
+         */
+        ImageButton drag_handle;
+
+        /*
         This holds all the variables in place for the events.
          */
         MemberViewHolder(View item_view) {
@@ -207,6 +229,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
             group_name = item_view.findViewById(R.id.group_name);
             description = item_view.findViewById(R.id.description);
             delete_button = item_view.findViewById(R.id.delete_group_button);
+            drag_handle = item_view.findViewById(R.id.drag_handle);
         }
     }
 }

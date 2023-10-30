@@ -3,6 +3,7 @@
 package groups;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -91,6 +92,9 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         layout_manger = new LinearLayoutManager(this);
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recycler_view);
 
         recycler_view.setLayoutManager(layout_manger);
         recycler_view.setAdapter(adapter);
@@ -141,7 +145,7 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
                                 String description = jsonObject.getString("description");
                                 String id = jsonObject.getString("id");
 
-                                member_list.add(new Member(name, description, id));
+                                member_list.add(0, new Member(name, description, id));
                                 Log.d("List", id);
                             } catch (JSONException e) {
                                 e.printStackTrace();
