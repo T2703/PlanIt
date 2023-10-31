@@ -7,7 +7,7 @@
     <string name="time">Time</string>
     <string name="location">Location</string>
     <string name="description">Description</string>
-    <string name="create">Create</string>
+    <string name="create">CREATE</string>
     <string name="enter_the_event_time">Enter the event time</string>
     <string name="create_account_link">Create an account</string>
     <string name="login">Log In</string>
@@ -31,6 +31,7 @@
     <string name="online_indicator">Online Indicator</string>
     <string name="home">Home</string>
     <string-array name="event_types">
+        <item>Select an event type</item>
         <item>Private</item>
         <item>Public</item>
         <item>Group</item>
