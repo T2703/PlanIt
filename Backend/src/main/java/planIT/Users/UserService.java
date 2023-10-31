@@ -54,4 +54,8 @@ public class UserService {
         userRepository.deleteById(id);
         return success;
     }
+
+    public User authenticate(String username, String password) {
+        return userRepository.findByUsernameAndPassword(username, password);
+    }
 }
