@@ -48,6 +48,16 @@ public class UserController {
         return userService.updateUser(id, user);
     }
 
+    // POST method - logs a user in the application.
+    @PostMapping(path = "/login")
+    public User login(@RequestBody User user) {
+        User authenticated = userService.authenticate(user.getUsername(), user.getPassword());
+        if (authenticated != null) {
+            return authenticated;
+        }
+        return null;
+    }
+
     // DELETE method - deletes a user from the database.
     @DeleteMapping(path = "/users/{id}")
     public String deleteUser(@PathVariable int id) {
