@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
  *
  * @author Melani Hodge
@@ -23,6 +26,9 @@ public class UserController {
     // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
     @Autowired
     private UserService userService;
+
+    private String success = "{\"message\":\"success\"}";
+    private String failure = "{\"message\":\"failure\"}";
 
     // GET method - retreives all users from the database.
     @GetMapping(path = "/users")
@@ -50,12 +56,29 @@ public class UserController {
 
     // POST method - logs a user in the application.
     @PostMapping(path = "/login")
-    public User login(@RequestBody User user) {
+    public User login(@RequestBody User user, HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        session.setAttribute("id", user.getId());
+        session.setAttribute("username", user.getUsername());
+        session.setMaxInactiveInterval(600);
+
         User authenticated = userService.authenticate(user.getUsername(), user.getPassword());
         if (authenticated != null) {
             return authenticated;
         }
         return null;
+    }
+
+    @PostMapping(path = "/logout")
+    public String logout(HttpSession session) {
+        System.out.println(session);
+        if (session != null) {
+            System.out.println("SESSION>>>>" + session.getAttribute("id"));
+            session.invalidate();
+            return success;
+        } else {
+            return failure;
+        }
     }
 
     // DELETE method - deletes a user from the database.
