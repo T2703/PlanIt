@@ -80,7 +80,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         Member member = member_list.get(position);
         //holder.username.setText(member.getUsername());
         holder.group_name.setText(member.getGroupName());
-        holder.description.setText(member.getDescription());
+        //holder.description.setText(member.getDescription());
 
         // Makes the list function as button (plus null checker).
         // Set a click listener for the entire item view (in a nutshell each item acts like button)
@@ -225,9 +225,9 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
          */
         MemberViewHolder(View item_view) {
             super(item_view);
-            username = item_view.findViewById(R.id.username);
+            //username = item_view.findViewById(R.id.username);
             group_name = item_view.findViewById(R.id.group_name);
-            description = item_view.findViewById(R.id.description);
+            //description = item_view.findViewById(R.id.description);
             delete_button = item_view.findViewById(R.id.delete_group_button);
             drag_handle = item_view.findViewById(R.id.drag_handle);
         }
