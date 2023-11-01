@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 
@@ -46,6 +47,11 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
     private Button delete_account_button;
 
     /*
+    Settings button for going into the settings page.
+     */
+    private ImageButton settings_button;
+
+    /*
     The image view for pulling up the profile pics.
      */
     private ImageView profile_image_view;
@@ -75,6 +81,7 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         profile_image_view = findViewById(R.id.profileImageView);
         save_changes_button = findViewById(R.id.save_changes_button);
         delete_account_button = findViewById(R.id.delete_account_button);
+        settings_button = findViewById(R.id.gear5);
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
 
@@ -112,6 +119,15 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             public void onClick(View view) {
                 // This will handle the button click.
                 Log.d("TAG", "Delete");
+            }
+        });
+
+        settings_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfilePage.this, Settings.class);
+                ActivityOptions options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);
+                startActivity(intent, options.toBundle());
             }
         });
     }
