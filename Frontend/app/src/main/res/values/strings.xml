@@ -30,6 +30,7 @@
     <string name="green_dot">green_dot</string>
     <string name="online_indicator">Online Indicator</string>
     <string name="home">Home</string>
+    <string name="notifications">Notifications</string>
     <string-array name="event_types">
         <item>Select an event type</item>
         <item>Private</item>
