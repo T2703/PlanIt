@@ -22,6 +22,8 @@ import com.example.myapplication.R;
 import api.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -187,6 +189,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public int getItemCount() {
         return event_list.size();
+    }
+
+    /*
+    Filter the event list.
+     */
+    public void filterEventList(ArrayList<Event> filterList) {
+        event_list = filterList;
+        notifyDataSetChanged();
     }
 
     /*
