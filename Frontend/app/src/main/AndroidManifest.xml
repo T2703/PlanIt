@@ -79,6 +79,9 @@
         <activity
             android:name="events.EditEventPage"
             android:exported="true" />
+        <activity
+            android:name="notifications.NotificationPage"
+            android:exported="true" />
     </application>
 
 </manifest>
