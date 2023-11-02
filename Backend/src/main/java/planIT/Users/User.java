@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import planIT.Chats.Chat;
 import planIT.Events.Event;
 import planIT.Notifications.Notification;
+import planIT.Teams.Team;
 
 /**
  *
@@ -45,6 +46,9 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private Set<Chat> chats = new HashSet<>();
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Team> teams = new HashSet<>();
 
     @OneToMany
     private List<Notification> notifications;
@@ -90,6 +94,10 @@ public class User {
 
     public Set<Chat> getChats() {
         return chats;
+    }
+
+    public Set<Team> getTeams(){
+        return teams;
     }
 
     // Methods for User-Notifications
