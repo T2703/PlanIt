@@ -1,13 +1,10 @@
 package planIT.Teams;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import planIT.Users.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.*;
+
+import javax.persistence.*;
 
 /**
  *
@@ -22,6 +19,10 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_team", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
 
     // Name for each Team
     private String name;
@@ -57,5 +58,9 @@ public class Team {
     public String getDescription() { return description; }
 
     public void setDescription(String description) { this.description = description; }
+
+    public Set<User> getUsers() {
+        return users;
+    }
 
 }
