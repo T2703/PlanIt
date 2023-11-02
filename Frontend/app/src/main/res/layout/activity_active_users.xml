@@ -5,14 +5,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp"
     tools:showIn="@layout/activity_homepage">
 
     <ImageView
         android:id="@+id/userAvatar"
         android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:src="@drawable/icons8_avatar_48" />
+        android:layout_height="72dp" />
 
     <ImageView
         android:id="@+id/onlineIndicator"
