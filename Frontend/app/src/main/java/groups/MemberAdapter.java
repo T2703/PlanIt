@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -23,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 
+import java.util.Collections;
 import java.util.List;
 
 import api.VolleySingleton;
@@ -31,7 +34,7 @@ import api.VolleySingleton;
 This is responsible for implementing/inflating the item layout.
 Also, treats the functionally of said individual list.
  */
-public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> {
+public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> implements ItemTouchHelperAdapter {
     /*
     The list of the events.
      */
@@ -58,12 +61,26 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         return new MemberViewHolder(view);
     }
 
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        // Reorder your list items when an item is dragged and dropped
+        Collections.swap(member_list, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        // If needed.
+    }
+
     @Override
     public void onBindViewHolder(@NonNull MemberViewHolder holder, int position) {
         Member member = member_list.get(position);
         //holder.username.setText(member.getUsername());
         holder.group_name.setText(member.getGroupName());
-        holder.description.setText(member.getDescription());
+        //holder.description.setText(member.getDescription());
 
         // Makes the list function as button (plus null checker).
         // Set a click listener for the entire item view (in a nutshell each item acts like button)
@@ -199,14 +216,20 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         Button delete_button;
 
         /*
+        Drag handle man.
+         */
+        ImageButton drag_handle;
+
+        /*
         This holds all the variables in place for the events.
          */
         MemberViewHolder(View item_view) {
             super(item_view);
-            username = item_view.findViewById(R.id.username);
+            //username = item_view.findViewById(R.id.username);
             group_name = item_view.findViewById(R.id.group_name);
-            description = item_view.findViewById(R.id.description);
+            //description = item_view.findViewById(R.id.description);
             delete_button = item_view.findViewById(R.id.delete_group_button);
+            drag_handle = item_view.findViewById(R.id.drag_handle);
         }
     }
 }
