@@ -205,6 +205,7 @@
             android:layout_width="152dp"
             android:layout_height="wrap_content"
             android:text="month"
+            android:textSize="25dp"
             android:translationX="120dp"
             android:translationY="0dp" />
 
@@ -215,6 +216,25 @@
         android:text="year"
         android:translationX="1000dp"
         android:translationY="-120dp" />
+
+        <TextView
+            android:id="@+id/prevWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Previous Week" />
+
+        <TextView
+            android:id="@+id/nextWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next Week"
+            android:translationX="270dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/event_item_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:translationY="140dp" />
 
     </com.example.myapplication.NavBarView>
 

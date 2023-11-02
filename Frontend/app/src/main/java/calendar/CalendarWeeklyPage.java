@@ -42,8 +42,11 @@ import java.util.Locale;
 import api.VolleySingleton;
 import events.CreateEventPage;
 import events.Event;
+import events.EventsListViewer;
 import groups.MemberViewer;
 import homepage.HomePage;
+import profile.CreateAccountPage;
+import profile.LoginFormPage;
 import profile.ProfilePage;
 
 /*
@@ -56,6 +59,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     The week range of the week.
      */
     private LinearLayout weekLayout;
+
+    /*
+    The buttons for going to the next or previous week.
+     */
+    private TextView weekButtonNext, weekButtonPrev;
 
     /*
     The dates of the day mon-sun.
@@ -132,20 +140,21 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         thuDate = findViewById(R.id.thuDate);
         friDate = findViewById(R.id.friDate);
         satDate = findViewById(R.id.satDate);
+        weekButtonNext = findViewById(R.id.nextWeek);
+        weekButtonPrev = findViewById(R.id.prevWeek);
         currentMonth = findViewById(R.id.month_text_view);
         currentYear = findViewById(R.id.year_text_view);
         menu_button = findViewById(R.id.menu_calendar_button);
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
-        gestureDetector = new GestureDetector(this, new MyGestureListener());
         event_list = new ArrayList<>();
         adapter = new EventCalendarMonthlyAdapter(this, event_list);
         layout_manager = new LinearLayoutManager(this);
 
-        //recycler_view = findViewById(R.id.recyclerView);
-        //recycler_view.setLayoutManager(layout_manager);
-        //recycler_view.setAdapter(adapter);
+        recycler_view = findViewById(R.id.event_item_list_view);
+        recycler_view.setLayoutManager(layout_manager);
+        recycler_view.setAdapter(adapter);
 
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
 
@@ -205,7 +214,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         currentMonth.setText(monthYear);
         currentYear.setText(yearSdf.format(calendar.getTime()));
 
-        date_getter = getCurrentDateForDay(Calendar.SUNDAY);
+        date_getter = getCurrentDateForDay(Calendar.DAY_OF_MONTH - 1);
 
 
         menu_button.setOnClickListener(new View.OnClickListener() {
@@ -224,6 +233,16 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                             startActivity(intent, options.toBundle());
                         }
 
+                        else if (menuItem.getItemId() == R.id.all_events) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, EventsListViewer.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
+                        else if (menuItem.getItemId() == R.id.daily_view) {
+                            Log.d("THING", date_getter);
+                        }
+
                         return true;
                     }
                 });
@@ -232,25 +251,52 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
             }
         });
 
+        weekButtonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
+                Calendar date = (Calendar) currentWeek.clone();
+                // This pretty much updates the date_getter.
+                date_getter = getDateForDayOfWeek(Calendar.DAY_OF_MONTH, currentWeek);
+                updateCalendarView();
+                getEventsRequest();
+            }
+        });
+
+        weekButtonPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
+                Calendar date = (Calendar) currentWeek.clone();
+                date_getter = getDateForDayOfWeek(Calendar.DAY_OF_MONTH - 1, currentWeek);
+                updateCalendarView();
+                getEventsRequest();
+            }
+        });
+
         sunDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                date_getter = getCurrentDateForDay(1); // Assuming 1 is for Sunday
+                date_getter = getDateForDayOfWeek(Calendar.SUNDAY, currentWeek);
                 getEventsRequest();
-                Log.d("Day", date_getter);
+                Log.d("Sunday", date_getter);
             }
         });
 
         monDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Day", "Mon");
+                date_getter = getDateForDayOfWeek(Calendar.MONDAY, currentWeek);
+                getEventsRequest();
+                Log.d("Monday", date_getter);
             }
         });
 
         tueDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                date_getter = getDateForDayOfWeek(Calendar.TUESDAY, currentWeek);
+                getEventsRequest();
                 Log.d("Day", "Tue");
             }
         });
@@ -258,40 +304,44 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         wedDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Day", "Wed");
+                date_getter = getDateForDayOfWeek(Calendar.WEDNESDAY, currentWeek);
+                getEventsRequest();
+                Log.d("Wednesday", date_getter);
             }
         });
 
         thuDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Day", "Thu");
+                date_getter = getDateForDayOfWeek(Calendar.THURSDAY, currentWeek);
+                getEventsRequest();
+                Log.d("Thursday", date_getter);
             }
         });
 
         friDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Day", "Fri");
+                date_getter = getDateForDayOfWeek(Calendar.FRIDAY, currentWeek);
+                getEventsRequest();
+                Log.d("Friday", date_getter);
             }
         });
 
         satDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Day", "Sat");
+                date_getter = getDateForDayOfWeek(Calendar.SATURDAY, currentWeek);
+                getEventsRequest();
+                Log.d("Saturday", date_getter);
             }
         });
 
+        getEventsRequest();
         updateCalendarView();
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // Pass the touch event to the GestureDetector
-        return gestureDetector.onTouchEvent(event);
-    }
 
     /*
     Updates the calendar view.
@@ -354,29 +404,6 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         // Navigate to Create Events page
         Intent intent = new Intent(CalendarWeeklyPage.this, CreateEventPage.class);
         startActivity(intent);
-    }
-
-    /*
-    Swiping.
-     */
-    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            // Implement your logic for swipe here
-            if (e1.getX() < e2.getX()) {
-                // Right swipe
-                currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
-                updateCalendarView();
-                Toast.makeText(CalendarWeeklyPage.this, "Right Swipe", Toast.LENGTH_SHORT).show();
-            } else {
-                // Left swipe
-                currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
-                updateCalendarView();
-                Toast.makeText(CalendarWeeklyPage.this, "Left Swipe", Toast.LENGTH_SHORT).show();
-
-            }
-            return true;
-        }
     }
 
     /*
@@ -453,6 +480,21 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
+
+    /*
+    Method to get the date for the day of the week.
+     */
+    private String getDateForDayOfWeek(int dayOfWeek, Calendar baseDate) {
+        Calendar date = (Calendar) baseDate.clone();
+
+        while (date.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            date.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return dateFormat.format(date.getTime());
+    }
+
 }
 
 

@@ -11,4 +11,8 @@
         android:id="@+id/daily_view"
         android:title="Daily"
         />
+    <item
+        android:id="@+id/all_events"
+        android:title="Events"
+        />
 </menu>

@@ -3,6 +3,7 @@ package events;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.example.myapplication.NavBar;
 import com.example.myapplication.R;
 import api.VolleySingleton;
 import calendar.CalendarMonthlyPage;
+import calendar.CalendarWeeklyPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +85,8 @@ public class EventsListViewer extends AppCompatActivity  {
             public void onClick(View view) {
                 // Create an intent to navigate to go back to another page.
                 Intent intent = new Intent(EventsListViewer.this, CalendarMonthlyPage.class);
-                startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeCustomAnimation(EventsListViewer.this, R.anim.empty_anim, R.anim.empty_anim);
+                startActivity(intent, options.toBundle());
             }
         });
     }
