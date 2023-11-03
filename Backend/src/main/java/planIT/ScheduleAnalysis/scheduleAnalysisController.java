@@ -16,6 +16,10 @@ public class scheduleAnalysisController {
 
     @GetMapping(path = "/scheduleAnalysis/{userId}")
     public String test(@PathVariable int userId) {
-        return scheduleAnalysis.measureWeeklyActivity(userRepository.findById(userId));
+
+        //UserRepository userRepository;
+        User user =userRepository.findById(userId);
+
+        return scheduleAnalysis.measureWeeklyActivity(user);
     }
 }

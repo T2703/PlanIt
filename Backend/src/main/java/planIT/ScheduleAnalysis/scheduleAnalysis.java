@@ -13,6 +13,10 @@ import java.util.List;
 public class scheduleAnalysis {
 
     static public String measureWeeklyActivity(User user){
+        if(user == null){
+            return "Invalid user";
+        }
+
         List<Event> userSchedule = new ArrayList<>(user.getEvents());
         int[] dayNum = new int[7];
         int[] dayLength = new int[7];

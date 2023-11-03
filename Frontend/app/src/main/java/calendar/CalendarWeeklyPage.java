@@ -346,6 +346,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
             public void onClick(View view) {
                Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
                startActivity(intent);
+                //Log.d("TEST", "TEST2");
             }
         });
 

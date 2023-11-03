@@ -104,7 +104,7 @@ public class PlanITApplication {
             Event eventA =new Event("A", "B", "C", "D", da1, da2, 1);
 
 
-            user1.setId(23);
+            //user1.setId(23);
             user1.getEvents().add(event4);
             user1.getEvents().add(event5);
             user1.getEvents().add(event6);
@@ -116,6 +116,7 @@ public class PlanITApplication {
             System.out.println(d11.toString());
             System.out.println(user1.getId() +" \n"+ user2.getId() +" \n"+temp);
 
+            userRepository.save(user1);
             eventRepository.save(event4);
             eventRepository.save(event5);
             eventRepository.save(event6);
