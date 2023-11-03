@@ -20,7 +20,7 @@ import planIT.Teams.*;
 import planIT.Messages.*;
 import planIT.Notifications.*;
 
-import planIT.scheduleAnalysis;
+import planIT.ScheduleAnalysis.scheduleAnalysis;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -95,16 +95,34 @@ public class PlanITApplication {
             Date da1 = new Date(2023, 10, 6, 18,0);
             Date da2 = new Date(2023, 10, 6, 21,0);
 
-            user1.getEvents().add(new Event("A","B","C","D", d11, d12, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d112, d122, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d21, d22, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d31, d32, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d41, d42, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d51, d52, 1));
-            user1.getEvents().add(new Event("A", "B", "C", "D", da1, da2, 1));
+            Event event4 =new Event("A","B","C","D", d11, d12, 1);
+            Event event5 =new Event("A","B","C","D", d112, d122, 1);
+            Event event6 =new Event("A","B","C","D", d21, d22, 1);
+            Event event7 =new Event("A","B","C","D", d31, d32, 1);
+            Event event8 =new Event("A","B","C","D", d41, d42, 1);
+            Event event9 =new Event("A","B","C","D", d51, d52, 1);
+            Event eventA =new Event("A", "B", "C", "D", da1, da2, 1);
+
+
+            user1.setId(23);
+            user1.getEvents().add(event4);
+            user1.getEvents().add(event5);
+            user1.getEvents().add(event6);
+            user1.getEvents().add(event7);
+            user1.getEvents().add(event8);
+            user1.getEvents().add(event9);
+            user1.getEvents().add(eventA);
             String temp =scheduleAnalysis.measureWeeklyActivity(user1);
             System.out.println(d11.toString());
-            System.out.println(temp);
+            System.out.println(user1.getId() +" \n"+ user2.getId() +" \n"+temp);
+
+            eventRepository.save(event4);
+            eventRepository.save(event5);
+            eventRepository.save(event6);
+            eventRepository.save(event7);
+            eventRepository.save(event8);
+            eventRepository.save(event9);
+            eventRepository.save(eventA);
 
             ///////////////
 

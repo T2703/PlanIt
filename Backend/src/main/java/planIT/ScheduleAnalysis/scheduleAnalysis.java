@@ -1,11 +1,14 @@
-package planIT;
+package planIT.ScheduleAnalysis;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import planIT.Events.*;
 import planIT.Users.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 
 public class scheduleAnalysis {
 
@@ -50,7 +53,6 @@ public class scheduleAnalysis {
 
         return week;
     }
-
 
 
     static private int eventLength(Event event){
