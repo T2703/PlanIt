@@ -32,18 +32,18 @@ public class scheduleAnalysis {
                         +"Monday:    " +dayNum[1] +" Events, Total of " +dayLength[1]/60 +" Hours " +dayLength[1]%60 +"Minutes\n"
                         +toLine(dayLength[1])
                         +"Tuesday:   " +dayNum[2] +" Events, Total of " +dayLength[2]/60 +" Hours " +dayLength[2]%60 +"Minutes\n"
-                        +toLine(dayLength[0])
+                        +toLine(dayLength[2])
                         +"Wednesday: " +dayNum[3] +" Events, Total of " +dayLength[3]/60 +" Hours " +dayLength[3]%60 +"Minutes\n"
-                        +toLine(dayLength[0])
+                        +toLine(dayLength[3])
                         +"Thursday:  " +dayNum[4] +" Events, Total of " +dayLength[4]/60 +" Hours " +dayLength[4]%60 +"Minutes\n"
-                        +toLine(dayLength[0])
+                        +toLine(dayLength[4])
                         +"Friday:    " +dayNum[5] +" Events, Total of " +dayLength[5]/60 +" Hours " +dayLength[5]%60 +"Minutes\n"
-                        +toLine(dayLength[0])
+                        +toLine(dayLength[5])
                         +"Saturday:  " +dayNum[6] +" Events, Total of " +dayLength[6]/60 +" Hours " +dayLength[6]%60 +"Minutes\n"
-                        +toLine(dayLength[0])
+                        +toLine(dayLength[6])
                 ;
 
-        return "";
+        return week;
     }
 
 
