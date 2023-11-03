@@ -25,10 +25,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import api.VolleySingleton;
+import events.Event;
 
 /*
 This is responsible for implementing/inflating the item layout.
@@ -140,6 +142,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     @Override
     public int getItemCount() {
         return member_list.size();
+    }
+
+    /*
+    Filter the event list.
+    */
+    public void filterEventList(ArrayList<Member> filterList) {
+        member_list = filterList;
+        notifyDataSetChanged();
     }
 
     /*
