@@ -74,27 +74,27 @@ public class PlanITApplication {
             Notification notification3 = new Notification("Notification 3", "Description 3");
 
             ///////////////
-            Date d11 = new Date(2023, 11, 20, 9,0);
-            Date d12 = new Date(2023, 11, 20, 5,0);
-
-            Date d21 = new Date(2023, 11, 20, 9,0);
-            Date d22 = new Date(2023, 11, 20, 5,0);
-
-            Date d31 = new Date(2023, 11, 20, 9,0);
-            Date d32 = new Date(2023, 11, 20, 5,0);
-
-            Date d41 = new Date(2023, 11, 20, 9,0);
-            Date d42 = new Date(2023, 11, 20, 5,0);
-
-            Date d51 = new Date(2023, 11, 20, 9,0);
-            Date d52 = new Date(2023, 11, 20, 5,0);
-            user1.getEvents().add(new Event("A","B","C","D", d11, d12, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d21, d22, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d31, d32, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d41, d42, 1));
-            user1.getEvents().add(new Event("A","B","C","D", d51, d52, 1));
-            String temp =scheduleAnalysis.measureWeeklyActivity(user1);
-            System.out.println(temp);
+//            Date d11 = new Date(2023, 11, 20, 9,0);
+//            Date d12 = new Date(2023, 11, 20, 5,0);
+//
+//            Date d21 = new Date(2023, 11, 20, 9,0);
+//            Date d22 = new Date(2023, 11, 20, 5,0);
+//
+//            Date d31 = new Date(2023, 11, 20, 9,0);
+//            Date d32 = new Date(2023, 11, 20, 5,0);
+//
+//            Date d41 = new Date(2023, 11, 20, 9,0);
+//            Date d42 = new Date(2023, 11, 20, 5,0);
+//
+//            Date d51 = new Date(2023, 11, 20, 9,0);
+//            Date d52 = new Date(2023, 11, 20, 5,0);
+//            user1.getEvents().add(new Event("A","B","C","D", d11, d12, 1));
+//            user1.getEvents().add(new Event("A","B","C","D", d21, d22, 1));
+//            user1.getEvents().add(new Event("A","B","C","D", d31, d32, 1));
+//            user1.getEvents().add(new Event("A","B","C","D", d41, d42, 1));
+//            user1.getEvents().add(new Event("A","B","C","D", d51, d52, 1));
+            //String temp =scheduleAnalysis.measureWeeklyActivity(user1);
+            //System.out.println(temp);
 
             ///////////////
 
