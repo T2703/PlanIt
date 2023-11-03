@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
@@ -48,6 +49,17 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+
+        // Open menu
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+
+
+
+
 
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
