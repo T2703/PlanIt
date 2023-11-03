@@ -11,8 +11,8 @@ public class scheduleAnalysis {
 
     static public String measureWeeklyActivity(User user){
         List<Event> userSchedule = new ArrayList<>(user.getEvents());
-        int[] dayNum = {0};
-        int[] dayLength = {0};
+        int[] dayNum = new int[7];
+        int[] dayLength = new int[7];
 
         if(userSchedule.isEmpty()){
             return "Schedule is Empty";
@@ -25,21 +25,26 @@ public class scheduleAnalysis {
             dayNum[event.getStartDate().getDay()] += 1;
             dayLength[event.getStartDate().getDay()] += eventLength(event);
         }
+        for(int i=0; i<7; ++i){
+            if(dayNum[i] !=0) {
+                dayLength[i] = dayLength[i] / dayNum[i];
+            }
+        }
 
         String week =
-                "Sunday:    " +dayNum[0] +" Events, Total of " +dayLength[0]/60 +" Hours " +dayLength[0]%60 +"Minutes\n"
+                "Sunday:    " +dayNum[0] +" Events, Average of " +dayLength[0]/60 +" Hours " +dayLength[0]%60 +" Minutes\n"
                         +toLine(dayLength[0])
-                        +"Monday:    " +dayNum[1] +" Events, Total of " +dayLength[1]/60 +" Hours " +dayLength[1]%60 +"Minutes\n"
+                        +"Monday:    " +dayNum[1] +" Events, Average of " +dayLength[1]/60 +" Hours " +dayLength[1]%60 +" Minutes\n"
                         +toLine(dayLength[1])
-                        +"Tuesday:   " +dayNum[2] +" Events, Total of " +dayLength[2]/60 +" Hours " +dayLength[2]%60 +"Minutes\n"
+                        +"Tuesday:   " +dayNum[2] +" Events, Average of " +dayLength[2]/60 +" Hours " +dayLength[2]%60 +" Minutes\n"
                         +toLine(dayLength[2])
-                        +"Wednesday: " +dayNum[3] +" Events, Total of " +dayLength[3]/60 +" Hours " +dayLength[3]%60 +"Minutes\n"
+                        +"Wednesday: " +dayNum[3] +" Events, Average of " +dayLength[3]/60 +" Hours " +dayLength[3]%60 +" Minutes\n"
                         +toLine(dayLength[3])
-                        +"Thursday:  " +dayNum[4] +" Events, Total of " +dayLength[4]/60 +" Hours " +dayLength[4]%60 +"Minutes\n"
+                        +"Thursday:  " +dayNum[4] +" Events, Average of " +dayLength[4]/60 +" Hours " +dayLength[4]%60 +" Minutes\n"
                         +toLine(dayLength[4])
-                        +"Friday:    " +dayNum[5] +" Events, Total of " +dayLength[5]/60 +" Hours " +dayLength[5]%60 +"Minutes\n"
+                        +"Friday:    " +dayNum[5] +" Events, Average of " +dayLength[5]/60 +" Hours " +dayLength[5]%60 +" Minutes\n"
                         +toLine(dayLength[5])
-                        +"Saturday:  " +dayNum[6] +" Events, Total of " +dayLength[6]/60 +" Hours " +dayLength[6]%60 +"Minutes\n"
+                        +"Saturday:  " +dayNum[6] +" Events, Average of " +dayLength[6]/60 +" Hours " +dayLength[6]%60 +" Minutes\n"
                         +toLine(dayLength[6])
                 ;
 
@@ -58,11 +63,11 @@ public class scheduleAnalysis {
     }
 
     static private String toLine(int length){
-        String line ="";
+        String line ="[";
         for(int i=0; i<length/10; ++i){
             line += "-";
         }
-        line += "\n";
+        line += "]\n";
         return line;
     }
 
