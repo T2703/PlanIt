@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="176dp"
+    android:layout_height="150dp"
     android:layout_gravity="bottom"
     android:background="@color/selected_tint"
     android:orientation="vertical"
@@ -22,5 +22,5 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="josh1015@gmail.com"
+        android:text="josh1015@gmail.com" />
 </LinearLayout>
