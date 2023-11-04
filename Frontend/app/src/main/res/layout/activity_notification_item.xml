@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/sentBy"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/icons8_avatar_48" />
+
+    <!-- Notification details -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/notificationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Demo 3"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/notificationDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You have been invited"
+            android:textSize="14sp" />
+
+        <!-- Accept and Deny buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/acceptButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:onClick="onAcceptClick"
+                android:text="Accept" />
+
+            <Button
+                android:id="@+id/denyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/cardview_dark_background"
+                android:onClick="onDenyClick"
+                android:text="Deny" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import api.VolleySingleton;
 import events.CreateEventPage;
 import events.Event;
+import events.EventsListViewer;
 import groups.GroupInfo;
 import groups.MemberViewer;
 import com.example.myapplication.NavBar;
@@ -166,6 +167,12 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.weekly_view) {
                             Intent intent = new Intent(CalendarMonthlyPage.this, CalendarWeeklyPage.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
+                        else if (menuItem.getItemId() == R.id.all_events) {
+                            Intent intent = new Intent(CalendarMonthlyPage.this, EventsListViewer.class);
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
                             startActivity(intent, options.toBundle());
                         }
