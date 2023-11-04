@@ -44,9 +44,6 @@ their account info like their name, email, password or pfp.
 And delete their account.
  */
 public class ProfilePage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
-    private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/logout";
-
-
     /*
     The button for changing the pfp.
      */
@@ -78,11 +75,6 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
     private NavBarView navbar_view;
 
     /*
-    The logout button.
-     */
-    private Button logout_button;
-
-    /*
     This is for the transitioning between pages.
      */
     private ActivityOptions options;
@@ -102,7 +94,6 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         profile_image_view = findViewById(R.id.profileImageView);
         save_changes_button = findViewById(R.id.save_changes_button);
         delete_account_button = findViewById(R.id.delete_account_button);
-        logout_button = findViewById(R.id.logout_button);
         settings_button = findViewById(R.id.gear5);
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
@@ -143,18 +134,6 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
                 Log.d("TAG", "Delete");
             }
         });
-
-        // Set a click listener for the logout button
-        logout_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // This will handle the button click.
-                Log.d("TAG", "Logout");
-
-                logout();
-            }
-        });
-
         settings_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,35 +162,6 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             }
         }
 
-    }
-
-    // handle the logout button click
-    private void logout() {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        JSONObject body = new JSONObject();
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                URL_POST_REQUEST,
-                body,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(getApplicationContext(), "User Logout", Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(ProfilePage.this, LoginFormPage.class);
-                        startActivity(intent);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Something went wrong. Please try again", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
-        requestQueue.add(jsonObjectRequest);
     }
 
 

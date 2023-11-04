@@ -12,9 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        >
-
+        app:layout_constraintEnd_toEndOf="parent">
         <ImageButton
             android:id="@+id/gear5"
             android:layout_width="wrap_content"
@@ -23,13 +21,6 @@
             app:srcCompat="@drawable/baseline_settings_suggest_24" />
     </com.example.myapplication.NavBarView>
 
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        android:translationX="10dp"
-        android:translationY="10dp" />
 
     <EditText
         android:id="@+id/editTextName"
