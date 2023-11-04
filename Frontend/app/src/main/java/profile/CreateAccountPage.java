@@ -95,7 +95,7 @@ public class CreateAccountPage extends AppCompatActivity {
 
                 sendPostRequest(username, password, email);
 
-                Intent intent = new Intent(CreateAccountPage.this, HomePage.class);
+                Intent intent = new Intent(CreateAccountPage.this, LoginFormPage.class);
                 startActivity(intent);
             }
         });

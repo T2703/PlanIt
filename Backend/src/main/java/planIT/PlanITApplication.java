@@ -4,6 +4,7 @@ import java.util.Date;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -20,7 +21,7 @@ import planIT.Teams.*;
 import planIT.Messages.*;
 import planIT.Notifications.*;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EnableTransactionManagement
 public class PlanITApplication {
 
@@ -42,7 +43,7 @@ public class PlanITApplication {
             Assignment assignment1 = new Assignment("Title1", "Desc1", "Course1", new Date());
             Assignment assignment2 = new Assignment("Title2", "Desc2", "Course2", new Date());
             Assignment assignment3 = new Assignment("Title3", "Desc3", "Course3", new Date());
-            
+
             ToDo toDo1 = new ToDo("name1", "desc1", new Date(), new Date());
             ToDo toDo2 = new ToDo("name2", "desc2", new Date(), new Date());
             ToDo toDo3 = new ToDo("name3", "desc3", new Date(), new Date());
