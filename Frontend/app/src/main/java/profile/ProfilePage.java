@@ -12,27 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-
-import events.EventsListViewer;
 import groups.MemberViewer;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.myapplication.NavBar;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
@@ -134,6 +117,7 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
                 Log.d("TAG", "Delete");
             }
         });
+
         settings_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
