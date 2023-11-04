@@ -112,11 +112,9 @@ public class PlanITApplication {
             user1.getEvents().add(event8);
             user1.getEvents().add(event9);
             user1.getEvents().add(eventA);
-            String temp =scheduleAnalysis.measureWeeklyActivity(user1);
-            System.out.println(d11.toString());
-            System.out.println(user1.getId() +" \n"+ user2.getId() +" \n"+temp);
 
-            userRepository.save(user1);
+
+
             eventRepository.save(event4);
             eventRepository.save(event5);
             eventRepository.save(event6);
@@ -124,6 +122,16 @@ public class PlanITApplication {
             eventRepository.save(event8);
             eventRepository.save(event9);
             eventRepository.save(eventA);
+            userRepository.save(user1);
+
+
+            String temp =scheduleAnalysis.measureWeeklyActivity(user1);
+            System.out.println(d11.toString());
+//            System.out.println(d21.toString());
+//            System.out.println(d31.toString());
+//            System.out.println(d41.toString());
+//            System.out.println(d51.toString());
+            System.out.println(user1.getId() +" \n"+ user2.getId() +" \n"+temp);
 
             ///////////////
 
@@ -139,7 +147,7 @@ public class PlanITApplication {
             tagRepository.save(tag2);
             tagRepository.save(tag3);
 
-            userRepository.save(user1);
+           // userRepository.save(user1);
             userRepository.save(user2);
             userRepository.save(user3);
 

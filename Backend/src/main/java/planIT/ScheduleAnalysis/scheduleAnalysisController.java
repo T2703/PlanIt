@@ -7,19 +7,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import planIT.Users.*;
+import planIT.Events.*;
 
 @RestController
 public class scheduleAnalysisController {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public scheduleAnalysisController(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
 
     @GetMapping(path = "/scheduleAnalysis/{userId}")
     public String test(@PathVariable int userId) {
 
-        //UserRepository userRepository;
-        User user =userRepository.findById(userId);
+        User user = userRepository.findById(userId);
+        String temp = scheduleAnalysis.measureWeeklyActivity(user);
+        System.out.println(user.getUsername() +" " +user.getEvents().size());
+        System.out.println(temp);
 
-        return scheduleAnalysis.measureWeeklyActivity(user);
+        return temp;
     }
 }
