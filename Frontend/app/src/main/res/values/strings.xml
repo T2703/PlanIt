@@ -31,6 +31,8 @@
     <string name="online_indicator">Online Indicator</string>
     <string name="home">Home</string>
     <string name="notifications">Notifications</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string-array name="event_types">
         <item>Select an event type</item>
         <item>Private</item>
