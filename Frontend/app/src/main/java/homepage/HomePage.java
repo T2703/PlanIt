@@ -1,19 +1,28 @@
 package homepage;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
+import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,11 +30,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
 import groups.MemberViewer;
 import notifications.NotificationPage;
+import profile.LoginFormPage;
 import profile.ProfilePage;
 
 /*
@@ -44,10 +55,46 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
 
     private TextView homePageGreeting;
     private ImageView notificationButton;
+    private ImageButton menuButton;
+
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+
+    private ActionBarDrawerToggle toggle;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navView = findViewById(R.id.navView);
+
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+
+                if (itemId == R.id.menu_logout) {
+                    Intent intent = new Intent(HomePage.this,  LoginFormPage.class);
+                    startActivity(intent);
+                }
+
+                return true;
+            }
+        });
+
+        menuButton = findViewById(R.id.menuButton);
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
 
         navbar_view = findViewById(R.id.navbar);
         navbar_view.setOnButtonClickListener(this);
