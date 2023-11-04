@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findById(int id);
 
-    User findByUsernameAndPassword(String username, String password);
+    User findByUsername(String username);
 
     void deleteById(int id);
 
