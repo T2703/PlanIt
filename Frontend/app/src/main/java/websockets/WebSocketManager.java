@@ -28,6 +28,11 @@ public class WebSocketManager {
      */
     private WebSocketListener web_socket_listener;
 
+    private boolean isConnected = false;
+
+    private String username;
+
+
     /*
     Yeah, this is empty.
      */
@@ -42,6 +47,14 @@ public class WebSocketManager {
             manager_instance = new WebSocketManager();
         }
         return manager_instance;
+    }
+
+    public String getUsername () {
+        return username;
+    }
+
+    public void setUsername (String username) {
+        this.username = username;
     }
 
     /*
@@ -61,12 +74,16 @@ public class WebSocketManager {
     the connection.
      */
     public void connectWebSocket(String server_url) {
-        try {
-            URI serverUri = URI.create(server_url);
-            web_socket_client = new MyWebSocketClient(serverUri);
-            web_socket_client.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!isConnected) {
+            try {
+                URI serverUri = URI.create(server_url);
+                web_socket_client = new MyWebSocketClient(serverUri);
+                web_socket_client.connect();
+                isConnected = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                isConnected = false;
+            }
         }
     }
 
@@ -85,6 +102,7 @@ public class WebSocketManager {
     public void disconnectWebSocket() {
         if (web_socket_client != null) {
             web_socket_client.close();
+            isConnected = false;
         }
     }
 

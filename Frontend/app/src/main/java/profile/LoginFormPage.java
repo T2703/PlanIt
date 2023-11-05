@@ -32,8 +32,6 @@ public class LoginFormPage extends AppCompatActivity implements WebSocketListene
 
     private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/login";
 
-    private static final String URL_ACTIVE_WEBSOCKET = "ws://coms-309-024.class.las.iastate.edu:8080/active/";
-
     private WebSocketManager webSocketManager;
 
     private TextView create_account_button;
@@ -76,8 +74,7 @@ public class LoginFormPage extends AppCompatActivity implements WebSocketListene
 
                 sendPostRequest(username, password);
 
-                WebSocketManager.getInstance().connectWebSocket(URL_ACTIVE_WEBSOCKET + username);
-                WebSocketManager.getInstance().setWebSocketListener(LoginFormPage.this);
+                WebSocketManager.getInstance().setUsername(username);
             }
         });
 
