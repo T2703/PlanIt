@@ -52,7 +52,7 @@
         android:background="@null"
         android:scaleX=".5"
         android:scaleY="0.5"
-        android:translationX="50dp"
+        android:translationX="0dp"
         android:translationY="-5dp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"

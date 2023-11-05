@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/checkbox_private"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Private"/>
+
+    <CheckBox
+        android:id="@+id/checkbox_public"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Public"/>
+
+    <CheckBox
+        android:id="@+id/checkbox_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group"/>
+
+</LinearLayout>

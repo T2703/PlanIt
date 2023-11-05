@@ -4,15 +4,21 @@ package events;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import androidx.appcompat.widget.SearchView;
+
+import android.widget.PopupMenu;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
@@ -31,7 +37,9 @@ import calendar.CalendarWeeklyPage;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.json.JSONArray;
@@ -79,6 +87,26 @@ public class EventsListViewer extends AppCompatActivity  {
      */
     private Toolbar toolbar;
 
+    /*
+    The button that brings up the popup menu displaying the types for the groups.
+    */
+    private ImageButton menu_button;
+
+    /*
+    Shared preferences.
+     */
+    private SharedPreferences sharedPreferences;
+
+    /*
+    Text type for retrieving said data.
+     */
+    private Set<String> eventTextTypes = new HashSet<>();
+
+    /*
+    How to search up the events.
+     */
+    private SearchView search_view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,13 +119,15 @@ public class EventsListViewer extends AppCompatActivity  {
         adapter = new EventAdapter(this, event_list);
         layout_manager = new LinearLayoutManager(this);
         toolbar = findViewById(R.id.toolbar);
+        menu_button = findViewById(R.id.filter_menu);
+        sharedPreferences = getSharedPreferences("FilterPreferences", MODE_PRIVATE);
         setSupportActionBar(toolbar);
 
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
 
-        //event_list.add(new Event("3", "Tank Party", "description", "start_date", "end_date"));
-        //event_list.add(new Event("3", "myhouse.wad", "description", "start_date", "end_date"));
+        event_list.add(new Event("3", "Tank Party", "description", "Public", "start_date", "end_date"));
+        event_list.add(new Event("3", "myhouse.wad", "description", "Private", "start_date", "end_date"));
 
         // Request events from server
         getEventsRequest();
@@ -112,6 +142,83 @@ public class EventsListViewer extends AppCompatActivity  {
                 startActivity(intent, options.toBundle());
             }
         });
+
+        menu_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EventsListViewer.this);
+                builder.setTitle("Filter");
+
+                View dialog_view = getLayoutInflater().inflate(R.layout.group_type_filters, null);
+                builder.setView(dialog_view);
+
+                CheckBox checkbox_private = dialog_view.findViewById(R.id.checkbox_private);
+                CheckBox checkbox_public = dialog_view.findViewById(R.id.checkbox_public);
+                CheckBox checkbox_group = dialog_view.findViewById(R.id.checkbox_group);
+
+                boolean privateChecked = sharedPreferences.getBoolean("privateChecked", false);
+                boolean publicChecked = sharedPreferences.getBoolean("publicChecked", false);
+                boolean groupChecked = sharedPreferences.getBoolean("groupChecked", false);
+                checkbox_private.setChecked(privateChecked);
+                checkbox_public.setChecked(publicChecked);
+                checkbox_group.setChecked(groupChecked);
+
+                AlertDialog dialog = builder.create();
+
+                checkbox_private.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        sharedPreferences.edit().putBoolean("privateChecked", isChecked).apply();
+                        if (isChecked) {
+                            Log.d("PRIVATE", "PTR Checked");
+                            eventTextTypes.add("Private");
+                        }
+                        else {
+                            Log.d("PRIVATE", "PTR Unchecked");
+                            eventTextTypes.remove("Private");
+                        }
+
+                        filterText(search_view.getQuery().toString(), eventTextTypes);
+                    }
+                });
+
+                checkbox_public.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        sharedPreferences.edit().putBoolean("publicChecked", isChecked).apply();
+                        if (isChecked) {
+                            Log.d("PUBLIC", "PTR Checked");
+                            eventTextTypes.add("Public");
+                        }
+                        else {
+                            Log.d("PUBLIC", "PTR Unchecked");
+                            eventTextTypes.remove("Public");
+                        }
+                        filterText(search_view.getQuery().toString(), eventTextTypes);
+                    }
+                });
+
+                checkbox_group.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                        sharedPreferences.edit().putBoolean("groupChecked", isChecked).apply();
+                        if (isChecked) {
+                            Log.d("GROUP", "PTR Checked");
+                            eventTextTypes.add("Group");
+                        }
+                        else {
+                            Log.d("GROUP", "PTR Unchecked");
+                            eventTextTypes.remove("Group");
+                        }
+
+                        filterText(search_view.getQuery().toString(), eventTextTypes);
+                    }
+                });
+
+                // Show the dialog
+                dialog.show();
+            }
+        });
     }
 
     @Override
@@ -119,7 +226,7 @@ public class EventsListViewer extends AppCompatActivity  {
         // So yeah basically creates the search bar.
         getMenuInflater().inflate(R.menu.event_search_bar, menu);
         MenuItem search_event = menu.findItem(R.id.searchBar);
-        SearchView search_view = (SearchView) search_event.getActionView();
+        search_view = (SearchView) search_event.getActionView();
 
         search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -129,7 +236,7 @@ public class EventsListViewer extends AppCompatActivity  {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterText(newText);
+                filterText(newText, eventTextTypes);
                 return false;
             }
         });
@@ -141,7 +248,7 @@ public class EventsListViewer extends AppCompatActivity  {
     Method that filters the text so the user can find their events without issues.
     Gotta think of the users. :D
      */
-    private void filterText(String text) {
+    private void filterText(String text, Set<String> eventTypes) {
         // List to filter the data.
         ArrayList<Event> filtered_event_list = new ArrayList<Event>();
 
@@ -150,7 +257,15 @@ public class EventsListViewer extends AppCompatActivity  {
         // Iterate we are using this to compare each event.
         // And this is how we shared.
         for (Event event_item : event_list) {
-            if (pattern.matcher(event_item.getName()).find()) {
+            boolean typeMatch = eventTypes.isEmpty();
+            for (String eventType : eventTypes) {
+                if (event_item.getType().equalsIgnoreCase(eventType)) {
+                    typeMatch = true;
+                    break;
+                }
+            }
+
+            if (pattern.matcher(event_item.getName()).find() && typeMatch) {
                 filtered_event_list.add(event_item);
             }
         }
@@ -186,10 +301,11 @@ public class EventsListViewer extends AppCompatActivity  {
                                 String id = jsonObject.getString("id");
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
+                                String eventType = jsonObject.getString("type");
                                 String start_date = jsonObject.getString("startDate");
                                 String end_date = jsonObject.getString("endDate");
 
-                                event_list.add(new Event(id, name, description, start_date, end_date));
+                                event_list.add(new Event(id, name, description, eventType, start_date, end_date));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
