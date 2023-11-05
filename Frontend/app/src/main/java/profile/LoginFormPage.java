@@ -28,7 +28,7 @@ import homepage.HomePage;
 import websockets.WebSocketListener;
 import websockets.WebSocketManager;
 
-public class LoginFormPage extends AppCompatActivity implements WebSocketListener {
+public class LoginFormPage extends AppCompatActivity {
 
     private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/login";
 
@@ -145,22 +145,6 @@ public class LoginFormPage extends AppCompatActivity implements WebSocketListene
 
         requestQueue.add(jsonObjectRequest);
     }
-
-    @Override
-    public void onWebSocketOpen(ServerHandshake data) {
-    }
-
-    @Override
-    public void onWebSocketClose(int code, String reason, boolean remote) {
-    }
-
-    @Override
-    public void onWebSocketMessage(String message) {
-        // TODO send notifications to the user through the web socket.
-    }
-
-    @Override
-    public void onWebSocketError(Exception ex) {}
 
     /*
     This checks for empty values in the edit text variables so in other words,
