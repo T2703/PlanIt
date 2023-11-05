@@ -12,25 +12,41 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 import com.google.android.material.navigation.NavigationView;
 
-import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
@@ -38,17 +54,12 @@ import groups.MemberViewer;
 import notifications.NotificationPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
-import websockets.WebSocketListener;
-import websockets.WebSocketManager;
 
 /*
 This is the homepage the main page of the app where the user can see their events and friends/other users
 that they are in contact with. Basically the main hub.
  */
-public class HomePage extends AppCompatActivity implements NavBarView.OnButtonClickListener, WebSocketListener {
-
-    private static final String URL_ACTIVE_WEBSOCKET = "ws://coms-309-024.class.las.iastate.edu:8080/active/";
-
+public class HomePage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
     private RecyclerView activeUsersRecyclerView;
     private RecyclerView assignmentsRecyclerView;
     private UserAdapter userAdapter;
@@ -78,19 +89,12 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        String username = WebSocketManager.getInstance().getUsername();
-        WebSocketManager.getInstance().connectWebSocket(URL_ACTIVE_WEBSOCKET + username);
-        WebSocketManager.getInstance().setWebSocketListener(HomePage.this);
-        WebSocketManager.getInstance().sendMessage("Update User List");
-
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
 
                 if (itemId == R.id.menu_logout) {
-                    WebSocketManager.getInstance().disconnectWebSocket();
-
                     Intent intent = new Intent(HomePage.this,  LoginFormPage.class);
                     startActivity(intent);
                 }
@@ -128,6 +132,13 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         activeUsersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         activeUsersRecyclerView.setAdapter(userAdapter);
 
+        // Add users to the RecyclerView
+        userList.add(new User(R.drawable.icons8_avatar_48, true));
+        userList.add(new User(R.drawable.icons8_avatar_48, true));
+        userList.add(new User(R.drawable.icons8_avatar_48, true));
+        userList.add(new User(R.drawable.icons8_avatar_48, true));
+        userList.add(new User(R.drawable.icons8_avatar_48, true));
+
         // Update assignments
         assignmentsRecyclerView = findViewById(R.id.assignments_recyclerView);
         assignmentsList = new ArrayList<>();
@@ -136,9 +147,7 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         assignmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         assignmentsRecyclerView.setAdapter(assignmentsAdapter);
 
-        assignmentsList.add(new Assignment("COM S 309", "Demo 3", "Nov 10th"));
-        assignmentsList.add(new Assignment("COM S 321", "Programming Assignment 2", "Nov 30th"));
-        assignmentsList.add(new Assignment("COM S 321", "Programming Assignment 2", "Nov 30th"));
+        getAssignments();
 
         notificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +156,44 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 startActivity(intent);
             }
         });
+
+    }
+
+    private void getAssignments() {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        String URL = "http://coms-309-024.class.las.iastate.edu:8080/assignments";
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject assignment = response.getJSONObject(i);
+
+                        if (assignment.getString("isCompleted").equals("false")) {
+                            Log.d("found", "yes");
+                            String course = assignment.getString("course");
+                            String title = assignment.getString("title");
+                            String dueDate = assignment.getString("dueDate");
+
+                            assignmentsList.add(new Assignment(course, title, dueDate));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                assignmentsAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Assignments could not be loaded", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        requestQueue.add(jsonArrayRequest);
 
     }
 
@@ -212,33 +259,5 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         // Navigate to Create Events page
         Intent intent = new Intent(HomePage.this, CreateEventPage.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onWebSocketOpen(ServerHandshake handshakedata) {
-        Log.d("ON OPEN", handshakedata.toString());
-    }
-
-    @Override
-    public void onWebSocketMessage(String message) {
-        int activeUsers = Integer.parseInt(message);
-
-        runOnUiThread(() -> {
-            userList.clear();
-            for (int i = 0; i < activeUsers; i++) {
-                userList.add(new User(R.drawable.icons8_avatar_48, true));
-            }
-            userAdapter.notifyDataSetChanged();
-        });
-    }
-
-    @Override
-    public void onWebSocketClose(int code, String reason, boolean remote) {
-
-    }
-
-    @Override
-    public void onWebSocketError(Exception ex) {
-
     }
 }
