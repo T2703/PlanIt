@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.VolleyError;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 import com.google.android.material.navigation.NavigationView;
@@ -74,6 +75,17 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navView = findViewById(R.id.navView);
 
+        MenuHeader menuHeader = new MenuHeader(this);
+
+        View headerView = navView.getHeaderView(0);
+        TextView headerUsername = headerView.findViewById(R.id.menuHeaderUsername);
+        TextView headerEmailAddress = headerView.findViewById(R.id.menuHeaderEmailAddress);
+
+        String usernameText = menuHeader.getUsername();
+        menuHeader.getUserEmailAddress(usernameText, headerEmailAddress);
+
+        headerUsername.setText(usernameText);
+
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -82,6 +94,7 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         WebSocketManager.getInstance().connectWebSocket(URL_ACTIVE_WEBSOCKET + username);
         WebSocketManager.getInstance().setWebSocketListener(HomePage.this);
         WebSocketManager.getInstance().sendMessage("Update User List");
+
 
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -172,13 +185,18 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
     }
 
     private void displayGreeting(int hour) {
+        String username = WebSocketManager.getInstance().getUsername();
+        String greeting = "";
+
         if (hour > 0 && hour < 12) {
-            homePageGreeting.setText("Good morning, Joshua");
+            greeting = "Good morning, " + username;
         } else if (hour >= 12 && hour < 18) {
-            homePageGreeting.setText("Good afternon, Joshua");
+            greeting = "Good afternoon, " + username;
         } else {
-            homePageGreeting.setText("Good evening, Joshua");
+            greeting = "Good evening, " + username;
         }
+
+        homePageGreeting.setText(greeting);
     }
 
     @Override
