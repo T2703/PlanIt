@@ -12,14 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import androidx.annotation.Nullable;
-
 import groups.MemberViewer;
-import com.example.myapplication.NavBar;
+
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
-
-import java.io.File;
 
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
