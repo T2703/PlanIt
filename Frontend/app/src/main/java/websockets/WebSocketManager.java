@@ -28,6 +28,11 @@ public class WebSocketManager {
      */
     private WebSocketListener web_socket_listener;
 
+    private boolean isConnected = false;
+
+    private String username;
+
+
     /*
     Yeah, this is empty.
      */
@@ -44,6 +49,14 @@ public class WebSocketManager {
         return manager_instance;
     }
 
+    public String getUsername () {
+        return username;
+    }
+
+    public void setUsername (String username) {
+        this.username = username;
+    }
+
     /*
     This handles the events like the messages and errors.
      */
@@ -51,17 +64,26 @@ public class WebSocketManager {
         this.web_socket_listener = listener;
     }
 
+    public void removeWebSocketListener() {
+        this.web_socket_listener = null;
+    }
+
+
     /*
     Connects a WebSocket connection to the server. So, in a nutshell it just makes
     the connection.
      */
     public void connectWebSocket(String server_url) {
-        try {
-            URI serverUri = URI.create(server_url);
-            web_socket_client = new MyWebSocketClient(serverUri);
-            web_socket_client.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!isConnected) {
+            try {
+                URI serverUri = URI.create(server_url);
+                web_socket_client = new MyWebSocketClient(serverUri);
+                web_socket_client.connect();
+                isConnected = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                isConnected = false;
+            }
         }
     }
 
@@ -80,6 +102,7 @@ public class WebSocketManager {
     public void disconnectWebSocket() {
         if (web_socket_client != null) {
             web_socket_client.close();
+            isConnected = false;
         }
     }
 
