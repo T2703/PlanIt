@@ -20,16 +20,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import events.CreateEventPage;
-import events.EventsListViewer;
 import homepage.HomePage;
+import websockets.WebSocketListener;
+import websockets.WebSocketManager;
 
 public class LoginFormPage extends AppCompatActivity {
 
     private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/login";
+
+    private WebSocketManager webSocketManager;
 
     private TextView create_account_button;
     private Button login_button;
@@ -70,6 +73,8 @@ public class LoginFormPage extends AppCompatActivity {
                 String password = user_password.getText().toString();
 
                 sendPostRequest(username, password);
+
+                WebSocketManager.getInstance().setUsername(username);
             }
         });
 
