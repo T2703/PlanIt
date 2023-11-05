@@ -125,12 +125,13 @@ public class PlanITApplication {
             userRepository.save(user1);
 
 
-            String temp =scheduleAnalysis.measureWeeklyActivity(user1);
+            String temp =scheduleAnalysis.measureWeeklyActivity(userRepository.findById(1));
             System.out.println(d11.toString());
 //            System.out.println(d21.toString());
 //            System.out.println(d31.toString());
 //            System.out.println(d41.toString());
 //            System.out.println(d51.toString());
+            System.out.println(user1.getEvents().size() +" " +userRepository.findById(1).getEvents().size());
             System.out.println(user1.getId() +" \n"+ user2.getId() +" \n"+temp);
 
             ///////////////

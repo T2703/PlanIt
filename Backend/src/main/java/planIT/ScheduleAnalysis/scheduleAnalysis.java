@@ -21,7 +21,6 @@ public class scheduleAnalysis {
         List<Event> userSchedule = new ArrayList<>(user.getEvents());
         int[] dayNum = new int[7];
         int[] dayLength = new int[7];
-        int[] numWeeks = new int[7];
 
         if(userSchedule.isEmpty()){
             return "Schedule is Empty";
@@ -35,30 +34,13 @@ public class scheduleAnalysis {
         }
         //COLLECT DATA
         Calendar cal = Calendar.getInstance();
-        int dayTrack =-1;
+
         for(Event event: userSchedule){
             cal.setTime(event.getStartDate());
-            /*
-            if(event.getStartDate().getDate() != dayTrack) {
-
-                dayTrack = event.getStartDate().getDate();
-            }else{
-                numWeeks[event.getStartDate().getDay() - 1] +=1;
-            }
-             */
             dayNum[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             dayLength[cal.get(Calendar.DAY_OF_WEEK)-1] += eventLength(event);
         }
-        /*
-        for(int i=0; i<7; ++i){
-            if(dayNum[i] !=0) {
-                if(numWeeks[i] !=0) {
-                    dayLength[i] = dayLength[i] / numWeeks[i];
-                }
-                System.out.print(numWeeks[i] +", ");//DEBUG
-            }
-        }
-         */
+
 
         String week =
                 "Sunday:    " +dayNum[0] +" Events, Total of " +dayLength[0]/60 +" Hours " +dayLength[0]%60 +" Minutes\n"
