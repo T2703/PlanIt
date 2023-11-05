@@ -12,6 +12,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -42,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
@@ -57,9 +59,7 @@ This is the homepage the main page of the app where the user can see their event
 that they are in contact with. Basically the main hub.
  */
 public class HomePage extends AppCompatActivity implements NavBarView.OnButtonClickListener, WebSocketListener {
-
     private static final String URL_ACTIVE_WEBSOCKET = "ws://coms-309-024.class.las.iastate.edu:8080/active/";
-
     private RecyclerView activeUsersRecyclerView;
     private RecyclerView assignmentsRecyclerView;
     private UserAdapter userAdapter;
@@ -94,6 +94,7 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         WebSocketManager.getInstance().setWebSocketListener(HomePage.this);
         WebSocketManager.getInstance().sendMessage("Update User List");
 
+
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -102,8 +103,9 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 if (itemId == R.id.menu_logout) {
                     WebSocketManager.getInstance().disconnectWebSocket();
 
-                    Intent intent = new Intent(HomePage.this,  LoginFormPage.class);
+                    Intent intent = new Intent(HomePage.this, LoginFormPage.class);
                     startActivity(intent);
+
                 }
 
                 return true;
@@ -286,6 +288,6 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
 
     @Override
     public void onWebSocketError(Exception ex) {
-
     }
+
 }
