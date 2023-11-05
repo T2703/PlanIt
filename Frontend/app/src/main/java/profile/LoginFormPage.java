@@ -20,16 +20,21 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import events.CreateEventPage;
-import events.EventsListViewer;
 import homepage.HomePage;
+import websockets.WebSocketListener;
+import websockets.WebSocketManager;
 
-public class LoginFormPage extends AppCompatActivity {
+public class LoginFormPage extends AppCompatActivity implements WebSocketListener {
 
     private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/login";
+
+    private static final String URL_ACTIVE_WEBSOCKET = "ws://coms-309-024.class.las.iastate.edu:8080/active/";
+
+    private WebSocketManager webSocketManager;
 
     private TextView create_account_button;
     private Button login_button;
@@ -70,6 +75,9 @@ public class LoginFormPage extends AppCompatActivity {
                 String password = user_password.getText().toString();
 
                 sendPostRequest(username, password);
+
+                WebSocketManager.getInstance().connectWebSocket(URL_ACTIVE_WEBSOCKET + username);
+                WebSocketManager.getInstance().setWebSocketListener(LoginFormPage.this);
             }
         });
 
@@ -140,6 +148,22 @@ public class LoginFormPage extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
+
+    @Override
+    public void onWebSocketOpen(ServerHandshake data) {
+    }
+
+    @Override
+    public void onWebSocketClose(int code, String reason, boolean remote) {
+    }
+
+    @Override
+    public void onWebSocketMessage(String message) {
+        // TODO send notifications to the user through the web socket.
+    }
+
+    @Override
+    public void onWebSocketError(Exception ex) {}
 
     /*
     This checks for empty values in the edit text variables so in other words,

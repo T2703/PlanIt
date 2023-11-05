@@ -51,6 +51,11 @@ public class WebSocketManager {
         this.web_socket_listener = listener;
     }
 
+    public void removeWebSocketListener() {
+        this.web_socket_listener = null;
+    }
+
+
     /*
     Connects a WebSocket connection to the server. So, in a nutshell it just makes
     the connection.

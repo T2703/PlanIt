@@ -38,6 +38,7 @@ import groups.MemberViewer;
 import notifications.NotificationPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
+import websockets.WebSocketManager;
 
 /*
 This is the homepage the main page of the app where the user can see their events and friends/other users
@@ -79,6 +80,9 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 int itemId = item.getItemId();
 
                 if (itemId == R.id.menu_logout) {
+                    WebSocketManager.getInstance().removeWebSocketListener();
+                    WebSocketManager.getInstance().disconnectWebSocket();
+
                     Intent intent = new Intent(HomePage.this,  LoginFormPage.class);
                     startActivity(intent);
                 }

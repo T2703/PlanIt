@@ -3,8 +3,6 @@ package planIT.Users;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,11 +42,11 @@ public class UserController {
 
     // POST method - adds a user to the database.
     @PostMapping(path = "/users")
-    public ResponseEntity createUser(@RequestBody User user) {
+    public String createUser(@RequestBody User user) {
 
         // Check if all the fields are filled out
         if (user.getUsername().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
-            return new ResponseEntity<>("Please complete all fields", HttpStatus.BAD_REQUEST);
+            return "Please complete all fields.";
         }
 
         // Hash the password
@@ -56,14 +54,7 @@ public class UserController {
 
         User hashed_user = new User(user.getUsername(), hashed_password, user.getEmail());
 
-        // Create new user object
-        String result = userService.createUser(hashed_user);
-
-        if (!result.equals(success)) {
-            return new ResponseEntity<>("Failed to Create User", HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>("Successfully Created User", HttpStatus.OK);
+        return userService.createUser(hashed_user);
     }
 
     // PUT method - updates a user in the database.
