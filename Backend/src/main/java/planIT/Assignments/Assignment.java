@@ -21,11 +21,14 @@ public class Assignment {
 
     private Date dueDate;
 
-    public Assignment(String title, String description, String course, Date dueDate) {
+    private boolean isCompleted;
+
+    public Assignment(String title, String description, String course, Date dueDate, boolean isCompleted) {
         this.title = title;
         this.description = description;
         this.course = course;
         this.dueDate = dueDate;
+        this.isCompleted = isCompleted;
     }
 
     public Assignment() {
@@ -51,6 +54,8 @@ public class Assignment {
 
     public Date getDueDate() { return dueDate; }
 
+    public boolean getIsCompleted() { return isCompleted; }
+
     public void setTitle(String title){
         this.title = title;
     }
@@ -64,5 +69,7 @@ public class Assignment {
     }
 
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
+
+    public void setIsCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
 
 }
