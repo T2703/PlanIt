@@ -18,13 +18,29 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -122,12 +138,6 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         userList.add(new User(R.drawable.icons8_avatar_48, true));
         userList.add(new User(R.drawable.icons8_avatar_48, true));
         userList.add(new User(R.drawable.icons8_avatar_48, true));
-        userList.add(new User(R.drawable.icons8_avatar_48, true));
-        userList.add(new User(R.drawable.icons8_avatar_48, true));
-        userList.add(new User(R.drawable.icons8_avatar_48, true));
-        userList.add(new User(R.drawable.icons8_avatar_48, true));
-        userList.add(new User(R.drawable.icons8_avatar_48, true));
-        userList.add(new User(R.drawable.add_user_icon, false));
 
         // Update assignments
         assignmentsRecyclerView = findViewById(R.id.assignments_recyclerView);
@@ -137,9 +147,7 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         assignmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         assignmentsRecyclerView.setAdapter(assignmentsAdapter);
 
-        assignmentsList.add(new Assignment("COM S 309", "Demo 3", "Nov 10th"));
-        assignmentsList.add(new Assignment("COM S 321", "Programming Assignment 2", "Nov 30th"));
-        assignmentsList.add(new Assignment("COM S 321", "Programming Assignment 2", "Nov 30th"));
+        getAssignments();
 
         notificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +156,44 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 startActivity(intent);
             }
         });
+
+    }
+
+    private void getAssignments() {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        String URL = "http://coms-309-024.class.las.iastate.edu:8080/assignments";
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject assignment = response.getJSONObject(i);
+
+                        if (assignment.getString("isCompleted").equals("false")) {
+                            Log.d("found", "yes");
+                            String course = assignment.getString("course");
+                            String title = assignment.getString("title");
+                            String dueDate = assignment.getString("dueDate");
+
+                            assignmentsList.add(new Assignment(course, title, dueDate));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                assignmentsAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Assignments could not be loaded", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        requestQueue.add(jsonArrayRequest);
 
     }
 
