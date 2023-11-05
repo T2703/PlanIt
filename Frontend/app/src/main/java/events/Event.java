@@ -34,14 +34,19 @@ public class Event {
     */
     private String end_date;
 
+    /*
+    Event type
+     */
+    private String type;
 
     /*
     Constructor for the event so how it constructs.
      */
-    public Event(String id, String name, String description, String start_date, String end_date) {
+    public Event(String id, String name, String description, String type, String start_date, String end_date) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.type = type;
         this.start_date = start_date;
         this.end_date = end_date;
     }
@@ -71,6 +76,8 @@ public class Event {
     public String getEndTime() {
         return this.end_date;
     }
+
+    public String getType() { return this.type; }
 
     @NonNull
     @Override

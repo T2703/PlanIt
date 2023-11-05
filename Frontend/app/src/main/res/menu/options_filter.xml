@@ -1,10 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/group_type_"
-        android:title="Edit"
-        />
-    <item
-        android:id="@+id/delete_option"
-        android:title="Delete"
-        />
+        android:id="@+id/filter_option"
+        android:title="Filter">
+        <menu>
+            <group
+                android:id="@+id/filter_group"
+                android:checkableBehavior="all">
+                <item
+                    android:id="@+id/checkbox_private"
+                    android:title="Private"
+                    android:checkable="true"/>
+                <item
+                    android:id="@+id/checkbox_public"
+                    android:title="Public"
+                    android:checkable="true"/>
+                <item
+                    android:id="@+id/checkbox_group"
+                    android:title="Group"
+                    android:checkable="true"/>
+            </group>
+        </menu>
+    </item>
 </menu>

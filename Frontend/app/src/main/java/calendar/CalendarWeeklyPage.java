@@ -454,6 +454,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                                 String id = jsonObject.getString("id");
                                 String name = jsonObject.getString("name");
                                 String description = jsonObject.getString("description");
+                                String eventType = jsonObject.getString("type");
                                 String startDateStr  = jsonObject.getString("startDate");
                                 String endDateStr  = jsonObject.getString("endDate");
 
@@ -468,7 +469,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                                 Log.d("START", startDateStr);
 
                                 if (startDateStr.startsWith(date_getter)) {
-                                    event_list.add(new Event(id, name, description, startTime, endTime));
+                                    event_list.add(new Event(id, name, description, eventType, startTime, endTime));
                                 }
 
                             } catch (JSONException e) {
