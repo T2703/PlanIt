@@ -40,6 +40,12 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    // GET method - retreives a user from the database.
+    @GetMapping(path = "/users/{username}")
+    public User getUserByUsername(@PathVariable String username) {
+        return userService.findUserByUsername(username);
+    }
+
     // POST method - adds a user to the database.
     @PostMapping(path = "/users")
     public String createUser(@RequestBody User user) {
