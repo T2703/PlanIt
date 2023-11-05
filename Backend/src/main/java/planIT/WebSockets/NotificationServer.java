@@ -51,17 +51,11 @@ public class NotificationServer {
     public void onOpen(Session session, @PathParam("username") String username)
             throws IOException {
 
-        logger.info("Entered into Open");
+        logger.info("[onOpen]", username);
 
         // store connecting user information
         sessionUsernameMap.put(session, username);
         usernameSessionMap.put(username, session);
-
-        // broadcast that new user joined
-        String notification = "User:" + username + " has Logged In the App";
-
-        // TODO: active users?
-        broadcast(notification);
     }
 
     @OnMessage
@@ -72,13 +66,21 @@ public class NotificationServer {
         String username = sessionUsernameMap.get(session);
         String[] words = notification.split(" ");
 
+        if (notification.startsWith("@")) {
+            for (String word : words) {
+                if (word.startsWith("@")) {
+                    word.split("@");
+                    sendNotification(word, notification);
+                }
+            }
+        }
+
         // Sending Invite Notifications
         if (notification.startsWith("INVITE")) {
             for (String word : words) {
                 if (word.startsWith("@")) {
                     word.split("@");
                     sendNotification(word, "Here is your notification.");
-                    broadcast(word + ": " + "Here is your notification.");
                 }
             }
         }
@@ -93,7 +95,6 @@ public class NotificationServer {
                 if (word.startsWith("@")) {
                     word.split("@");
                     sendNotification(word, "Here is your message.");
-                    broadcast(word + ": " + "Here is your message.");
                 }
             }
         }
@@ -104,22 +105,19 @@ public class NotificationServer {
 
     @OnClose
     public void onClose(Session session) throws IOException {
-        logger.info("Entered into Close");
+        String username = sessionUsernameMap.get(session);
+
+        logger.info("[onClose]", username);
 
         // remove the user connection information
-        String username = sessionUsernameMap.get(session);
         sessionUsernameMap.remove(session);
         usernameSessionMap.remove(username);
-
-        // broadcase that the user disconnected
-        String notification = username + " disconnected";
-        broadcast(notification);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
         // Do error handling here
-        logger.info("Entered into Error");
+        logger.info("[onError]");
         throwable.printStackTrace();
     }
 
