@@ -38,6 +38,7 @@ import java.util.List;
             assignment.setDescription(request.getDescription());
             assignment.setCourse(request.getCourse());
             assignment.setDueDate(request.getDueDate());
+            assignment.setIsCompleted(request.getIsCompleted());
 
             assignmentRepository.save(assignment);
             return assignmentRepository.findById(id);
