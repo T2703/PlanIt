@@ -34,6 +34,7 @@ import com.example.myapplication.R;
 import api.VolleySingleton;
 import calendar.CalendarMonthlyPage;
 import calendar.CalendarWeeklyPage;
+import websockets.WebSocketManager;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class EventsListViewer extends AppCompatActivity  {
     The search bar this can be used to search things like events.
      */
     private SearchView search_bar;
-    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
+    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     /*
     The event adapter for the event list.
@@ -125,9 +126,6 @@ public class EventsListViewer extends AppCompatActivity  {
 
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
-
-        event_list.add(new Event("3", "Tank Party", "description", "Public", "start_date", "end_date"));
-        event_list.add(new Event("3", "myhouse.wad", "description", "Private", "start_date", "end_date"));
 
         // Request events from server
         getEventsRequest();
@@ -280,9 +278,11 @@ public class EventsListViewer extends AppCompatActivity  {
     }
 
     private void getEventsRequest() {
+        String username = WebSocketManager.getInstance().getUsername();
+        Log.d("GET REQUEST", URL_STRING_REQ + username + "/events");
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                URL_STRING_REQ,
+                URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

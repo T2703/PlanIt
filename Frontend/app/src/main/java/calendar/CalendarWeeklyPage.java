@@ -49,6 +49,7 @@ import homepage.HomePage;
 import profile.CreateAccountPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
+import websockets.WebSocketManager;
 
 /*
 The calendar page but this time it's the weekly page.
@@ -128,7 +129,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
 
     private Button analyzeWeek;
 
-    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
+    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -430,9 +431,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     }
 
     private void getEventsRequest() {
+        String username = WebSocketManager.getInstance().getUsername();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                URL_STRING_REQ,
+                URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
