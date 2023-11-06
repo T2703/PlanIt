@@ -22,10 +22,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.volley.VolleyError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.NavBarView;
@@ -84,6 +84,17 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
 
         drawerLayout = findViewById(R.id.drawerLayout);
         NavigationView navView = findViewById(R.id.navView);
+
+        MenuHeader menuHeader = new MenuHeader(this);
+
+        View headerView = navView.getHeaderView(0);
+        TextView headerUsername = headerView.findViewById(R.id.menuHeaderUsername);
+        TextView headerEmailAddress = headerView.findViewById(R.id.menuHeaderEmailAddress);
+
+        String usernameText = menuHeader.getUsername();
+        menuHeader.getUserEmailAddress(usernameText, headerEmailAddress);
+
+        headerUsername.setText(usernameText);
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -221,13 +232,18 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
     }
 
     private void displayGreeting(int hour) {
+        String username = WebSocketManager.getInstance().getUsername();
+        String greeting = "";
+
         if (hour > 0 && hour < 12) {
-            homePageGreeting.setText("Good morning, Joshua");
+            greeting = "Good morning, " + username;
         } else if (hour >= 12 && hour < 18) {
-            homePageGreeting.setText("Good afternon, Joshua");
+            greeting = "Good afternoon, " + username;
         } else {
-            homePageGreeting.setText("Good evening, Joshua");
+            greeting = "Good evening, " + username;
         }
+
+        homePageGreeting.setText(greeting);
     }
 
     @Override
