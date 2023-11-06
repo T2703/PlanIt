@@ -41,7 +41,7 @@ public class UserController {
     }
 
     // GET method - retreives a user from the database.
-    @GetMapping(path = "/users/{username}")
+    @GetMapping(path = "/username/{username}")
     public User getUserByUsername(@PathVariable String username) {
         return userService.findUserByUsername(username);
     }

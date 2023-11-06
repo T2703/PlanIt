@@ -20,6 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 import api.VolleySingleton;
+import websockets.WebSocketManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,7 +72,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
                         String eventId = clickedEvent.getId();
 
-                        String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+                        String username = WebSocketManager.getInstance().getUsername();
+
+                        String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/users/" + username + "/events/" + eventId;
 
                         makeDeleteRequest(delete_url, eventId);
                     }

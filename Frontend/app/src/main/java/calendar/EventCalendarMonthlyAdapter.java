@@ -26,6 +26,7 @@ import java.util.List;
 import api.VolleySingleton;
 import events.EditEventPage;
 import events.Event;
+import websockets.WebSocketManager;
 
 /*
 This one is for the events but for the calendar monthly page.
@@ -93,7 +94,9 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
 
                                 String eventId = clickedEvent.getId();
 
-                                String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+                                String username = WebSocketManager.getInstance().getUsername();
+
+                                String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/users/" + username + "/events/" + eventId;
 
                                 makeDeleteRequest(delete_url, eventId);
 

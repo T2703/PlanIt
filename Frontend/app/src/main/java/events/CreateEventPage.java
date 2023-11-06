@@ -38,9 +38,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import homepage.HomePage;
+import websockets.WebSocketManager;
 
 public class CreateEventPage extends AppCompatActivity {
-    private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/events";
+    private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/users/";
     // Form fields
     private Spinner event_type;
     private EditText event_name;
@@ -203,10 +204,12 @@ public class CreateEventPage extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        String username = WebSocketManager.getInstance().getUsername();
+
         // Make the request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
-                URL_POST_REQUEST,
+                URL_POST_REQUEST + username + "/events",
                 body,
                 new Response.Listener<JSONObject>() {
                     @Override

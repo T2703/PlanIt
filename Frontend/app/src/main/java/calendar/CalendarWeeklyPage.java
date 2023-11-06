@@ -24,6 +24,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.AnalyzeSchedule;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 
@@ -48,6 +49,7 @@ import homepage.HomePage;
 import profile.CreateAccountPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
+import websockets.WebSocketManager;
 
 /*
 The calendar page but this time it's the weekly page.
@@ -125,7 +127,9 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     */
     private ImageButton menu_button;
 
-    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
+    private Button analyzeWeek;
+
+    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +137,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         setContentView(R.layout.activity_calendar_weekly_page);
 
         // Initialize
+        analyzeWeek = findViewById(R.id.analyzeWeek);
         sunDate = findViewById(R.id.sunDate);
         monDate = findViewById(R.id.monDate);
         tueDate = findViewById(R.id.tueDate);
@@ -337,6 +342,15 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
             }
         });
 
+        analyzeWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
+               startActivity(intent);
+                //Log.d("TEST", "TEST2");
+            }
+        });
+
         getEventsRequest();
         updateCalendarView();
 
@@ -417,9 +431,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     }
 
     private void getEventsRequest() {
+        String username = WebSocketManager.getInstance().getUsername();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                URL_STRING_REQ,
+                URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

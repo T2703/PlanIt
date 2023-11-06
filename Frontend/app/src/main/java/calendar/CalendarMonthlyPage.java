@@ -44,6 +44,8 @@ import homepage.HomePage;
 import messages.MessageView;
 import profile.LoginFormPage;
 import profile.ProfilePage;
+import websockets.WebSocketManager;
+
 import com.example.myapplication.R;
 import java.util.Calendar;
 import java.util.Date;
@@ -108,7 +110,7 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
 
     private String formattedDate;
 
-    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events";
+    private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     @SuppressLint("ResourceType")
     @Override
@@ -241,9 +243,10 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     }
 
     private void getEventsRequest() {
+        String username = WebSocketManager.getInstance().getUsername();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                URL_STRING_REQ,
+                URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
