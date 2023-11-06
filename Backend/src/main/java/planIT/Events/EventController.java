@@ -43,9 +43,20 @@ public class EventController {
     }
 
     // POST method - adds an event to the database.
+    @PostMapping(path = "/users/{username}/events")
+    public String addUserToEvent(@PathVariable String username, @RequestBody Event event) {
+        return eventService.createEventWithUser(username, event);
+    }
+
     @PostMapping(path = "/users/{userId}/events/{eventId}")
     public String addUserToEvent(@PathVariable int userId, @PathVariable int eventId) {
         return eventService.addUserToEvent(userId, eventId);
+    }
+
+    // GET method - adds an event to the database.
+    @GetMapping(path = "/users/{username}/events")
+    public List<Event> addUserToEvent(@PathVariable String username) {
+        return eventService.findEventsByUser(username);
     }
 
     // PUT method - updates an event in the database.
@@ -55,9 +66,9 @@ public class EventController {
     }
 
     // DELETE method - deletes an event from the database.
-    @DeleteMapping(path = "/events/{id}")
-    public String deleteEvent(@PathVariable int id) {
-        return eventService.deleteEvent(id);
+    @DeleteMapping(path = "users/{username}/events/{id}")
+    public String deleteEvent(@PathVariable String username, @PathVariable int id) {
+        return eventService.deleteEvent(username, id);
     }
 }
 
