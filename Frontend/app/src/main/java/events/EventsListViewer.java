@@ -127,9 +127,6 @@ public class EventsListViewer extends AppCompatActivity  {
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
 
-        event_list.add(new Event("3", "Tank Party", "description", "Public", "start_date", "end_date"));
-        event_list.add(new Event("3", "myhouse.wad", "description", "Private", "start_date", "end_date"));
-
         // Request events from server
         getEventsRequest();
 
