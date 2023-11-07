@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 
 import websockets.WebSocketListener;
-import websockets.WebSocketManager;
+import websockets.WebSocketManagerChat;
 
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -22,7 +22,7 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
     /*
     The url for the messaging.
      */
-    private String MESSAGE_URL = "ws://10.0.2.2:8080/chat/";
+    private String MESSAGE_URL = "ws://coms-309-024.class.las.iastate.edu:8080/chat/";
 
     /*
     The button for sending message.
@@ -61,12 +61,17 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
         username_placeholder = findViewById(R.id.username);
         message_appear_screen = findViewById(R.id.message_tv);
 
+
+        String username = WebSocketManagerChat.getInstance().getUsername();
+        WebSocketManagerChat.getInstance().connectWebSocket(MESSAGE_URL + username);
+        WebSocketManagerChat.getInstance().setWebSocketListener(MessageView.this);
+
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     // How the message is sent.
-                    WebSocketManager.getInstance().sendMessage(user_message.getText().toString());
+                    WebSocketManagerChat.getInstance().sendMessage(user_message.getText().toString());
                 }
                 catch (Exception e) {
                     Log.d("ExceptionSendMessage:", e.getMessage().toString());
@@ -74,21 +79,21 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
             }
         });
 
-        connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    String serverUrl = MESSAGE_URL + username_placeholder.getText().toString();
-
-                    // Establish WebSocket connection and set listener
-                    WebSocketManager.getInstance().connectWebSocket(serverUrl);
-                    WebSocketManager.getInstance().setWebSocketListener(MessageView.this);
-                }
-                catch (Exception e) {
-                    Log.d("ExceptionSendMessage:", e.getMessage().toString());
-                }
-            }
-        });
+//        connect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    String serverUrl = MESSAGE_URL + username_placeholder.getText().toString();
+//
+//                    // Establish WebSocket connection and set listener
+//                    WebSocketManagerChat.getInstance().connectWebSocket(serverUrl);
+//                    WebSocketManagerChat.getInstance().setWebSocketListener(MessageView.this);
+//                }
+//                catch (Exception e) {
+//                    Log.d("ExceptionSendMessage:", e.getMessage().toString());
+//                }
+//            }
+//        });
     }
 
     @Override

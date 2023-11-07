@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import homepage.HomePage;
 import websockets.WebSocketListener;
 import websockets.WebSocketManager;
+import websockets.WebSocketManagerChat;
 
 public class LoginFormPage extends AppCompatActivity {
 
@@ -75,6 +76,7 @@ public class LoginFormPage extends AppCompatActivity {
                 sendPostRequest(username, password);
 
                 WebSocketManager.getInstance().setUsername(username);
+                WebSocketManagerChat.getInstance().setUsername(username);
             }
         });
 
