@@ -1,9 +1,15 @@
 package planIT.Tags;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import planIT.Users.User;
 
 
 @Entity
@@ -15,6 +21,11 @@ public class Tag {
     private String name;
 
     private String description;
+
+    @JsonIgnoreProperties("tags")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Tag(String name, String description) {
         this.name = name;
@@ -47,5 +58,12 @@ public class Tag {
         return description;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 }

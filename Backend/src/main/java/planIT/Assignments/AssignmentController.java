@@ -27,9 +27,14 @@ public class AssignmentController {
         return assignmentService.getAssignmentById(id);
     }
 
-    @PostMapping(path = "/assignments")
-    public String createAssignment(@RequestBody Assignment assignment){
-        return assignmentService.createAssignment(assignment);
+    @PostMapping(path = "users/{username}/assignments")
+    public String createAssignment(@PathVariable String username, @RequestBody Assignment assignment){
+        return assignmentService.createAssignment(username, assignment);
+    }
+
+    @GetMapping(path = "users/{username}/assignments")
+    public List<Assignment> getUserAssignments(@PathVariable String username){
+        return assignmentService.getAssignmentByUser(username);
     }
 
     @PutMapping(path = "/assignments/{id}")

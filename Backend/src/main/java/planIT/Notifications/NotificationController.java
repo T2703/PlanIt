@@ -37,15 +37,15 @@ public class NotificationController {
     }
 
     // POST method - adds a notification to the database.
-    @PostMapping(path = "/notifications")
-    public String createNotification(@RequestBody Notification notification) {
-        return notificationService.createNotification(notification);
+    @PostMapping(path = "/users/{username}/notifications")
+    public String createNotification(@PathVariable String username, @RequestBody Notification notification) {
+        return notificationService.createNotification(username, notification);
     }
 
-    // POST method - adds a notification to the database.
-    @PostMapping(path = "/users/{userId}/notifications/{notificationId}")
-    public String addUserToNotification(@PathVariable int userId, @PathVariable int notificationId) {
-        return notificationService.addUserToNotification(userId, notificationId);
+    // GET method - gets notifications from a specific user.
+    @GetMapping(path = "/users/{username}/notifications")
+    public List<Notification> getUserNotifications(@PathVariable String username) {
+        return notificationService.getNotificationByUser(username);
     }
 
     // PUT method - updates a notification in the database.

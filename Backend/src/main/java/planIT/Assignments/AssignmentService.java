@@ -5,13 +5,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
+import planIT.Users.UserRepository;
 
-    @Service
+
+@Service
     @Transactional
     public class AssignmentService {
 
         @Autowired
         private AssignmentRepository assignmentRepository;
+
+        @Autowired
+        private UserRepository userRepository;
 
         private String success = "{\"message\":\"success\"}";
         private String failure = "{\"message\":\"failure\"}";
@@ -24,7 +29,8 @@ import java.util.List;
             return assignmentRepository.findById(id);
         }
 
-        public String createAssignment(Assignment assignment) {
+        public String createAssignment(String username, Assignment assignment) {
+            assignment.setUser(userRepository.findByUsername(username));
             assignmentRepository.save(assignment);
             return success;
         }
@@ -47,5 +53,9 @@ import java.util.List;
         public String deleteAssignment(int id) {
             assignmentRepository.deleteById(id);
             return success;
+        }
+
+        public List<Assignment> getAssignmentByUser(String username) {
+            return userRepository.findByUsername(username).getAssignments();
         }
 }

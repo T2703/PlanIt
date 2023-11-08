@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import planIT.Assignments.Assignment;
 import planIT.Users.*;
 
 /**
@@ -37,7 +38,8 @@ public class NotificationService {
         return notificationRepository.findById(id);
     }
 
-    public String createNotification(Notification notification) {
+    public String createNotification(String username, Notification notification) {
+        notification.setUser(userRepository.findByUsername(username));
         notificationRepository.save(notification);
         return success;
     }
@@ -69,5 +71,9 @@ public class NotificationService {
     public String deleteNotification(int id) {
         notificationRepository.deleteById(id);
         return success;
+    }
+
+    public List<Notification> getNotificationByUser(String username) {
+        return userRepository.findByUsername(username).getNotifications();
     }
 }

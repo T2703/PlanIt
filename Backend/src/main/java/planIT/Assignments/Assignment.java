@@ -1,10 +1,15 @@
 package planIT.Assignments;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import planIT.Users.User;
 
 @Entity
 public class Assignment {
@@ -22,6 +27,12 @@ public class Assignment {
     private Date dueDate;
 
     private boolean isCompleted;
+
+    @JsonIgnoreProperties("assignments")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
     public Assignment(String title, String description, String course, Date dueDate, boolean isCompleted) {
         this.title = title;
@@ -71,5 +82,13 @@ public class Assignment {
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
 
     public void setIsCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 }

@@ -1,12 +1,8 @@
 package planIT.Messages;
 
-import planIT.Notifications.Notification;
 import planIT.Chats.Chat;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 
 import javax.persistence.*;
 

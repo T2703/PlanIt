@@ -1,8 +1,7 @@
 package planIT.Events;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -44,6 +43,7 @@ public class Event {
 
     private int manager;
 
+    @JsonIgnoreProperties("events")
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_event", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
