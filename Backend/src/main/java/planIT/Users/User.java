@@ -46,7 +46,8 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private Set<Chat> chats = new HashSet<>();
 
-    @OneToMany
+    @JsonIgnoreProperties("user")
+    @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
 
     @JsonIgnoreProperties("user")
