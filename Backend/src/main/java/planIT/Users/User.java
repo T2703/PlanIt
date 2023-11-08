@@ -1,16 +1,20 @@
 package planIT.Users;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
 import javax.persistence.*;
 
+import planIT.Assignments.Assignment;
 import planIT.Chats.Chat;
 import planIT.Events.Event;
 import planIT.Notifications.Notification;
+import planIT.Tags.Tag;
+import planIT.ToDos.ToDo;
 
 /**
  *
@@ -35,6 +39,7 @@ public class User {
     // Email for each User
     private String email;
 
+    @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<Event> events = new HashSet<>();
 
@@ -43,6 +48,16 @@ public class User {
 
     @OneToMany
     private List<Notification> notifications;
+
+    @JsonIgnoreProperties("user")
+    @OneToMany(mappedBy = "user")
+    private List<Assignment> assignments;
+
+    @OneToMany
+    private List<Tag> tags;
+
+    @OneToMany
+    private List<ToDo> toDos;
 
     // User constructor (with parameters)
     public User(String username, String password, String email) {
@@ -98,6 +113,45 @@ public class User {
 
     public void addNotification(Notification notification){
         this.notifications.add(notification);
+    }
+
+    // Methods for User-Assignments
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+
+    public void addAssignment(Assignment assignment){
+        this.assignments.add(assignment);
+    }
+
+    // Methods for User-Tags
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void addTags(Tag tag){
+        this.tags.add(tag);
+    }
+
+    // Methods for User-ToDos
+    public List<ToDo> getToDos() {
+        return toDos;
+    }
+
+    public void setToDos(List<ToDo> toDos) {
+        this.toDos = toDos;
+    }
+
+    public void addToDos(ToDo toDo){
+        this.toDos.add(toDo);
     }
 
 }

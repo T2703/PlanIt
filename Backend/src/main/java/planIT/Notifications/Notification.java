@@ -1,20 +1,11 @@
 package planIT.Notifications;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import planIT.Users.User;
 
@@ -40,7 +31,6 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
 
