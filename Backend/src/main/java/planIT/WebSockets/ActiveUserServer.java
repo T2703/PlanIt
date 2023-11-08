@@ -2,15 +2,11 @@ package planIT.WebSockets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -19,10 +15,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-
-import planIT.Notifications.Notification;
-import planIT.Notifications.NotificationRepository;
-import planIT.Users.UserRepository;
 
 @ServerEndpoint(value = "/active/{username}")
 @Component

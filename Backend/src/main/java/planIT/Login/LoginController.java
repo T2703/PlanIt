@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import planIT.Users.User;
-import planIT.Users.UserService;
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserService;
 
 @RestController
 public class LoginController {
