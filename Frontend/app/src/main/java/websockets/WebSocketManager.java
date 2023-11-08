@@ -57,6 +57,7 @@ public class WebSocketManager {
         this.username = username;
     }
 
+
     /*
     This handles the events like the messages and errors.
      */

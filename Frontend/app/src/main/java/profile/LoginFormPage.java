@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import homepage.User;
+import profile.UserManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
@@ -46,6 +48,8 @@ public class LoginFormPage extends AppCompatActivity {
     The password that the user will use.
      */
     private EditText user_password;
+
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +135,18 @@ public class LoginFormPage extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Intent intent = new Intent(LoginFormPage.this, HomePage.class);
-                        startActivity(intent);
+                        try {
+                            String userId = response.getString("id");
+
+                            UserManager userManager = UserManager.getInstance();
+                            userManager.setUserID(userId);
+
+                            Intent intent = new Intent(LoginFormPage.this, HomePage.class);
+                            startActivity(intent);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Error parsing server response", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -163,5 +177,10 @@ public class LoginFormPage extends AppCompatActivity {
         }
     }
 
+    public String getUserID() { return userID; }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
 
 }
