@@ -51,6 +51,7 @@ import groups.MemberViewer;
 import notifications.NotificationPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
+import utilities.NotificationsHelper;
 import websockets.WebSocketListener;
 import websockets.WebSocketManager;
 
@@ -104,6 +105,10 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         WebSocketManager.getInstance().connectWebSocket(URL_ACTIVE_WEBSOCKET + username);
         WebSocketManager.getInstance().setWebSocketListener(HomePage.this);
         WebSocketManager.getInstance().sendMessage("Update User List");
+
+        // Update number of unread notifications
+        TextView notificationsCount = findViewById(R.id.notificationCount);
+        NotificationsHelper.setNumberOfUnreadNotifications(notificationsCount);
 
 
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -207,7 +212,6 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         });
 
         requestQueue.add(jsonArrayRequest);
-
     }
 
     private String getTodayDate() {
