@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import planIT.Entity.Users.User;
 
 /**
@@ -34,9 +35,11 @@ public class Team {
     // Description for each Team
     private String description;
 
+    @JsonIgnoreProperties("users")
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_team", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
+
 
     // Team constructor (with parameters)
     public Team(String name, String description) {

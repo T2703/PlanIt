@@ -1,8 +1,12 @@
 package planIT.Entity.Messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import planIT.Entity.Chats.Chat;
+import planIT.Entity.Notifications.Notification;
+import planIT.Entity.Users.User;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -20,8 +24,11 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @JsonIgnoreProperties("message")
     @ManyToOne
+    @JoinColumn(name = "chat_id")
     private Chat chat;
+
 
     // Body for each Message
     private String body;

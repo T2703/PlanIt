@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import planIT.Entity.Users.User;
 
 @Entity
@@ -25,9 +26,11 @@ public class ToDo {
 
     private Date dueDate;
 
+    @JsonIgnoreProperties("ToDos")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     
     public ToDo(String name, String description, Date remindTime, Date dueDate) {
         this.name = name;
