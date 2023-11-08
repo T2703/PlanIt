@@ -58,6 +58,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Tag> tags;
 
+    @JsonIgnoreProperties("user")
     @OneToMany
     private List<ToDo> toDos;
 

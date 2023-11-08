@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import planIT.Entity.Assignments.Assignment;
+import planIT.Entity.Messages.Message;
 
 
 @RestController
@@ -44,7 +46,10 @@ public class ChatController {
         return chatService.addUserToChat(userId, chatId);
     }
 
-    // TODO POST..or PUT? method - add a message to a chat??
+    @PostMapping(path = "chats/{id}/messages")
+    public String addMessageToChat(@PathVariable int id, @RequestBody Message message){
+        return chatService.addMessageToChat(id, message);
+    }
 
     // PUT method - updates a chat in the database.
     @PutMapping(path = "/chats/{id}")

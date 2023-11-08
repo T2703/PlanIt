@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import planIT.Entity.Users.*;
+
 
 @Service
 @Transactional
@@ -14,6 +16,9 @@ public class ToDoService {
 
     @Autowired
     private ToDoRepository toDoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -47,6 +52,15 @@ public class ToDoService {
 
     public String deleteToDo(int id) {
         toDoRepository.deleteById(id);
+        return success;
+    }
+
+    public String userAddToDo(int id, ToDo toDo){
+        User user = userRepository.findById(id);
+        toDoRepository.save(toDo);
+        user.getToDos().add(toDo);
+        toDo.setUser(user);
+
         return success;
     }
 }

@@ -96,4 +96,13 @@ public class ChatService {
         addUserToChat(userID2, newDM.getId());
         return newDM;
     }
+
+    public String addMessageToChat(int id, Message message){
+
+        Chat chat = chatRepository.findById(id);
+        chat.getMessages().add(message);
+
+        return success;
+    }
+
 }

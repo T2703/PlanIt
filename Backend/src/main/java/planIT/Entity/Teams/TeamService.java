@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import planIT.Entity.Users.User;
+
 /**
  *
  * @author Melani Hodge
@@ -51,6 +53,14 @@ public class TeamService {
 
     public String deleteTeam(int id) {
         teamRepository.deleteById(id);
+        return success;
+    }
+
+    public String addUserToTeam(int id, User user){
+
+        Team team = teamRepository.findById(id);
+        team.getUsers().add(user);
+
         return success;
     }
 }
