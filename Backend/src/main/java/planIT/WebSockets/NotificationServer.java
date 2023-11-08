@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import planIT.Notifications.Notification;
-import planIT.Notifications.NotificationRepository;
+import planIT.Entity.Notifications.Notification;
+import planIT.Entity.Notifications.NotificationRepository;
 
 @ServerEndpoint(value = "/notification/{username}")
 @Component

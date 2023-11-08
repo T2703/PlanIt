@@ -1,9 +1,7 @@
 package planIT.ScheduleAnalysis;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import planIT.Events.*;
-import planIT.Users.*;
+import planIT.Entity.Events.*;
+import planIT.Entity.Users.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
