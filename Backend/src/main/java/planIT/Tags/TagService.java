@@ -7,12 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import planIT.Notifications.Notification;
+import planIT.Users.UserRepository;
+
 @Service
 @Transactional
 public class TagService {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -25,7 +31,8 @@ public class TagService {
         return tagRepository.findById(id);
     }
 
-    public String createTag(Tag tag) {
+    public String createTag(String username, Tag tag) {
+        tag.setUser(userRepository.findByUsername(username));
         tagRepository.save(tag);
         return success;
     }
@@ -45,5 +52,9 @@ public class TagService {
     public String deleteTag(int id) {
         tagRepository.deleteById(id);
         return success;
+    }
+
+    public List<Tag> getTagByUser(String username) {
+        return userRepository.findByUsername(username).getTags();
     }
 }

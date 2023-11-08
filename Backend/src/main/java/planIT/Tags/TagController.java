@@ -26,9 +26,16 @@ public class TagController {
         return tagService.getTagById(id);
     }
 
-    @PostMapping(path = "/tags")
-    public String createEvent(@RequestBody Tag tag){
-        return tagService.createTag(tag);
+    // POST method - adds a tag to the database.
+    @PostMapping(path = "/users/{username}/tags")
+    public String createTag(@PathVariable String username, @RequestBody Tag tag) {
+        return tagService.createTag(username, tag);
+    }
+
+    // GET method - gets tags from a specific user.
+    @GetMapping(path = "/users/{username}/tags")
+    public List<Tag> getUserTags(@PathVariable String username) {
+        return tagService.getTagByUser(username);
     }
 
     @PutMapping(path = "/tags/{id}")

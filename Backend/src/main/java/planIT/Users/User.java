@@ -54,7 +54,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Assignment> assignments;
 
-    @OneToMany
+    @JsonIgnoreProperties("user")
+    @OneToMany(mappedBy = "user")
     private List<Tag> tags;
 
     @OneToMany
