@@ -73,4 +73,3 @@ android-test:
   script:
     - cd Frontend
     - ./gradlew test
-    -
