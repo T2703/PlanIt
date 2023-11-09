@@ -1,0 +1,66 @@
+stages:
+  - mavenbuild
+  - maventest
+  - mavenDeploy
+  - androidbuild
+  - androidtest
+
+
+maven-build: #this is a JOB
+  stage: mavenbuild
+  tags:
+    - spring_tag
+  script:
+    - cd Backend # to where you have the pom.xml
+    - mvn package
+
+maven-test:
+  stage: maventest
+  tags:
+    - spring_tag
+  script:
+    - cd Backend
+    - mvn test
+  artifacts:
+    paths:
+      - Backend/target/*.jar
+
+
+#Below job builds, deploys, executes jar as service.
+autoDeploy:
+  stage: mavenDeploy  #do make a stage with same name!
+  tags:
+    - spring_tag
+  script:
+    - cd Backend
+    - mvn package
+    - sudo mv target/*.jar /target/web-demo.jar
+    - sudo systemctl stop system-web-demo
+    - sudo systemctl start system-web-demo
+
+android-build:
+  image: gjandres/android-ci:latest
+  stage: androidbuild
+  tags:
+    - android_tag
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./Frontend/gradlew
+  script:
+    - cd Frontend # to where you have ‘gradlew’
+    - ./gradlew build
+  artifacts:
+    paths:
+      - Frontend/app/build/outputs/
+
+android-test:
+  image: gjandres/android-ci:latest
+  stage: androidtest
+  tags:
+    - android_tag
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./Frontend/gradlew
+  script:
+    - cd Frontend
+    - ./gradlew test
