@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -65,6 +66,15 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         holder.event_name.setText(event.getName());
         holder.event_start_time.setText(event.getStartTime());
         holder.event_end_time.setText(event.getEndTime());
+
+        if (event.getType().equals("Public")) {
+            holder.tag_color.setImageResource(R.color.tint_public); // Set your public event color drawable
+        } else if (event.getType().equals("Private")) {
+            holder.tag_color.setImageResource(R.color.tint_private); // Set your private event color drawable
+        } else if (event.getType().equals("Group")) {
+            holder.tag_color.setImageResource(R.color.tint_group); // Set your group event color drawable
+        }
+
 
         holder.options_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +229,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         ImageButton options_button;
 
         /*
+        The tag image and the color of it.
+         */
+        ImageView tag_color;
+
+        /*
         This holds all the variables in place for the events.
          */
         EventViewHolder(View item_view) {
@@ -227,6 +242,8 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
             event_start_time = item_view.findViewById(R.id.event_start_time);
             event_end_time = item_view.findViewById(R.id.event_end_time);
             options_button = item_view.findViewById(R.id.menu_button);
+            tag_color = item_view.findViewById(R.id.tag_color);
+
         }
     }
 }
