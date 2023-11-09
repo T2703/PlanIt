@@ -4,7 +4,7 @@ import planIT.Entity.Chats.Chat;
 
 import java.util.Date;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  *
