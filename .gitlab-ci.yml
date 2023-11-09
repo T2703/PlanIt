@@ -40,15 +40,17 @@ autoDeploy:
     - sudo systemctl start system-web-demo
 
 check_java_version:
-  image: alpine:latest
+  image: gjandres/android-ci:latest
   stage: checkjavaversion
   tags:
     - android_tag
   script:
+    - apt-get update
+    - apt-get install -y openjdk-17-jdk
     - java -version
 
 android-build:
-  image: alpine:latest
+  image: gjandres/android-ci:latest
   stage: androidbuild
   tags:
     - android_tag
@@ -57,13 +59,15 @@ android-build:
     - chmod +x ./Frontend/gradlew
   script:
     - cd Frontend # to where you have ‘gradlew’
+    - apt-get update
+    - apt-get install -y openjdk-17-jdk
     - ./gradlew build
   artifacts:
     paths:
       - Frontend/app/build/outputs/
 
 android-test:
-  image: alpine:latest
+  image: gjandres/android-ci:latest
   stage: androidtest
   tags:
     - android_tag
@@ -72,4 +76,6 @@ android-test:
     - chmod +x ./Frontend/gradlew
   script:
     - cd Frontend
+    - apt-get update
+    - apt-get install -y openjdk-17-jdk
     - ./gradlew test
