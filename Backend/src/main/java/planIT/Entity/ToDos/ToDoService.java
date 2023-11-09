@@ -55,8 +55,8 @@ public class ToDoService {
         return success;
     }
 
-    public String userAddToDo(int id, ToDo toDo){
-        User user = userRepository.findById(id);
+    public String userAddToDo(String username, ToDo toDo){
+        User user = userRepository.findByUsername(username);
         toDoRepository.save(toDo);
         user.getToDos().add(toDo);
         toDo.setUser(user);

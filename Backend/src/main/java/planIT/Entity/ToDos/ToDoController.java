@@ -34,9 +34,9 @@ public class ToDoController {
     }
 
     //
-    @PostMapping(path = "users/{id}/ToDos")
-    public String userAddToDo(@PathVariable int id, @RequestBody ToDo toDo){
-        return toDoService.userAddToDo(id, toDo);
+    @PostMapping(path = "users/{username}/ToDos")
+    public String userAddToDo(@PathVariable String username, @RequestBody ToDo toDo){
+        return toDoService.userAddToDo(username, toDo);
     }
 
     @PutMapping(path = "/ToDos/{id}")
