@@ -38,6 +38,11 @@ autoDeploy:
     - sudo systemctl stop system-web-demo
     - sudo systemctl start system-web-demo
 
+check_java_version:
+  image: gjandres/android-ci:latest
+  script:
+    - java -version
+
 android-build:
   image: gjandres/android-ci:latest
   stage: androidbuild
