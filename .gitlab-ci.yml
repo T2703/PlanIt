@@ -48,7 +48,6 @@ android-build:
     - chmod +x ./Frontend/gradlew
   script:
     - cd Frontend # to where you have ‘gradlew’
-    - ./gradlew clean
     - ./gradlew build
   artifacts:
     paths:
