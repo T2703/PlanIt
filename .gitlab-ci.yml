@@ -9,7 +9,7 @@ steps:
       distribution: "temurin"
       java-version: 17
 
-tages:
+stages:
   - mavenbuild
   - maventest
   - mavenDeploy
