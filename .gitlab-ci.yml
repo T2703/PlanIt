@@ -31,16 +31,6 @@ autoDeploy:
   stage: mavenDeploy  #do make a stage with same name!
   tags:
     - springboot_tag
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout the code
-      uses: actions/checkout@v2
-
-    - name: Set up Java
-      uses: actions/setup-java@v2
-      with:
-        distribution: "temurin"
-        java-version: 17
   script:
     - cd Backend
     - mvn package
