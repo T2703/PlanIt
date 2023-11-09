@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import planIT.Entity.Assignments.Assignment;
 import planIT.Entity.Chats.Chat;
