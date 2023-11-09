@@ -48,7 +48,7 @@ check_java_version:
     - java -version
 
 android-build:
-  image: gjandres/android-ci:latest
+  image: 5bd092d0bb48
   stage: androidbuild
   tags:
     - android_tag
@@ -63,7 +63,7 @@ android-build:
       - Frontend/app/build/outputs/
 
 android-test:
-  image: gjandres/android-ci:latest
+  image: 5bd092d0bb48
   stage: androidtest
   tags:
     - android_tag
