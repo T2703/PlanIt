@@ -40,7 +40,7 @@ autoDeploy:
     - sudo systemctl start system-web-demo
 
 check_java_version:
-  image: km_205/android-ci:latest
+  image: java-app-planit:latest
   stage: checkjavaversion
   tags:
     - android_tag
@@ -48,7 +48,7 @@ check_java_version:
     - java -version
 
 android-build:
-  image: km_205/android-ci:latest
+  image: java-app-planit:latest
   stage: androidbuild
   tags:
     - android_tag
@@ -63,7 +63,7 @@ android-build:
       - Frontend/app/build/outputs/
 
 android-test:
-  image: km_205/android-ci:latest
+  image: java-app-planit:latest
   stage: androidtest
   tags:
     - android_tag
