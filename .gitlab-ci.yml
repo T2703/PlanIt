@@ -59,8 +59,6 @@ android-build:
     - chmod +x ./Frontend/gradlew
   script:
     - cd Frontend # to where you have ‘gradlew’
-    - apt-get update
-    - apt-get install -y openjdk-17-jdk
     - ./gradlew build
   artifacts:
     paths:
@@ -76,6 +74,4 @@ android-test:
     - chmod +x ./Frontend/gradlew
   script:
     - cd Frontend
-    - apt-get update
-    - apt-get install -y openjdk-17-jdk
     - ./gradlew test
