@@ -46,7 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-<!--                android:onClick="onAcceptClick"-->
                 android:text="Accept" />
 
             <Button
@@ -54,7 +53,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/cardview_dark_background"
-<!--                android:onClick="onDenyClick"-->
                 android:text="Deny" />
         </LinearLayout>
     </LinearLayout>
