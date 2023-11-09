@@ -1,6 +1,6 @@
 package planIT.Entity.Events;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 @Entity
