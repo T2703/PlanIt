@@ -40,7 +40,7 @@ autoDeploy:
     - sudo systemctl start system-web-demo
 
 android-build:
-  image: gjandres/android-ci:latest
+  image: afirefly/android-ci:java17
   stage: androidbuild
   tags:
     - android_tag
@@ -49,15 +49,13 @@ android-build:
     - chmod +x ./Frontend/gradlew
   script:
     - cd Frontend # to where you have ‘gradlew’
-    - apt-get update
-    - apt-get install -y openjdk-17-jdk
     - ./gradlew build
   artifacts:
     paths:
       - Frontend/app/build/outputs/
 
 android-test:
-  image: gjandres/android-ci:latest
+  image: afirefly/android-ci:java17
   stage: androidtest
   tags:
     - android_tag
