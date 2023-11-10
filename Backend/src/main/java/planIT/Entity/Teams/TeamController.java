@@ -44,9 +44,9 @@ public class TeamController {
         return teamService.createTeam(team);
     }
 
-    @PostMapping(path = "teams/{id}/users")
-    public String addUserToTeam(@PathVariable int id, @RequestBody User user){
-        return teamService.addUserToTeam(id, user);
+    @PostMapping(path = "teams/{id}/user/{username}")
+    public String addUserToTeam(@PathVariable int id, @RequestBody String username){
+        return teamService.addUserToTeam(id, username);
     }
 
     // PUT method - updates a team in the database.
