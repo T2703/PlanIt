@@ -29,23 +29,39 @@ public class ChatService {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
+    /**
+     * Returns all chats from the repository as a list
+     * @return chats
+     */
     public List<Chat> getAllChats() {
         return chatRepository.findAll();
     }
 
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
-    }
-
+    /**
+     * Returns a chat from the repository with the matching id number
+     * @param id
+     * @return chat
+     */
     public Chat getChatById(int id) {
         return chatRepository.findById(id);
     }
 
+    /**
+     * Saves a chat to the repository
+     * @param chat
+     * @return success
+     */
     public String createChat(Chat chat) {
         chatRepository.save(chat);
         return success;
     }
 
+    /**
+     * Updates a chat in the repository
+     * @param id
+     * @param request
+     * @return chat
+     */
     public Chat updateChat(int id, Chat request) {
         Chat chat= chatRepository.findById(id);
         if (chat == null)
@@ -57,8 +73,14 @@ public class ChatService {
         return chatRepository.findById(id);
     }
 
-    public String addUserToChat(int userId, int chatId) {
-        User user = userRepository.findById(userId);
+    /**
+     * Adds a preexisting user to a preexisting chat
+     * @param username
+     * @param chatId
+     * @return success
+     */
+    public String addUserToChat(String username, int chatId) {
+        User user = userRepository.findByUsername(username);
         Chat chat = chatRepository.findById(chatId);
         user.getChats().add(chat);
         chat.getUsers().add(user);
@@ -66,8 +88,14 @@ public class ChatService {
         return success;
     }
 
-    public String removeUserFromChat(int userId, int chatId) {
-        User user = userRepository.findById(userId);
+    /**
+     * Removes a user from a chat
+     * @param username
+     * @param chatId
+     * @return success
+     */
+    public String removeUserFromChat(String username, int chatId) {
+        User user = userRepository.findByUsername(username);
         Chat chat = chatRepository.findById(chatId);
         user.getChats().remove(chat);
         chat.getUsers().remove(user);
@@ -75,14 +103,26 @@ public class ChatService {
         return success;
     }
 
+    /**
+     * Deletes a chat from the repository
+     * @param id
+     * @return success
+     */
     public String deleteChat(int id) {
         chatRepository.deleteById(id);
         return success;
     }
 
-    public Chat findPrivateChat(int userID1, int userID2){
-        User user1 = userRepository.findById(userID1);
-        User user2 = userRepository.findById(userID2);
+    /**
+     * Searches both users chats looking for a chat of size two that contains both users.
+     * If no such chat exists, it creates a new chat, adds both users, and saves it to the repository.
+     * @param username1
+     * @param username2
+     * @return private chat
+     */
+    public Chat findPrivateChat(String username1, String username2){
+        User user1 = userRepository.findByUsername(username1);
+        User user2 = userRepository.findByUsername(username2);
 
         for(int i=0; i< chatRepository.findAll().size(); ++i) {
             Chat sample = chatRepository.findAll().get(i);
@@ -92,8 +132,9 @@ public class ChatService {
             }
         }
         Chat newDM = new Chat("New Private Chat");
-        addUserToChat(userID1, newDM.getId());
-        addUserToChat(userID2, newDM.getId());
+        addUserToChat(username1, newDM.getId());
+        addUserToChat(username2, newDM.getId());
+        chatRepository.save(newDM);
         return newDM;
     }
 }

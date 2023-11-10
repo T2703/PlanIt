@@ -21,30 +21,52 @@ public class ChatController {
     private ChatService chatService;
 
     // GET method - retreives all chats from the database.
+    /**
+     * Accesses the chatService.getAllChats() method
+     * Returns all chats from a repository as a set
+     * @return chats
+     */
     @GetMapping(path = "/chats")
     public List<Chat> getAllChats() {
         return chatService.getAllChats();
     }
 
     // GET method - retreives a chat from the database.
+    /**
+     * Accesses chatService.getChatById();
+     * Returns a chat from its id number
+     * @param id
+     * @return
+     */
     @GetMapping(path = "/chats/{id}")
     public Chat getChatById(@PathVariable int id) {
         return chatService.getChatById(id);
     }
 
     // POST method - adds a chat to the database.
+    /**
+     * Accesses chatService.createChat()
+     * @param chat
+     * @return success
+     */
     @PostMapping(path = "/chats")
     public String createChat(@RequestBody Chat chat) {
         return chatService.createChat(chat);
     }
 
     // POST method - adds a user to a chat
-    @PostMapping(path = "/users/{userId}/chats/{chatId}")
-    public String addUserToChat(@PathVariable int userId, @PathVariable int chatId) {
-        return chatService.addUserToChat(userId, chatId);
+    /**
+     * Accesses chatService.addUserToChat()
+     * Adds a preexisting user to a preexisting chat
+     * @param username
+     * @param chatId
+     * @return success
+     */
+    @PostMapping(path = "/users/{username}/chats/{chatId}")
+    public String addUserToChat(@PathVariable String username, @PathVariable int chatId) {
+        return chatService.addUserToChat(username, chatId);
     }
-
-    // TODO POST..or PUT? method - add a message to a chat??
+    
 
     // PUT method - updates a chat in the database.
     @PutMapping(path = "/chats/{id}")
@@ -59,9 +81,9 @@ public class ChatController {
     }
 
     // DELETE method - deletes a user from a chat.
-    @DeleteMapping(path = "/chats/{chatID}/users/{userId}")
-    public String removeUserFromChat(@PathVariable int userID, int chatID) {
-        return chatService.removeUserFromChat(userID, chatID);
+    @DeleteMapping(path = "/chats/{chatID}/users/{username}")
+    public String removeUserFromChat(@PathVariable String username, int chatID) {
+        return chatService.removeUserFromChat(username, chatID);
     }
 
 }
