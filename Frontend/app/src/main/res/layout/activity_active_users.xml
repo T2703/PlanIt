@@ -25,10 +25,8 @@
         android:src="@drawable/icons8_green_dot_48"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/userAvatar"
+        app:layout_constraintStart_toStartOf="@id/userAvatar"
         android:contentDescription="@string/user_online_indicator" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

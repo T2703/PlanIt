@@ -35,6 +35,7 @@
     <string name="close">Close</string>
     <string name="user_avatar_picture">User avatar picture</string>
     <string name="user_online_indicator">User online indicator</string>
+    <string name="open_notifications_button">Open notifications button</string>
     <string-array name="event_types">
         <item>Select an event type</item>
         <item>Private</item>
