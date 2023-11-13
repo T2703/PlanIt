@@ -7,7 +7,9 @@ import java.util.List;
 
 import planIT.Entity.Users.UserRepository;
 
-
+/**
+ * Service class for assignment entity
+ */
 @Service
     @Transactional
     public class AssignmentService {
@@ -21,11 +23,21 @@ import planIT.Entity.Users.UserRepository;
         private String success = "{\"message\":\"success\"}";
         private String failure = "{\"message\":\"failure\"}";
 
-        public List<Assignment> getAllAssignments() {
+    /**
+     * Returns all assignments from repository as a List object
+     * @return Assignment List
+     */
+
+    public List<Assignment> getAllAssignments() {
             return assignmentRepository.findAll();
         }
 
-        public Assignment getAssignmentById(int id) {
+    /**
+     * Gets an assignment from repository by its id number
+     * @param id id number of target assignment
+     * @return success
+     */
+    public Assignment getAssignmentById(int id) {
             return assignmentRepository.findById(id);
         }
 
@@ -35,6 +47,12 @@ import planIT.Entity.Users.UserRepository;
             return success;
         }
 
+    /**
+     * Updates an assignment in the repository.
+     * @param id id of target assignment
+     * @param request Assignment object with updated details
+     * @return updated assignment
+     */
         public Assignment updateAssignment(int id, Assignment request) {
             Assignment assignment = assignmentRepository.findById(id);
             if (assignment == null)
@@ -50,12 +68,22 @@ import planIT.Entity.Users.UserRepository;
             return assignmentRepository.findById(id);
         }
 
-        public String deleteAssignment(int id) {
+    /**
+     * Deletes an assignment from the repository
+     * @param id id number of the assignment to be deleted
+     * @return success
+     */
+    public String deleteAssignment(int id) {
             assignmentRepository.deleteById(id);
             return success;
-        }
+    }
 
-        public List<Assignment> getAssignmentByUser(String username) {
+    /**
+     * Gets all assignments for a particular user and returns them as a list object.
+     * @param username username of the target user
+     * @return assignment List
+     */
+    public List<Assignment> getAssignmentByUser(String username) {
             return userRepository.findByUsername(username).getAssignments();
         }
 }
