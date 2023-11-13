@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import planIT.Entity.Messages.Message;
 import planIT.Entity.Users.User;
 
+/**
+ * Chat entity tracks the info for a text chat between users
+ */
 @Entity
 public class Chat {
 
@@ -39,10 +42,10 @@ public class Chat {
     @JoinTable(name = "chat_messages", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
     private Set<Message> messages = new HashSet<>();
 
-    
+
     /**
      * Chat constructor from String
-     * @param name
+     * @param name the name of the chat
      */
     public Chat(String name){
         this.name = name;
@@ -55,7 +58,7 @@ public class Chat {
     }
 
     /**
-     *
+     *Returns the chat's id number
      * @return id number of chat entity
      */
     public int getId() { return id; }

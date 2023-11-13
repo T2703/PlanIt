@@ -15,6 +15,9 @@ import planIT.Entity.Messages.Message;
 
 // @Service - Used to denote a service.
 // @Transactional - Used to allow transactional actions on the server.
+/**
+ * Service class for the chat entity
+ */
 @Service
 @Transactional
 public class ChatService {
@@ -35,7 +38,7 @@ public class ChatService {
     private String failure = "{\"message\":\"failure\"}";
 
     /**
-     * Returns all chats from the repository as a list
+     * Returns all chats from the repository as a list object
      * @return chats
      */
     public List<Chat> getAllChats() {
@@ -44,7 +47,7 @@ public class ChatService {
 
     /**
      * Returns a chat from the repository with the matching id number
-     * @param id
+     * @param id id number of the target chat
      * @return chat
      */
     public Chat getChatById(int id) {
@@ -53,7 +56,7 @@ public class ChatService {
 
     /**
      * Saves a chat to the repository
-     * @param chat
+     * @param chat chat entity to be saved
      * @return success
      */
     public String createChat(Chat chat) {
@@ -63,8 +66,8 @@ public class ChatService {
 
     /**
      * Updates a chat in the repository
-     * @param id
-     * @param request
+     * @param id id number of the target chat
+     * @param request chat entity with the updated info
      * @return chat
      */
     public Chat updateChat(int id, Chat request) {
@@ -80,8 +83,8 @@ public class ChatService {
 
     /**
      * Adds a preexisting user to a preexisting chat
-     * @param username
-     * @param chatId
+     * @param username username of target user
+     * @param chatId id number of the target chat
      * @return success
      */
     public String addUserToChat(String username, int chatId) {
@@ -95,8 +98,8 @@ public class ChatService {
 
     /**
      * Removes a user from a chat
-     * @param username
-     * @param chatId
+     * @param username username of target user
+     * @param chatId id number of target chat
      * @return success
      */
     public String removeUserFromChat(String username, int chatId) {
@@ -110,7 +113,7 @@ public class ChatService {
 
     /**
      * Deletes a chat from the repository
-     * @param id
+     * @param id id number of target chat
      * @return success
      */
     public String deleteChat(int id) {
@@ -121,8 +124,8 @@ public class ChatService {
     /**
      * Searches both users chats looking for a chat of size two that contains both users.
      * If no such chat exists, it creates a new chat, adds both users, and saves it to the repository.
-     * @param username1
-     * @param username2
+     * @param username1 username of the first user to compare
+     * @param username2 username of the second user to compare
      * @return private chat
      */
     public Chat findPrivateChat(String username1, String username2){
@@ -143,6 +146,12 @@ public class ChatService {
         return newDM;
     }
 
+    /**
+     * Simultaneously saves a new message entity and attaches it to a chat.
+     * @param id id number of the target chat
+     * @param message message entity to be saved
+     * @return success
+     */
     public String createMessageInChat(int id, Message message){
         Chat chat = chatRepository.findById(id);
         chat.getMessages().add(message);
@@ -151,6 +160,12 @@ public class ChatService {
         return success;
     }
 
+    /**
+     * Adds a preexisting message to preexisting chat
+     * @param chatId id number of target chat
+     * @param messageId id number of target message
+     * @return success
+     */
     public String addMessageToChat(int chatId, int messageId){
         Chat chat = chatRepository.findById(chatId);
         Message message = messageRepository.findById(messageId);
@@ -159,6 +174,12 @@ public class ChatService {
         return success;
     }
 
+    /**
+     * Creates a new chat entity and adds all members of a team to the chat
+     * @param teamId id number of target team
+     * @param chat chat entity supplied by request body
+     * @return success
+     */
     public String createTeamChat(int teamId, Chat chat){
         Team team = teamRepository.findById(teamId);
         for(User user: team.getUsers()){
