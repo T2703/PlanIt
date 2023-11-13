@@ -41,22 +41,28 @@ public class Event {
     // End time for each Event
     private Date endDate;
 
-    private int manager;
+    @JsonIgnoreProperties({"managed", "events", "chats", "teams", "notifications", "assignments", "tags", "toDos"})
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User manager;
 
-    @JsonIgnoreProperties("events")
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_event", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIgnoreProperties({"events", "managed", "chats", "teams", "notifications", "assignments", "tags", "toDos"})
+    @ManyToMany
+    @JoinTable(
+            name = "user_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private Set<User> users = new HashSet<>();
 
     // Event constructor (with parameters)
-    public Event(String name, String description, String location, String type, Date startDate, Date endDate, int manager) {
+    public Event(String name, String description, String location, String type, Date startDate, Date endDate) {
         this.name = name;
         this.description = description;
         this.location = location;
         this.type = type;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.manager = manager;
     }
 
     // Event constructor (without parameters)
@@ -92,12 +98,15 @@ public class Event {
 
     public void setEndDate(Date endDate) { this.endDate = endDate; }
 
-    public int getManager() { return manager; }
+    public User getManager() { return manager; }
 
-    public void setManager(int manager) { this.manager = manager; }
+    public void setManager(User manager) { this.manager = manager; }
 
     public Set<User> getUsers() {
         return users;
+    }
+    public void addUser(User user) {
+        this.users.add(user);
     }
 
 }
