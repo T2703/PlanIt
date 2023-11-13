@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import planIT.Entity.Messages.MessageRepository;
+import planIT.Entity.Teams.Team;
+import planIT.Entity.Teams.TeamRepository;
 import planIT.Entity.Users.User;
 import planIT.Entity.Users.UserRepository;
 import planIT.Entity.Messages.Message;
@@ -25,6 +27,9 @@ public class ChatService {
 
     @Autowired
     private MessageRepository messageRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -137,4 +142,31 @@ public class ChatService {
         chatRepository.save(newDM);
         return newDM;
     }
+
+    public String createMessageInChat(int id, Message message){
+        Chat chat = chatRepository.findById(id);
+        chat.getMessages().add(message);
+        messageRepository.save(message);
+
+        return success;
+    }
+
+    public String addMessageToChat(int chatId, int messageId){
+        Chat chat = chatRepository.findById(chatId);
+        Message message = messageRepository.findById(messageId);
+        chat.getMessages().add(message);
+
+        return success;
+    }
+
+    public String createTeamChat(int teamId, Chat chat){
+        Team team = teamRepository.findById(teamId);
+        for(User user: team.getUsers()){
+            chat.getUsers().add(user);
+        }
+        chatRepository.save(chat);
+
+        return success;
+    }
+
 }

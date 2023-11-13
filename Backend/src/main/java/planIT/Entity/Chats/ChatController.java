@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import planIT.Entity.Assignments.Assignment;
+import planIT.Entity.Messages.Message;
+import planIT.Entity.Teams.Team;
 
 
 @RestController
@@ -54,7 +57,25 @@ public class ChatController {
         return chatService.createChat(chat);
     }
 
-    // POST method - adds a user to a chat
+
+    //POST method - creates a chat from a team entity
+    @PostMapping(path = "/chats/{teamId}/chat")
+    public String createTeamChat(@PathVariable int teamId, @RequestBody Chat chat){
+        return chatService.createTeamChat(teamId, chat);
+    }
+
+    @PostMapping(path = "chats/{id}/messages")
+    public String createMessageInChat(@PathVariable int id, @RequestBody Message message){
+        return chatService.createMessageInChat(id, message);
+    }
+
+    // PUT method - updates a chat in the database.
+    @PutMapping(path = "/chats/{id}")
+    public Chat updateChat(@PathVariable int id, @RequestBody Chat chat) {
+        return chatService.updateChat(id, chat);
+    }
+
+    // PUT method - adds a user to a chat
     /**
      * Accesses chatService.addUserToChat()
      * Adds a preexisting user to a preexisting chat
@@ -62,16 +83,15 @@ public class ChatController {
      * @param chatId
      * @return success
      */
-    @PostMapping(path = "/users/{username}/chats/{chatId}")
+    @PutMapping(path = "/chats/{chatId}/users/{username}")
     public String addUserToChat(@PathVariable String username, @PathVariable int chatId) {
         return chatService.addUserToChat(username, chatId);
     }
-    
 
-    // PUT method - updates a chat in the database.
-    @PutMapping(path = "/chats/{id}")
-    public Chat updateChat(@PathVariable int id, @RequestBody Chat chat) {
-        return chatService.updateChat(id, chat);
+    // PUT method - adds a user to a chat
+    @PutMapping(path = "/chats/{chatId}/messages/{messageId}")
+    public String addMessageToChat(@PathVariable int chatId, @PathVariable int messageId) {
+        return chatService.addMessageToChat(chatId, messageId);
     }
 
     // DELETE method - deletes a chat from the database.
@@ -85,5 +105,4 @@ public class ChatController {
     public String removeUserFromChat(@PathVariable String username, int chatID) {
         return chatService.removeUserFromChat(username, chatID);
     }
-
 }

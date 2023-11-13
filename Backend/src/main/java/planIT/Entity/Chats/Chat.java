@@ -3,6 +3,7 @@ package planIT.Entity.Chats;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import planIT.Entity.Messages.Message;
 import planIT.Entity.Users.User;
@@ -25,6 +26,7 @@ public class Chat {
     /**
      * Table mapping chats with users
      */
+    @JsonIgnoreProperties("chats")
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_chat", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
@@ -32,10 +34,12 @@ public class Chat {
     /**
      * Table mapping messages to the chat
      */
+    @JsonIgnoreProperties("chat")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "chat_messages", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
     private Set<Message> messages = new HashSet<>();
 
+    
     /**
      * Chat constructor from String
      * @param name

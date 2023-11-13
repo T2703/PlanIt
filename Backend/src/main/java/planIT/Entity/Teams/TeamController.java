@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import planIT.Entity.Assignments.Assignment;
+import planIT.Entity.Users.User;
 
 /**
  *
@@ -40,6 +42,11 @@ public class TeamController {
     @PostMapping(path = "/teams")
     public String createTeam(@RequestBody Team team) {
         return teamService.createTeam(team);
+    }
+
+    @PostMapping(path = "teams/{id}/user/{username}")
+    public String addUserToTeam(@PathVariable int id, @RequestBody String username){
+        return teamService.addUserToTeam(id, username);
     }
 
     // PUT method - updates a team in the database.
