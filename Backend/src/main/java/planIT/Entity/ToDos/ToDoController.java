@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import planIT.Entity.Assignments.Assignment;
 
 @RestController
 public class ToDoController {
@@ -30,6 +31,12 @@ public class ToDoController {
     @PostMapping(path = "/ToDos")
     public String createToDo(@RequestBody ToDo ToDo){
         return toDoService.createToDo(ToDo);
+    }
+
+    //
+    @PostMapping(path = "users/{username}/ToDos")
+    public String userAddToDo(@PathVariable String username, @RequestBody ToDo toDo){
+        return toDoService.userAddToDo(username, toDo);
     }
 
     @PutMapping(path = "/ToDos/{id}")
