@@ -2,6 +2,7 @@ package planIT.Entity.Events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,6 @@ public class EventService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserEventRepository userEventRepository;
-
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
@@ -41,7 +39,9 @@ public class EventService {
         return eventRepository.findById(id);
     }
 
-    public String createEvent(Event event) {
+    public String createEvent(String username, Event event) {
+        event.setManager(userRepository.findByUsername(username));
+        event.getUsers().add(userRepository.findByUsername(username));
         eventRepository.save(event);
 
         return success;
@@ -58,22 +58,13 @@ public class EventService {
         event.setType(request.getType());
         event.setStartDate(request.getStartDate());
         event.setEndDate(request.getEndDate());
-        event.setManager(request.getManager());
 
         eventRepository.save(event);
         return eventRepository.findById(id);
     }
 
-    public String createEventWithUser(String username, Event event) {
-        UserEvent related = new UserEvent(userRepository.findByUsername(username).getId(), eventRepository.save(event).getId());
-
-        userEventRepository.save(related);
-
-        return success;
-    }
-
-    public String addUserToEvent(int userId, int eventId) {
-        User user = userRepository.findById(userId);
+    public String addUserToEvent(String username, int eventId) {
+        User user = userRepository.findByUsername(username);
         Event event = eventRepository.findById(eventId);
 
         user.getEvents().add(event);
@@ -84,17 +75,11 @@ public class EventService {
         return success;
     }
 
-    public List<Event> findEventsByUser(String username) {
-        List<Event> events = new ArrayList<>();
-        int[] eventIds = userEventRepository.findEventIdsByUserId(userRepository.findByUsername(username).getId());
-        for (int i = 0; i < eventIds.length; i++) {
-            events.add(eventRepository.findById(eventIds[i]));
-        }
-        return events;
+    public Set<Event> getUserEvents(String username) {
+        return userRepository.findByUsername(username).getEvents();
     }
 
     public String deleteEvent(String username, int id) {
-        userEventRepository.deleteByUserIdAndEventId(userRepository.findByUsername(username).getId(), id);
         eventRepository.deleteById(id);
         return success;
     }
