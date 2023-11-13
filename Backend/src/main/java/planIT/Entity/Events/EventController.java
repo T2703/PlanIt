@@ -1,6 +1,7 @@
 package planIT.Entity.Events;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,26 +38,20 @@ public class EventController {
     }
 
     // POST method - adds an event to the database.
-    @PostMapping(path = "/events")
-    public String createEvent(@RequestBody Event event) {
-        return eventService.createEvent(event);
+    @PostMapping(path = "users/{username}/events")
+    public String createEvent(@PathVariable String username, @RequestBody Event event) {
+        return eventService.createEvent(username, event);
     }
 
-    // POST method - adds an event to the database.
-    @PostMapping(path = "/users/{username}/events")
-    public String addUserToEvent(@PathVariable String username, @RequestBody Event event) {
-        return eventService.createEventWithUser(username, event);
-    }
-
-    @PostMapping(path = "/users/{userId}/events/{eventId}")
-    public String addUserToEvent(@PathVariable int userId, @PathVariable int eventId) {
-        return eventService.addUserToEvent(userId, eventId);
+    @PostMapping(path = "/users/{username}/events/{eventId}")
+    public String addUserToEvent(@PathVariable String username, @PathVariable int eventId) {
+        return eventService.addUserToEvent(username, eventId);
     }
 
     // GET method - adds an event to the database.
     @GetMapping(path = "/users/{username}/events")
-    public List<Event> addUserToEvent(@PathVariable String username) {
-        return eventService.findEventsByUser(username);
+    public Set<Event> addUserToEvent(@PathVariable String username) {
+        return eventService.getUserEvents(username);
     }
 
     // PUT method - updates an event in the database.
