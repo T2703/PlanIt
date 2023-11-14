@@ -148,7 +148,6 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         recycler_view = findViewById(R.id.recycler_view);
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
-
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
 
 
@@ -156,13 +155,17 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         calendar_display.setOnDateChangeListener(
                 new CalendarView.OnDateChangeListener() {
 
-                    // This changes the date depending on what the user picks.
-                    // For example if the user clicks 21 and it's on September (do you remember what happened during the night though?)
-                    // and the year is 2023 the date should display 9/21/2023.
+                    /**
+                     * Called when the user selects a day on the {@code calendar_view}.
+                     * Updates the selected date, displays it in the {@code date_view}, and requests events for the selected date.
+                     *
+                     * @param calendar_view The CalendarView that triggered the change event.
+                     * @param year The selected year.
+                     * @param month The selected month (0-indexed, i.e., January is 0).
+                     * @param day_of_month The selected day of the month.
+                     */
                     @Override
                     public void onSelectedDayChange(@NonNull CalendarView calendar_view, int year, int month, int day_of_month) {
-                        //month = month - 1;
-
                         Calendar selectedDate = Calendar.getInstance();
                         selectedDate.set(year, month, day_of_month);
 
@@ -176,6 +179,13 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         );
 
         menu_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified {@code view} is clicked. Creates and displays a PopupMenu
+             * anchored to the clicked view, inflates the options menu for the calendar, and shows the popup menu.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(CalendarMonthlyPage.this, view);
@@ -183,6 +193,14 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                 popup_menu.show();
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    /**
+                     * Called when a menu item in the options menu is clicked.
+                     * Performs actions based on the selected menu item, such as starting a new activity.
+                     *
+                     * @param menuItem The menu item that was clicked.
+                     *                 It can be used to identify which menu item triggered the click event.
+                     * @return true if the menu item click has been handled, false otherwise.
+                     */
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.weekly_view) {
@@ -289,6 +307,13 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                 Request.Method.GET,
                 URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         JSONArray responseArray;
@@ -338,6 +363,13 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request
