@@ -1,5 +1,6 @@
 package planIT.ScheduleCompare;
 
+import jakarta.validation.constraints.NotNull;
 import planIT.Entity.Events.Event;
 import planIT.Entity.Teams.Team;
 import planIT.Entity.Users.User;
@@ -120,32 +121,32 @@ public class scheduleCompare {
         }
 
         //CONVERT TO STRING
-        String unavailability ="Unavailable: \n";
+        StringBuilder unavailability = new StringBuilder("Unavailable: \n");
         for (Event event : unavailable) {
-            unavailability = unavailability +"  " + event.getStartDate().toString() + " - " + event.getEndDate().toString() + '\n';
+            unavailability.append("  ").append(event.getStartDate().toString()).append(" - ").append(event.getEndDate().toString()).append('\n');
         }
-        String availability = "Available: \n";
+        StringBuilder availability = new StringBuilder("Available: \n");
         for (Event event : available) {
-            availability = availability +"  " + event.getStartDate().toString() + " - " + event.getEndDate().toString() + '\n';
+            availability.append("  ").append(event.getStartDate().toString()).append(" - ").append(event.getEndDate().toString()).append('\n');
         }
-        //availability = unavailability + availability;  //MERGE STRINGS
-        return availability;
+        //availability = unavailability.append(availability);  //MERGE STRINGS
+        return availability.toString();
     }
 
     //RETURNS AVAILABILITY AS STRING
     static public String compareStandard(List<Event> available){
-        String availability = "Available: \n";
+        StringBuilder availability = new StringBuilder("Available: \n");
         for (Event event : available) {
-            availability = availability +"  " + event.getStartDate().toString() + " - " + event.getEndDate().toString() + '\n';
+            availability.append("  ").append(event.getStartDate().toString()).append(" - ").append(event.getEndDate().toString()).append('\n');
         }
-        return availability;
+        return availability.toString();
     }
 
     //RETURNS AVAILABILITY IN HALF HOUR INCREMENTS
     static public String compareBy30(Team team, Date rangeStart, Date rangeEnd){
 
         boolean done =false;
-        String toReturn ="Available: \n";
+        StringBuilder toReturn = new StringBuilder("Available: \n");
         String temp = "";
 
         while(!done){
@@ -156,7 +157,7 @@ public class scheduleCompare {
 
             if(temp.length()>15){
                 temp = temp.substring(12);
-                toReturn += temp;
+                toReturn.append(temp);
             }
 
             rangeStart = newEnd;
@@ -165,7 +166,7 @@ public class scheduleCompare {
                 done=true;
             }
         }
-        return toReturn;
+        return toReturn.toString();
     }
 
 
