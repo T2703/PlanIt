@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import planIT.Entity.Messages.Message;
 import planIT.Entity.Users.User;
 
@@ -12,6 +13,7 @@ import planIT.Entity.Users.User;
  * Chat entity tracks the info for a text chat between users
  */
 @Entity
+@Tag(name = "Chat", description = "Chat entity tracks the info for a text chat between users.")
 public class Chat {
 
     /**
@@ -19,11 +21,13 @@ public class Chat {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of chat")
     private int id;
 
     /**
      * The name of the chat
      */
+    @Schema(description = "Name of chat")
     private String name;
 
     /**

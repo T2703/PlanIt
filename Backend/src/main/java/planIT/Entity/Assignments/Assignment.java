@@ -1,6 +1,9 @@
 package planIT.Entity.Assignments;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import planIT.Entity.Users.User;
 
@@ -15,20 +20,28 @@ import planIT.Entity.Users.User;
  * Assignment entity.  Contains info for a user assignment, its due date, and whether or not the assignment is complete.
  */
 @Entity
+@Tag(name = "Assignment", description = "Assignment entity.  Contains info for a user assignment, its due date, and whether or not the assignment is complete.")
+@RestController
 public class Assignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of assignment")
     private int id;
 
+    @Schema(description = "Title of assignment")
     private String title;
 
+    @Schema(description = "Description of assignment")
     private String description;
 
+    @Schema(description = "Courses for the assignment")
     private String course;
 
+    @Schema(description = "Due date of the assignment")
     private Date dueDate;
 
+    @Schema(description = "Checks if the assignment is completed.")
     private boolean isCompleted;
 
     /**

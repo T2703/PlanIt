@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
-
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 
 import planIT.Entity.Users.User;
@@ -16,29 +17,37 @@ import planIT.Entity.Users.User;
  */
 
 @Entity
+@Tag(name = "Event", description = "Event entity.  Tracks all details of a user's event.")
 public class Event {
 
     // Generated ID for each Event
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of event")
     private int id;
 
     // Name for each Event
+    @Schema(description = "Name of event")
     private String name;
 
     // Description for each Event
+    @Schema(description = "Description of event")
     private String description;
 
     // Location for each Event
+    @Schema(description = "Location of event")
     private String location;
 
     // Type for each Event
+    @Schema(description = "Type of event")
     private String type;
 
     // Start time for each Event
+    @Schema(description = "Start date of event")
     private Date startDate;
 
     // End time for each Event
+    @Schema(description = "End date of event")
     private Date endDate;
 
     @JsonIgnoreProperties({"managed", "events", "chats", "teams", "notifications", "assignments", "tags", "toDos"})
