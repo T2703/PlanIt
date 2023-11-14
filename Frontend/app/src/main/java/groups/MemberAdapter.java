@@ -1,7 +1,3 @@
-// Author Tristan Nono
-
-// Side note just think of member as like the teams/group I need to rename them.
-
 package groups;
 
 import android.content.Context;
@@ -32,38 +28,54 @@ import java.util.List;
 import api.VolleySingleton;
 import events.Event;
 
-/*
-This is responsible for implementing/inflating the item layout.
-Also, treats the functionally of said individual list.
+/**
+ * This is responsible for implementing/inflating the item layout.
+ * Also, treats the functionally of said individual list.
+ *
+ * @author Tristan Nono
  */
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder> implements ItemTouchHelperAdapter {
-    /*
-    The list of the events.
+    /**
+     * The list of group members.
      */
     private List<Member> member_list;
 
-
-
-    /*
-    The context variable.
+    /**
+     * The context variable.
      */
     private Context context;
 
-    /*
-    Epic constructor. This is how we have this event list initialized.
+    /**
+     * Constructor for the MemberAdapter class.
+     *
+     * @param member_list The list of group members.
+     * @param context The context.
      */
     public MemberAdapter(List<Member> member_list, Context context) {
         this.member_list = member_list;
         this.context = context;
     }
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @Override
     public MemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_item, parent, false);
         return new MemberViewHolder(view);
     }
 
-
+    /**
+     * Called to check whether two items have the same data.
+     *
+     * @param fromPosition The first item to compare.
+     * @param toPosition The second item to compare.
+     * @return True if the two items represent the same object or false if they are different.
+     */
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         // Reorder your list items when an item is dragged and dropped
@@ -72,11 +84,22 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         return true;
     }
 
+    /**
+     * Called when an item has been dismissed.
+     *
+     * @param position The position of the item dismissed.
+     */
     @Override
     public void onItemDismiss(int position) {
         // If needed.
     }
 
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     *
+     * @param holder The ViewHolder that should be updated to represent the contents of the item at the given position.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull MemberViewHolder holder, int position) {
         Member member = member_list.get(position);
@@ -139,22 +162,31 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         });
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in this adapter.
+     */
     @Override
     public int getItemCount() {
         return member_list.size();
     }
 
-    /*
-    Filter the event list.
-    */
+    /**
+     * Filters the group member list.
+     *
+     * @param filterList The filtered list of group members.
+     */
     public void filterEventList(ArrayList<Member> filterList) {
         member_list = filterList;
         notifyDataSetChanged();
     }
 
-    /*
-    Makes the delete request call. That's all it does really should be
-    self explanatory.
+    /**
+     * Makes the delete request call.
+     *
+     * @param deleteUrl The URL for the delete request.
+     * @param group_id The ID of the group to be deleted.
      */
     private void makeDeleteRequest(String deleteUrl, String group_id) {
         // Find the position of the item with the given group_id
@@ -200,38 +232,37 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     }
 
 
-    /*
-    This is for the list or I should say the characteristics of it like what goes in it.
-    Like our title and description and so on.
+    /**
+     * This class is for holding the variables in place for the group members.
      */
     static class MemberViewHolder extends RecyclerView.ViewHolder {
-        /*
-        The user's name.
+        /**
+         * The user's name.
          */
         TextView username;
 
-        /*
-        Group's name.
+        /**
+         * Group's name.
          */
         TextView group_name;
 
-        /*
-        Information.
+        /**
+         * Information.
          */
         TextView description;
 
-        /*
-        Delete button guy.
+        /**
+         * Delete button guy.
          */
         Button delete_button;
 
-        /*
-        Drag handle man.
+        /**
+         * Drag handle man.
          */
         ImageButton drag_handle;
 
-        /*
-        This holds all the variables in place for the events.
+        /**
+         * This holds all the variables in place for the events.
          */
         MemberViewHolder(View item_view) {
             super(item_view);
