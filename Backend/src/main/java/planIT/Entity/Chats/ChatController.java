@@ -18,6 +18,7 @@ import planIT.Entity.Teams.Team;
 /**
  * Controller class for the chat entity
  */
+@Api(value= "ChatController", description ="REST APIs for chat entity")
 @RestController
 public class ChatController {
 
