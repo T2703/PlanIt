@@ -42,7 +42,32 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The calendar monthly page where the users can see their events in a monthly view.
+ * Activity class for displaying a monthly view of the calendar with user events.
+ * Users can navigate through months using the CalendarView and view events for selected dates.
+ *
+ * <p>
+ * UI components:
+ * - CalendarView: calendar_display (Displays the calendar for selecting dates)
+ * - TextView: date_view (Displays the selected date)
+ * - NavBarView: navbar_view (Custom navigation bar for switching between app sections)
+ * - ImageButton: menu_button (Button to show a popup menu with calendar view options)
+ * - RecyclerView: recycler_view (Displays a list of events for the selected date)
+ * </p>
+ *
+ * <p>
+ * Functionalities:
+ * - Displays a monthly calendar using CalendarView.
+ * - Updates the displayed events based on the selected date.
+ * - Provides options to switch to a weekly view or view all events through a popup menu.
+ * - Uses a RecyclerView to display a list of events for the selected date.
+ * - Implements the NavBarView.OnButtonClickListener interface for handling navigation button clicks.
+ * - Makes API requests to get the user's events for the selected date.
+ * </p>
+ *
+ * <p>
+ * The class also uses the EventCalendarMonthlyAdapter for managing the event list in the RecyclerView.
+ * </p>
+ *
  * @author Tristan Nono
  */
 public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
@@ -101,6 +126,11 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
      */
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
+    /**
+     * Initializes the activity, sets up UI components, and retrieves events for the current date.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +148,6 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         recycler_view = findViewById(R.id.recycler_view);
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
-
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
 
 
@@ -126,13 +155,17 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         calendar_display.setOnDateChangeListener(
                 new CalendarView.OnDateChangeListener() {
 
-                    // This changes the date depending on what the user picks.
-                    // For example if the user clicks 21 and it's on September (do you remember what happened during the night though?)
-                    // and the year is 2023 the date should display 9/21/2023.
+                    /**
+                     * Called when the user selects a day on the {@code calendar_view}.
+                     * Updates the selected date, displays it in the {@code date_view}, and requests events for the selected date.
+                     *
+                     * @param calendar_view The CalendarView that triggered the change event.
+                     * @param year The selected year.
+                     * @param month The selected month (0-indexed, i.e., January is 0).
+                     * @param day_of_month The selected day of the month.
+                     */
                     @Override
                     public void onSelectedDayChange(@NonNull CalendarView calendar_view, int year, int month, int day_of_month) {
-                        //month = month - 1;
-
                         Calendar selectedDate = Calendar.getInstance();
                         selectedDate.set(year, month, day_of_month);
 
@@ -146,6 +179,13 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         );
 
         menu_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified {@code view} is clicked. Creates and displays a PopupMenu
+             * anchored to the clicked view, inflates the options menu for the calendar, and shows the popup menu.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(CalendarMonthlyPage.this, view);
@@ -153,6 +193,14 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                 popup_menu.show();
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    /**
+                     * Called when a menu item in the options menu is clicked.
+                     * Performs actions based on the selected menu item, such as starting a new activity.
+                     *
+                     * @param menuItem The menu item that was clicked.
+                     *                 It can be used to identify which menu item triggered the click event.
+                     * @return true if the menu item click has been handled, false otherwise.
+                     */
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.weekly_view) {
@@ -195,6 +243,10 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         getEventsRequest();
     }
 
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCalendarButtonClick() {
         /*Intent intent = new Intent(this, CalendarMonthlyPage.class);
@@ -202,6 +254,10 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         //Log.d("Date", date_getter);
     }
 
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onHomeButtonClick() {
         Intent intent = new Intent(CalendarMonthlyPage.this, HomePage.class);
@@ -209,6 +265,10 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onMessagesButtonClick() {
         Intent intent = new Intent(CalendarMonthlyPage.this, MemberViewer.class);
@@ -216,6 +276,10 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onProfileButtonClick() {
         Intent intent = new Intent(CalendarMonthlyPage.this, ProfilePage.class);
@@ -223,6 +287,10 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCreateEventButtonClick() {
         // Navigate to Create Events page
@@ -231,7 +299,7 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     }
 
     /**
-     * The method to call the list of events from the user.
+     * Makes an API request to get the user's events for the selected date and updates the event list.
      */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
@@ -239,6 +307,13 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                 Request.Method.GET,
                 URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         JSONArray responseArray;
@@ -288,6 +363,13 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request

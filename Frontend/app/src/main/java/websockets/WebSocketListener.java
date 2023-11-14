@@ -6,6 +6,8 @@ import org.java_websocket.handshake.ServerHandshake;
  * Interface defining methods for handling WebSocket events.
  * Implement this interface to listen for WebSocket connection,
  * message, closure, and error events.
+ *
+ * @author Tristan Nono
  */
 public interface WebSocketListener {
 

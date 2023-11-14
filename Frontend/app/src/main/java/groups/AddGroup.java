@@ -24,6 +24,7 @@ import org.json.JSONObject;
 /**
  * Welcome to the add group page where we can add groups by creating them ofc!
  * Overall, this is where the new groups gets created.
+ *
  * @author Tristan Nono
  */
 public class AddGroup extends AppCompatActivity {
@@ -52,6 +53,11 @@ public class AddGroup extends AppCompatActivity {
      */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
 
+    /**
+     * Initializes the activity and sets up UI components.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
