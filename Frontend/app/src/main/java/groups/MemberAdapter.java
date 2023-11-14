@@ -142,6 +142,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         // How this button functions as a delete. So, basically this button should delete
         // the group.
         holder.delete_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Retrieves the position of the clicked item
+             * in the RecyclerView, extracts the group ID from the corresponding Member, constructs a delete URL,
+             * and makes a delete request to the server to remove the associated group.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
@@ -204,6 +212,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                     Request.Method.DELETE,
                     deleteUrl,
                     new Response.Listener<String>() {
+                        /**
+                         * Callback method that is invoked when a network request succeeds and returns a response.
+                         *
+                         * @param response The response received from the network request.
+                         *                 It is expected to be a JSON string representing an array.
+                         * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                         */
                         @Override
                         public void onResponse(String response) {
                             Log.d("response", response);
@@ -218,6 +233,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                         }
                     },
                     new Response.ErrorListener() {
+                        /**
+                         * Callback method that is invoked when a network request encounters an error.
+                         *
+                         * @param error The VolleyError object containing information about the error.
+                         *              This can include details such as the error message, network response, and more.
+                         *              It can be used for debugging and handling specific error scenarios.
+                         */
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // Handle any errors that occur during the request

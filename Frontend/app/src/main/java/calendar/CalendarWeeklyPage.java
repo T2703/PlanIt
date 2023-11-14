@@ -239,6 +239,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
 
 
         menu_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Creates and displays a {@link PopupMenu}
+             * anchored to the clicked view, inflates the options menu for the calendar, and shows the popup menu.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(CalendarWeeklyPage.this, view);
@@ -246,6 +253,14 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                 popup_menu.show();
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    /**
+                     * Called when a menu item in the options menu is clicked.
+                     * Performs actions based on the selected menu item, such as starting a new activity.
+                     *
+                     * @param menuItem The menu item that was clicked.
+                     *                 It can be used to identify which menu item triggered the click event.
+                     * @return true if the menu item click has been handled, false otherwise.
+                     */
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.monthly_view) {
@@ -273,6 +288,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         weekButtonNext.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified code v (view) is clicked. Increments the current week by one,
+             * updates the date getter, updates the calendar view, and requests events for the updated date.
+             *
+             * @param v The view that was clicked.
+             *          It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View v) {
                 currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
@@ -285,6 +307,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         weekButtonPrev.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified v (view) is clicked. Decrements the current week by one,
+             * updates the date getter, updates the calendar view, and requests events for the updated date.
+             *
+             * @param v The view that was clicked.
+             *          It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View v) {
                 currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
@@ -296,6 +325,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         sunDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Sunday, requests events for the updated date, and logs the selected Sunday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.SUNDAY, currentWeek);
@@ -305,6 +341,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         monDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Monday, requests events for the updated date, and logs the selected Monday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.MONDAY, currentWeek);
@@ -314,6 +357,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         tueDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Tuesday, requests events for the updated date, and logs the selected Tuesday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.TUESDAY, currentWeek);
@@ -323,6 +373,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         wedDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Wednesday requests events for the updated date, and logs the selected Wednesday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.WEDNESDAY, currentWeek);
@@ -332,6 +389,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         thuDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Thursday, requests events for the updated date, and logs the selected Thursday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.THURSDAY, currentWeek);
@@ -341,6 +405,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         friDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Friday, requests events for the updated date, and logs the selected Friday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.FRIDAY, currentWeek);
@@ -350,6 +421,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         satDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Saturday, requests events for the updated date, and logs the selected Saturday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.SATURDAY, currentWeek);
@@ -359,6 +437,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         analyzeWeek.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Launches an Intent to navigate
+             * from the current CalendarWeeklyPage to the AnalyzeSchedule activity.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
@@ -479,6 +564,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                 Request.Method.GET,
                 URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         JSONArray responseArray;
@@ -528,6 +620,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request

@@ -42,7 +42,7 @@ import homepage.HomePage;
 import profile.ProfilePage;
 
 /**
- * The {@code MemberViewer} class represents the page for viewing group members.
+ * The MemberViewer class represents the page for viewing group members.
  * It includes functionality for displaying and managing group members using a RecyclerView.
  * This class also handles interactions with the navigation bar and provides options for creating new groups.
  *
@@ -123,6 +123,11 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         //member_list.add(new Member("Tristan", "Group 1", "1"));
 
         create_group_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * The button to navigate to the create event page
+             *
+             * @param view The View that was clicked.
+             */
             @Override
             public void onClick(View view) {
                 Log.d("MemberViewer", "Number of members: " + member_list.size());
@@ -147,11 +152,23 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         SearchView search_view = (SearchView) search_event.getActionView();
 
         search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            /**
+             * Called when the user submits the query.
+             *
+             * @param text The submitted query text.
+             * @return true if the query has been handled, false otherwise.
+             */
             @Override
             public boolean onQueryTextSubmit(String text) {
                 return false;
             }
 
+            /**
+             * Called when the query text is changed by the user.
+             *
+             * @param newText The new text in the query.
+             * @return true if the query text change has been handled, false otherwise.
+             */
             @Override
             public boolean onQueryTextChange(String newText) {
                 filterText(newText);
@@ -198,6 +215,13 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
                 Request.Method.GET,
                 TEAMS_URL,
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         JSONArray responseArray;
@@ -227,6 +251,13 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request

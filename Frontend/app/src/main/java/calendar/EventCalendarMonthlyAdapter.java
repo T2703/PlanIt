@@ -69,6 +69,14 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         notifyDataSetChanged();
     }
 
+    /**
+     * Called when RecyclerView needs a new EventViewHolder of the given type to represent
+     * an item.
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new {@link EventViewHolder} that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,6 +84,15 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         return new EventCalendarMonthlyAdapter.EventViewHolder(view);
     }
 
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     * This method updates the contents of the EventViewHolder#event_name,
+     * EventViewHolder#event_start_time, and EventViewHolder#event_end_time
+     * based on the data at the given position in the event list.
+     *
+     * @param holder The EventViewHolder to bind data to.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventCalendarMonthlyAdapter.EventViewHolder holder, int position) {
         Event event = event_list.get(position);
@@ -84,12 +101,25 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         holder.event_end_time.setText(event.getEndTime());
 
         holder.options_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Callback method that is invoked when a view is clicked.
+             *
+             * @param v The view that was clicked.
+             *          It can be used to identify which view triggered the click event.
+             *          For example, you can compare it with view IDs to determine the source of the click.
+             */
             @Override
             public void onClick(View v) {
                 PopupMenu popup_menu = new PopupMenu(context, v);
                 popup_menu.getMenuInflater().inflate(R.menu.options_menu, popup_menu.getMenu());
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    /**
+                     * Callback method that is invoked when a context menu item is clicked.
+                     *
+                     * @param menuItem The clicked MenuItem.
+                     * @return true if the click event was handled, false otherwise.
+                     */
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.edit_option) {
@@ -152,6 +182,13 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                     Request.Method.DELETE,
                     deleteUrl,
                     new Response.Listener<String>() {
+                        /**
+                         * Callback method that is invoked when a network request succeeds and returns a response.
+                         *
+                         * @param response The response received from the network request.
+                         *                 It is expected to be a JSON string representing an array.
+                         * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                         */
                         @Override
                         public void onResponse(String response) {
                             Log.d("response", response);
@@ -162,6 +199,13 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                         }
                     },
                     new Response.ErrorListener() {
+                        /**
+                         * Callback method that is invoked when a network request encounters an error.
+                         *
+                         * @param error The VolleyError object containing information about the error.
+                         *              This can include details such as the error message, network response, and more.
+                         *              It can be used for debugging and handling specific error scenarios.
+                         */
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // Handle any errors that occur during the request
@@ -186,6 +230,13 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                 Request.Method.GET,
                 URL_STRING_REQ,
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         try {
@@ -208,6 +259,13 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request
@@ -220,6 +278,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Gets the item count for the event list.
+     *
+     * @return event_list size, the amount
+     */
     @Override
     public int getItemCount() {
         return event_list.size();
