@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import planIT.Entity.Users.User;
 
@@ -17,17 +19,21 @@ import planIT.Entity.Users.User;
  *
  */
 @Entity
+@Tag(name = "Notification", description = "Notifcations entity.")
 public class Notification {
 
     // Generated ID for each Notification
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of notification")
     private int id;
 
     // Title for each Notification
+    @Schema(description = "Title of notification")
     private String title;
 
     // Description for each Notification
+    @Schema(description = "Description of notification")
     private String description;
 
     @JsonIgnoreProperties("notifications")
