@@ -42,63 +42,74 @@ import homepage.HomePage;
 import profile.ProfilePage;
 import websockets.WebSocketManager;
 
-/*
-Daily view for the calendar page.
+/**
+ * This class represents the daily view for the calendar page in a mobile application.
+ * It extends AppCompatActivity and implements NavBarView.OnButtonClickListener for button click events.
+ *
+ * @author Tristan Nono
  */
 public class CalendarDailyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
-    /*
-    The buttons for going to the next or previous day.
-    */
+    /**
+     * The buttons for going to the next or previous day.
+     */
     private ImageButton dayButtonNext, dayButtonPrev;
 
-    /*
-    The day it is.
-    */
+    /**
+     * The day it is.
+     */
     private TextView dayOfMonth;
 
-    /*
-    This grabs the date.
-    */
+    /**
+     * This grabs the date.
+     */
     private static String date_getter;
 
-    /*
-    Calendar thing.
-    */
+    /**
+     * Calendar thing.
+     */
     private Calendar calendar, currentWeek;
 
-    /*
-    It's our navbar.
-    */
+    /**
+     * It's our navbar.
+     */
     private NavBarView navbar_view;
 
-    /*
-    The event adapter for the event list.
-    */
+    /**
+     * The event adapter for the event list.
+     */
     private EventCalendarMonthlyAdapter adapter;
 
-    /*
-    Array list.
-    */
+    /**
+     * Array list.
+     */
     private List<Event> event_list;
 
-    /*
-    This manages the layout.
-    */
+    /**
+     * This manages the layout.
+     */
     private LinearLayoutManager layout_manager;
 
-    /*
-    Recycler view aka from what I know it's how we display the list of items.
-    */
+    /**
+     * Recycler view aka from what I know it's how we display the list of items.
+     */
     private RecyclerView recycler_view;
 
-    /*
-    The button that brings up the popup menu displaying the views of the calendars.
-    */
+    /**
+     * The button that brings up the popup menu displaying the views of the calendars.
+     */
     private ImageButton menu_button;
 
-
+    /**
+     * Url request for making the calls to the api.
+     */
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
+    /**
+     * Method called when the activity is created.
+     * Initializes components, sets up listeners, and makes an initial request for events.
+     *
+     * @param savedInstanceState Bundle object containing the activity's previously saved state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +145,11 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
 
         // Buttons
         dayButtonNext.setOnClickListener(new View.OnClickListener() {
+            /**
+             * This onClick advances the day forward.
+             *
+             * @param v view that has been clicked
+             */
             @Override
             public void onClick(View v) {
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -146,6 +162,11 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         });
 
         dayButtonPrev.setOnClickListener(new View.OnClickListener() {
+            /**
+             * This onClick advances the day backward.
+             *
+             * @param v view that has been clicked
+             */
             @Override
             public void onClick(View v) {
                 calendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -158,6 +179,13 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         });
 
         menu_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified {@code view} is clicked. Creates and displays a PopupMenu
+             * anchored to the clicked view, inflates the options menu for the calendar, and shows the popup menu.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(CalendarDailyPage.this, view);
@@ -165,6 +193,14 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
                 popup_menu.show();
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    /**
+                     * Called when a menu item in the options menu is clicked.
+                     * Performs actions based on the selected menu item, such as starting a new activity.
+                     *
+                     * @param menuItem The menu item that was clicked.
+                     *                 It can be used to identify which menu item triggered the click event.
+                     * @return true if the menu item click has been handled, false otherwise.
+                     */
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.monthly_view) {
@@ -197,9 +233,8 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         date_getter = getDateForDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK), calendar);
     }
 
-    /*
-    Method to update the date text.
-    So, when user clicks the button it updates.
+    /**
+     * Updates the displayed date text on the UI.
      */
     private void updateDateText() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
@@ -207,9 +242,12 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         dayOfMonth.setText(formattedDate);
     }
 
-    /*
-    Gets the current date for the day.
-    */
+    /**
+     * Gets the current date for the given day of the week.
+     *
+     * @param dayOfWeek Integer representing the day of the week.
+     * @return String containing the formatted date.
+     */
     private String getCurrentDateForDay(int dayOfWeek) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek); // Set to the selected day of the week
@@ -217,9 +255,13 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         return dateFormat.format(calendar.getTime());
     }
 
-    /*
-    Method to get the date for the day of the week.
-    */
+    /**
+     * Gets the date for the specified day of the week based on the provided base date.
+     *
+     * @param dayOfWeek Integer representing the day of the week.
+     * @param baseDate  Calendar object representing the base date.
+     * @return String containing the formatted date.
+     */
     private String getDateForDayOfWeek(int dayOfWeek, Calendar baseDate) {
         Calendar date = (Calendar) baseDate.clone();
 
@@ -231,6 +273,10 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         return dateFormat.format(date.getTime());
     }
 
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCalendarButtonClick() {
         /*Intent intent = new Intent(this, CalendarMonthlyPage.class);
@@ -238,6 +284,10 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         //Log.d("Date", date_getter);
     }
 
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onHomeButtonClick() {
         Intent intent = new Intent(CalendarDailyPage.this, HomePage.class);
@@ -245,6 +295,10 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onMessagesButtonClick() {
         Intent intent = new Intent(CalendarDailyPage.this, MemberViewer.class);
@@ -252,6 +306,10 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onProfileButtonClick() {
         Intent intent = new Intent(CalendarDailyPage.this, ProfilePage.class);
@@ -259,6 +317,10 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCreateEventButtonClick() {
         // Navigate to Create Events page
@@ -266,12 +328,22 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
         startActivity(intent);
     }
 
+    /**
+     * Makes a request to the server to get events for the currently logged-in user.
+     */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
                 URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         JSONArray responseArray;
@@ -321,6 +393,13 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request
