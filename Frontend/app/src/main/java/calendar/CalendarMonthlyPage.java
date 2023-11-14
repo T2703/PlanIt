@@ -148,7 +148,6 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         recycler_view = findViewById(R.id.recycler_view);
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
-
         navbar_view.setSelectedButton(navbar_view.getCalendarButton());
 
 
