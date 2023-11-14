@@ -20,13 +20,13 @@ public class scheduleCompareController {
     }
 
     @GetMapping(path = "/scheduleCompare/{teamId}/{startDate}/{endDate}")
-    public String scheduleCompare(@PathVariable int teamId, @PathVariable long startDate, @PathVariable long endDate) {
+    public String compareStandard(@PathVariable int teamId, @PathVariable long startDate, @PathVariable long endDate) {
 
         Date start = new Date(startDate);
         Date end = new Date(endDate);
 
         Team target = teamRepository.findById(teamId);
-        String returnString = scheduleCompare.compareSchedule(target, start, end);
+        String returnString = scheduleCompare.compareStandard(target, start, end);
 
         return returnString;
     }

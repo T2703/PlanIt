@@ -12,7 +12,7 @@ import java.util.List;
 
 public class scheduleCompare {
 
-    static public String compareSchedule(Team team, Date rangeStart, Date rangeEnd){
+    static public List<Event> compareSchedule(Team team, Date rangeStart, Date rangeEnd){
 
         //SET DATE RANGE
         Event dateRange = new Event();
@@ -31,9 +31,11 @@ public class scheduleCompare {
         schedule.sort(new startDateComparator());
 
         //IF NO EVENTS
+        /*
         if(schedule.isEmpty()){
             return("Available: \n  " + dateRange.getStartDate().toString() + " - " + dateRange.getEndDate().toString() + '\n');
         }
+         */
 
         //INITIALIZE UNAVAILABLE LIST
         List<Event> unavailable = new ArrayList<>();
@@ -121,6 +123,7 @@ public class scheduleCompare {
         }
 
         //CONVERT TO STRING
+        /*
         StringBuilder unavailability = new StringBuilder("Unavailable: \n");
         for (Event event : unavailable) {
             unavailability.append("  ").append(event.getStartDate().toString()).append(" - ").append(event.getEndDate().toString()).append('\n');
@@ -131,10 +134,20 @@ public class scheduleCompare {
         }
         //availability = unavailability.append(availability);  //MERGE STRINGS
         return availability.toString();
+         */
+        return available;
     }
 
     //RETURNS AVAILABILITY AS STRING
-    static public String compareStandard(List<Event> available){
+    static public String compareStandard(Team team, Date rangeStart, Date rangeEnd){
+
+        List<Event> available = compareSchedule(team, rangeStart, rangeEnd);
+
+        //IF NO EVENTS
+        if(available.isEmpty()){
+            return("Available: \n  " + rangeStart.toString() + " - " + rangeEnd.toString() + '\n');
+        }
+
         StringBuilder availability = new StringBuilder("Available: \n");
         for (Event event : available) {
             availability.append("  ").append(event.getStartDate().toString()).append(" - ").append(event.getEndDate().toString()).append('\n');
