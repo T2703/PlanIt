@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import planIT.Entity.Assignments.Assignment;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * RESTful controller for managing To-Do-related operations.
@@ -22,6 +24,7 @@ import planIT.Entity.Assignments.Assignment;
  *
  */
 @RestController
+@Tag(name = "To-Do Management System", description = "Operations pertaining to To-Do management")
 public class ToDoController {
 
     @Autowired
@@ -33,6 +36,7 @@ public class ToDoController {
      * @return List of ToDo entities.
      */
     @GetMapping(path = "/ToDos")
+    @Operation(summary = "Get all To-Dos", description = "Returns all To-Dos from the repository as a List object")
     public List<ToDo> getAllToDos(){
         return toDoService.getAllToDos();
     }
@@ -44,6 +48,7 @@ public class ToDoController {
      * @return The ToDo entity corresponding to the provided ID.
      */
     @GetMapping(path = "/ToDos/{id}")
+    @Operation(summary = "Get a To-Do by Id", description = "Gets a To-Do from the repository based on id number")
     public ToDo getEventById(@PathVariable int id){
         return toDoService.getToDoById(id);
     }
@@ -55,6 +60,7 @@ public class ToDoController {
      * @return A success or failure message as a JSON string.
      */
     @PostMapping(path = "/ToDos")
+    @Operation(summary = "Create a new To-Do", description = "Adds a To-Do to the database")
     public String createToDo(@RequestBody ToDo toDo){
         return toDoService.createToDo(toDo);
     }
@@ -67,6 +73,7 @@ public class ToDoController {
      * @return A success or failure message as a JSON string.
      */
     @PostMapping(path = "users/{username}/ToDos")
+    @Operation(summary = "Add a To-Do to a user", description = "Adds a To-Do to a user in the repository")
     public String userAddToDo(@PathVariable String username, @RequestBody ToDo toDo){
         return toDoService.userAddToDo(username, toDo);
     }
@@ -79,6 +86,7 @@ public class ToDoController {
      * @return The updated ToDo entity.
      */
     @PutMapping(path = "/ToDos/{id}")
+    @Operation(summary = "Update an existing To-Do", description = "Updates a To-Do in the repository")
     public ToDo updateToDo(@PathVariable int id, @RequestBody ToDo toDo){
         return toDoService.updateToDo(id, toDo);
     }
@@ -90,6 +98,7 @@ public class ToDoController {
      * @return A success or failure message as a JSON string.
      */
     @DeleteMapping(path = "/ToDos/{id}")
+    @Operation(summary = "Delete a To-Do by Id", description = "Deletes a To-Do from the repository")
     public String deleteToDo(@PathVariable int id){
         return toDoService.deleteToDo(id);
     }
