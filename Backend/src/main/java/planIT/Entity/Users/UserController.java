@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 /**
  * RESTful controller for managing user-related operations.
  * This controller handles HTTP requests related to user entities, such as retrieval, creation, update, and deletion.
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Melani Hodge
  */
 @RestController
+@Tag(name = "User Management System", description = "Operations pertaining to user management")
 public class UserController {
 
     // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
@@ -35,6 +38,7 @@ public class UserController {
      * @return List of User entities.
      */
     @GetMapping(path = "/users")
+    @Operation(summary = "View a list of all users", description = "Retrieves all users from the database")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -46,6 +50,7 @@ public class UserController {
      * @return The User entity corresponding to the provided ID.
      */
     @GetMapping(path = "/users/{id}")
+    @Operation(summary = "Get a user by Id", description = "Retrieves a specific user from the database based on the provided ID")
     public User getUserById(@PathVariable int id) {
         return userService.getUserById(id);
     }
@@ -57,6 +62,7 @@ public class UserController {
      * @return The User entity corresponding to the provided username.
      */
     @GetMapping(path = "/username/{username}")
+    @Operation(summary = "Get a user by username", description = "Retrieves a specific user from the database based on the provided username")
     public User getUserByUsername(@PathVariable String username) {
         return userService.findUserByUsername(username);
     }
@@ -68,6 +74,7 @@ public class UserController {
      * @return A success or failure message as a JSON string.
      */
     @PostMapping(path = "/users")
+    @Operation(summary = "Add a new user", description = "Adds a new user to the database")
     public String createUser(@RequestBody User user) {
 
         // Check if all the fields are filled out
@@ -91,6 +98,7 @@ public class UserController {
      * @return The updated User entity.
      */
     @PutMapping(path = "/users/{id}")
+    @Operation(summary = "Update an existing user", description = "Updates an existing user in the database")
     public User updateUser(@PathVariable int id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
@@ -100,7 +108,9 @@ public class UserController {
      *
      * @param id The unique identifier of the user to be deleted.
      * @return A success or failure message as a JSON string.
-     */    @DeleteMapping(path = "/users/{id}")
+     */
+    @DeleteMapping(path = "/users/{id}")
+    @Operation(summary = "Delete a user by Id", description = "Deletes a user from the database based on the provided ID")
     public String deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
     }

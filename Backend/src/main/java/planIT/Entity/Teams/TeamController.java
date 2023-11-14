@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import planIT.Entity.Assignments.Assignment;
-import planIT.Entity.Users.User;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * RESTful controller for managing Team-related operations.
@@ -22,6 +23,7 @@ import planIT.Entity.Users.User;
  *
  */
 @RestController
+@Tag(name = "Team Management System", description = "Operations pertaining to Team management")
 public class TeamController {
 
     // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
@@ -34,6 +36,7 @@ public class TeamController {
      * @return List of Team entities.
      */
     @GetMapping(path = "/teams")
+    @Operation(summary = "Get all Teams", description = "Returns all teams from the repository as a List object")
     public List<Team> getAllTeams() {
         return teamService.getAllTeams();
     }
@@ -45,6 +48,7 @@ public class TeamController {
      * @return The Team entity corresponding to the provided ID.
      */
     @GetMapping(path = "/teams/{id}")
+    @Operation(summary = "Get a Team by Id", description = "Gets a team from the repository based on id number")
     public Team getTeamById(@PathVariable int id) {
         return teamService.getTeamById(id);
     }
@@ -56,6 +60,7 @@ public class TeamController {
      * @return A success or failure message as a JSON string.
      */
     @PostMapping(path = "/teams")
+    @Operation(summary = "Create a new Team", description = "Adds a team to the database")
     public String createTeam(@RequestBody Team team) {
         return teamService.createTeam(team);
     }
@@ -68,6 +73,7 @@ public class TeamController {
      * @return A success or failure message as a JSON string.
      */
     @PostMapping(path = "teams/{id}/user/{username}")
+    @Operation(summary = "Add a user to a Team", description = "Adds a user to a team in the repository")
     public String addUserToTeam(@PathVariable int id, @RequestBody String username){
         return teamService.addUserToTeam(id, username);
     }
@@ -80,6 +86,7 @@ public class TeamController {
      * @return The updated Team entity.
      */
     @PutMapping(path = "/teams/{id}")
+    @Operation(summary = "Update an existing Team", description = "Updates a team in the repository")
     public Team updateTeam(@PathVariable int id, @RequestBody Team team) {
         return teamService.updateTeam(id, team);
     }
@@ -91,6 +98,7 @@ public class TeamController {
      * @return A success or failure message as a JSON string.
      */
     @DeleteMapping(path = "/teams/{id}")
+    @Operation(summary = "Delete a Team by Id", description = "Deletes a team from the repository")
     public String deleteTeam(@PathVariable int id) {
         return teamService.deleteTeam(id);
     }
