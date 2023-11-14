@@ -1,19 +1,15 @@
-// Author: Tristan Nono
 package calendar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -22,11 +18,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,14 +29,10 @@ import api.VolleySingleton;
 import events.CreateEventPage;
 import events.Event;
 import events.EventsListViewer;
-import groups.GroupInfo;
 import groups.MemberViewer;
-import com.example.myapplication.NavBar;
 import com.example.myapplication.NavBarView;
 
 import homepage.HomePage;
-import messages.MessageView;
-import profile.LoginFormPage;
 import profile.ProfilePage;
 import websockets.WebSocketManager;
 
@@ -51,68 +41,66 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/*
-The calendar page, basically the monthly view to be more precise,
-this is where the user can see the entire month of the calendar and they can
-see their events for the day they have clicked.
-Also, this is a work in progress at the moment uh let me just idk pull something out to insta finish lol idk.
+/**
+ * The calendar monthly page where the users can see their events in a monthly view.
+ * @author Tristan Nono
  */
 public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
-    /*
-    The calendar for displaying the calendar (I mean, I don't know what else to say).
-    */
+    /**
+     * The calendar for displaying the calendar (I mean, I don't know what else to say).
+     */
     private CalendarView calendar_display;
 
-    /*
-    The text for displaying the current date.
+    /**
+     * The date text view.
      */
     private TextView date_view;
 
-    /*
-    This grabs the date from the onSelectedDayChange.
+    /**
+     * This grabs the date from the onSelectedDayChange.
      */
     private static String date_getter;
 
-    /*
-    It's our navbar.
+    /**
+     * It's our navbar.
      */
     private NavBarView navbar_view;
 
-    /*
-    This is for the transitioning between pages.
+    /**
+     * This is for the transitioning between pages.
      */
     private ActivityOptions options;
 
-    /*
-    Array list.
-    */
+    /**
+     * Array list for the event list.
+     */
     private List<Event> event_list;
 
-    /*
-    This manages the layout.
-    */
+    /**
+     * This manages the layout.
+     */
     private LinearLayoutManager layout_manager;
 
-    /*
-    Recycler view aka from what I know it's how we display the list of items.
-    */
+    /**
+     * Recycler view aka from what I know it's how we display the list of items.
+     */
     private RecyclerView recycler_view;
 
-    /*
-    The event adapter for the event list.
-    */
+    /**
+     * The event adapter for the event list.
+     */
     private EventCalendarMonthlyAdapter adapter;
 
-    /*
-    The button that brings up the popup menu displaying the views of the calendars.
-    */
+    /**
+     * The button that brings up the popup menu displaying the views of the calendars.
+     */
     private ImageButton menu_button;
 
-    private String formattedDate;
-
+    /**
+     * URL request for the users mainly used for making the api calls and method requests.
+     */
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
-    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,6 +230,9 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         startActivity(intent);
     }
 
+    /**
+     * The method to call the list of events from the user.
+     */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
         StringRequest stringRequest = new StringRequest(
