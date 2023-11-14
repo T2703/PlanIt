@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * Controller class for event entity
  * @author Melani Hodge
  *
  */
 @RestController
+@Tag(name = "Event Management System", description = "Operations pertaining to event management")
 public class EventController {
 
     // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
@@ -30,6 +34,7 @@ public class EventController {
      * @return events list
      */
     @GetMapping(path = "/events")
+    @Operation(summary = "Get all Events", description = "Get all of an event's users and return them as a List")
     public List<Event> getAllEvents() {
         return eventService.getAllEvents();
     }
@@ -41,6 +46,7 @@ public class EventController {
      * @return event
      */
     @GetMapping(path = "/events/{id}")
+    @Operation(summary = "Get an Event by Id", description = "Get an event from the repository by its id number")
     public Event getEventById(@PathVariable int id) {
         return eventService.getEventById(id);
     }
@@ -53,6 +59,7 @@ public class EventController {
      * @return success
      */
     @PostMapping(path = "users/{username}/events")
+    @Operation(summary = "Create a new Event for a user", description = "Create a new event and attach it to a user")
     public String createEvent(@PathVariable String username, @RequestBody Event event) {
         return eventService.createEvent(username, event);
     }
@@ -64,6 +71,7 @@ public class EventController {
      * @return success
      */
     @PostMapping(path = "/users/{username}/events/{eventId}")
+    @Operation(summary = "Add a user to an Event", description = "Add a preexisting user to a preexisting event")
     public String addUserToEvent(@PathVariable String username, @PathVariable int eventId) {
         return eventService.addUserToEvent(username, eventId);
     }
@@ -75,6 +83,7 @@ public class EventController {
      * @return Events
      */
     @GetMapping(path = "/users/{username}/events")
+    @Operation(summary = "Get Events for a user", description = "Returns all events a particular user has as a set")
     public Set<Event> getUserEvents(@PathVariable String username) {
         return eventService.getUserEvents(username);
     }
@@ -87,6 +96,7 @@ public class EventController {
      * @return event
      */
     @PutMapping(path = "/events/{id}")
+    @Operation(summary = "Update an existing Event", description = "Updates an event in the repository")
     public Event updateEvent(@PathVariable int id, @RequestBody Event event) {
         return eventService.updateEvent(id, event);
     }
@@ -99,6 +109,7 @@ public class EventController {
      * @return success
      */
     @DeleteMapping(path = "users/{username}/events/{id}")
+    @Operation(summary = "Delete an Event by Id", description = "Deletes an event from the repository")
     public String deleteEvent(@PathVariable String username, @PathVariable int id) {
         return eventService.deleteEvent(username, id);
     }
