@@ -52,7 +52,35 @@ import profile.ProfilePage;
 import websockets.WebSocketManager;
 
 /**
- * The calendar weekly page where the users can see their events in a weekly view.
+ * Activity class for displaying a weekly view of the calendar with user events.
+ * Users can navigate through weeks using gesture detection and view events for each day.
+ *
+ * <p>
+ * UI components:
+ * - TextView: sunDate, monDate, tueDate, wedDate, thuDate, friDate, satDate (Displays dates for each day of the week)
+ * - TextView: currentMonth, currentYear (Displays the current month and year)
+ * - TextView: weekButtonNext, weekButtonPrev (Buttons for navigating to the next or previous week)
+ * - ImageButton: menu_button (Button to show a popup menu with calendar view options)
+ * - NavBarView: navbar_view (Custom navigation bar for switching between app sections)
+ * - RecyclerView: recycler_view (Displays a list of events for the selected date)
+ * - Button: analyzeWeek (Button to go to the Analyze Week page)
+ * </p>
+ *
+ * <p>
+ * Functionalities:
+ * - Displays a weekly view of the calendar with dates for each day of the week.
+ * - Allows users to navigate to the next or previous week.
+ * - Provides options to switch to a monthly view, daily view, or view all events through a popup menu.
+ * - Uses gesture detection for navigating between weeks.
+ * - Uses a RecyclerView to display a list of events for the selected week.
+ * - Implements the NavBarView.OnButtonClickListener interface for handling navigation button clicks.
+ * - Makes API requests to get the user's events for the selected week.
+ * </p>
+ *
+ * <p>
+ * The class also uses the EventCalendarMonthlyAdapter for managing the event list in the RecyclerView.
+ * </p>
+ *
  * @author Tristan Nono
  */
 public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
@@ -132,6 +160,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
      */
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
+    /**
+     * Initializes the activity, sets up UI components, and retrieves events for the current week.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -370,11 +403,19 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
 
     }
 
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCalendarButtonClick() {
         // Does nothing.
     }
 
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onHomeButtonClick() {
         Intent intent = new Intent(CalendarWeeklyPage.this, HomePage.class);
@@ -382,6 +423,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onMessagesButtonClick() {
         Intent intent = new Intent(CalendarWeeklyPage.this, MemberViewer.class);
@@ -389,6 +434,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onProfileButtonClick() {
         Intent intent = new Intent(CalendarWeeklyPage.this, ProfilePage.class);
@@ -396,6 +445,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCreateEventButtonClick() {
         // Navigate to Create Events page
@@ -404,9 +457,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     }
 
     /**
-     * Gets the current date for the certain day.
-     * @param dayOfWeek
-     * @return formatted date
+     * Gets the current date for a specified day of the week.
+     *
+     * @param dayOfWeek The day of the week (Calendar.DAY_OF_WEEK) for which to get the current date.
+     * @return A formatted date string (yyyy-MM-dd) for the specified day.
      */
     private String getCurrentDateForDay(int dayOfWeek) {
         Calendar calendar = Calendar.getInstance();
@@ -416,7 +470,8 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     }
 
     /**
-     * The method to call the list of events from the user.
+     * Makes a request to the server to get the list of events for the user.
+     * Populates the event_list and updates the adapter to reflect the changes.
      */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
@@ -486,10 +541,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     }
 
     /**
-     * Method to get the date for the day of the week.
-     * @param dayOfWeek
-     * @param baseDate
-     * @return formatted date
+     * Gets the date for a specific day of the week relative to a base date.
+     *
+     * @param dayOfWeek The day of the week (Calendar.DAY_OF_WEEK) to get the date for.
+     * @param baseDate   The base date from which the calculation starts.
+     * @return A formatted date string (yyyy-MM-dd) for the specified day of the week.
      */
     private String getDateForDayOfWeek(int dayOfWeek, Calendar baseDate) {
         Calendar date = (Calendar) baseDate.clone();

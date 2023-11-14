@@ -1,5 +1,3 @@
-// Author: Tristan Nono
-
 package groups;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,50 +23,57 @@ import com.example.myapplication.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/*
-Where the user or someone can edit the group stuff.
+/**
+ * Where the user or someone can edit the group stuff.
+ *
+ * @author Tristan Nono
  */
 public class EditGroup extends AppCompatActivity {
-    /*
-    This button edits the group.
+    /**
+     * Button for editing the group.
      */
     private Button edit_group_button;
 
-    /*
-    We go back.
-    */
+    /**
+     * Button to go back.
+     */
     private ImageButton back_button;
 
-    /*
-    The group name input from the user.
+    /**
+     * Input for the group name from the user.
      */
     private EditText group_name;
 
-    /*
-    The description that the use inputs
+    /**
+     * Input for the group description from the user.
      */
     private EditText group_description;
 
-    /*
-    Group id number.
+    /**
+     * Group ID number.
      */
     private String group_id;
 
-    /*
-    Gets the group name.
-    */
+    /**
+     * Gets the group name.
+     */
     private String getting_group_name;
 
-    /*
-    Gets the group description.
+    /**
+     * Gets the group description.
      */
     private String getting_group_desc;
 
-    /*
-    The URL for making the calls.
-    */
+    /**
+     * URL for making calls.
+     */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
 
+    /**
+     * Initializes the activity and sets up UI components.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,10 +159,10 @@ public class EditGroup extends AppCompatActivity {
 
     }
 
-    /*
-    This checks for empty values in the edit text variables so in other words,
-    if there's nothing in both the group name and description then, it shouldn't go through.
-    */
+    /**
+     * This checks for empty values in the edit text variables so in other words,
+     * if there's nothing in both the group name and description then, it shouldn't go through.
+     */
     private void checkFieldsForEmptyValues() {
         String group_name_input = group_name.getText().toString();
         String group_description_input = group_description.getText().toString();
@@ -171,10 +176,10 @@ public class EditGroup extends AppCompatActivity {
         }
     }
 
-    /*
-    This is the request for updating a group (well we call it teams or whatever).
-    This PUTs the group on to the server.
-    */
+    /**
+     * This is the request for updating a group (well we call it teams or whatever).
+     * This PUTs the group on to the server.
+     */
     private void updateGroup() {
         // Find the values of each field
         EditText input_group_name = findViewById(R.id.group_name);

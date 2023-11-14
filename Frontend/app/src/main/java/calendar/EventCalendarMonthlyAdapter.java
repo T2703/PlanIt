@@ -28,8 +28,13 @@ import events.Event;
 import websockets.WebSocketManager;
 
 /**
- * The item adapter for making the individual item for the calendar events.
- * Basically, just an individual item for the list of events.
+ * The item adapter for creating individual items for the calendar events.
+ * Each item represents an event in the list.
+ *
+ * This adapter is responsible for binding event data to the corresponding views
+ * in the RecyclerView, handling option button clicks (Edit or Delete), and making
+ * network requests for event details or deleting events.
+ *
  * @author Tristan Nono
  */
 public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalendarMonthlyAdapter.EventViewHolder> {
@@ -43,11 +48,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
      */
     private Context context;
 
-
     /**
      * Adapter constructor for constructing the adapter.
-     * @param context
-     * @param event_list
+     *
+     * @param context The context of the calling activity or fragment.
+     * @param event_list The list of events to be displayed.
      */
     public EventCalendarMonthlyAdapter(Context context, List<Event> event_list) {
         this.context = context;
@@ -56,7 +61,8 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
 
     /**
      * Sets the events for the event list.
-     * @param eventList
+     *
+     * @param eventList The list of events to be set in the adapter.
      */
     public void setEvents(List<Event> eventList) {
         this.event_list = eventList;
@@ -125,8 +131,9 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
 
     /**
      * Method to make the delete request for the event.
-     * @param deleteUrl
-     * @param eventId
+     *
+     * @param deleteUrl The URL for deleting the event.
+     * @param eventId   The ID of the event to be deleted.
      */
     private void makeDeleteRequest(String deleteUrl, String eventId) {
         int positionToDelete = -1;
@@ -168,8 +175,9 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
     }
 
     /**
-     * Method for getting the list of events to store the info for each item.
-     * @param eventId
+     * Method for getting the details of a specific event.
+     *
+     * @param eventId The ID of the event to retrieve details for.
      */
     private void getEvent(String eventId) {
         String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
@@ -242,8 +250,9 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         ImageButton options_button;
 
         /**
-         * This holds all the attributes for the item.
-         * @param item_view
+         * Holds all the attributes for the item.
+         *
+         * @param item_view The view for the item.
          */
         EventViewHolder(View item_view) {
             super(item_view);
