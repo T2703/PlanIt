@@ -15,6 +15,9 @@ import planIT.Entity.Messages.Message;
 
 // @Service - Used to denote a service.
 // @Transactional - Used to allow transactional actions on the server.
+/**
+ * Service class for the chat entity
+ */
 @Service
 @Transactional
 public class ChatService {
@@ -34,23 +37,39 @@ public class ChatService {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
+    /**
+     * Returns all chats from the repository as a list object
+     * @return chats
+     */
     public List<Chat> getAllChats() {
         return chatRepository.findAll();
     }
 
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
-    }
-
+    /**
+     * Returns a chat from the repository with the matching id number
+     * @param id id number of the target chat
+     * @return chat
+     */
     public Chat getChatById(int id) {
         return chatRepository.findById(id);
     }
 
+    /**
+     * Saves a chat to the repository
+     * @param chat chat entity to be saved
+     * @return success
+     */
     public String createChat(Chat chat) {
         chatRepository.save(chat);
         return success;
     }
 
+    /**
+     * Updates a chat in the repository
+     * @param id id number of the target chat
+     * @param request chat entity with the updated info
+     * @return chat
+     */
     public Chat updateChat(int id, Chat request) {
         Chat chat= chatRepository.findById(id);
         if (chat == null)
@@ -62,6 +81,12 @@ public class ChatService {
         return chatRepository.findById(id);
     }
 
+    /**
+     * Adds a preexisting user to a preexisting chat
+     * @param username username of target user
+     * @param chatId id number of the target chat
+     * @return success
+     */
     public String addUserToChat(String username, int chatId) {
         User user = userRepository.findByUsername(username);
         Chat chat = chatRepository.findById(chatId);
@@ -71,8 +96,14 @@ public class ChatService {
         return success;
     }
 
-    public String removeUserFromChat(int userId, int chatId) {
-        User user = userRepository.findById(userId);
+    /**
+     * Removes a user from a chat
+     * @param username username of target user
+     * @param chatId id number of target chat
+     * @return success
+     */
+    public String removeUserFromChat(String username, int chatId) {
+        User user = userRepository.findByUsername(username);
         Chat chat = chatRepository.findById(chatId);
         user.getChats().remove(chat);
         chat.getUsers().remove(user);
@@ -80,11 +111,23 @@ public class ChatService {
         return success;
     }
 
+    /**
+     * Deletes a chat from the repository
+     * @param id id number of target chat
+     * @return success
+     */
     public String deleteChat(int id) {
         chatRepository.deleteById(id);
         return success;
     }
 
+    /**
+     * Searches both users chats looking for a chat of size two that contains both users.
+     * If no such chat exists, it creates a new chat, adds both users, and saves it to the repository.
+     * @param username1 username of the first user to compare
+     * @param username2 username of the second user to compare
+     * @return private chat
+     */
     public Chat findPrivateChat(String username1, String username2){
         User user1 = userRepository.findByUsername(username1);
         User user2 = userRepository.findByUsername(username2);
@@ -99,9 +142,16 @@ public class ChatService {
         Chat newDM = new Chat("New Private Chat");
         addUserToChat(username1, newDM.getId());
         addUserToChat(username2, newDM.getId());
+        chatRepository.save(newDM);
         return newDM;
     }
 
+    /**
+     * Simultaneously saves a new message entity and attaches it to a chat.
+     * @param id id number of the target chat
+     * @param message message entity to be saved
+     * @return success
+     */
     public String createMessageInChat(int id, Message message){
         Chat chat = chatRepository.findById(id);
         chat.getMessages().add(message);
@@ -110,6 +160,12 @@ public class ChatService {
         return success;
     }
 
+    /**
+     * Adds a preexisting message to preexisting chat
+     * @param chatId id number of target chat
+     * @param messageId id number of target message
+     * @return success
+     */
     public String addMessageToChat(int chatId, int messageId){
         Chat chat = chatRepository.findById(chatId);
         Message message = messageRepository.findById(messageId);
@@ -118,6 +174,12 @@ public class ChatService {
         return success;
     }
 
+    /**
+     * Creates a new chat entity and adds all members of a team to the chat
+     * @param teamId id number of target team
+     * @param chat chat entity supplied by request body
+     * @return success
+     */
     public String createTeamChat(int teamId, Chat chat){
         Team team = teamRepository.findById(teamId);
         for(User user: team.getUsers()){
