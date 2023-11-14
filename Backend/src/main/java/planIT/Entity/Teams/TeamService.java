@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserRepository;
+
 /**
  *
  * @author Melani Hodge
@@ -20,6 +23,9 @@ public class TeamService {
 
     @Autowired
     private TeamRepository teamRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -51,6 +57,15 @@ public class TeamService {
 
     public String deleteTeam(int id) {
         teamRepository.deleteById(id);
+        return success;
+    }
+
+    public String addUserToTeam(int id, String username){
+
+        User user = userRepository.findByUsername(username);
+        Team team = teamRepository.findById(id);
+        team.getUsers().add(user);
+
         return success;
     }
 }

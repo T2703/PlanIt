@@ -14,6 +14,7 @@ import planIT.Entity.Chats.Chat;
 import planIT.Entity.Events.Event;
 import planIT.Entity.Notifications.Notification;
 import planIT.Entity.Tags.Tag;
+import planIT.Entity.Teams.Team;
 import planIT.Entity.ToDos.ToDo;
 
 /**
@@ -40,11 +41,16 @@ public class User {
     private String email;
 
     @JsonIgnoreProperties("users")
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users")
     private Set<Event> events = new HashSet<>();
 
+    @JsonIgnoreProperties
     @ManyToMany(mappedBy = "users")
     private Set<Chat> chats = new HashSet<>();
+
+    @JsonIgnoreProperties
+    @ManyToMany(mappedBy = "users")
+    private Set<Team> teams = new HashSet<>();
 
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
@@ -54,10 +60,15 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Assignment> assignments;
 
+    @JsonIgnoreProperties("manager")
+    @OneToMany(mappedBy = "manager")
+    private List<Event> managed;
+
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
     private List<Tag> tags;
 
+    @JsonIgnoreProperties("user")
     @OneToMany
     private List<ToDo> toDos;
 
@@ -154,6 +165,19 @@ public class User {
 
     public void addToDos(ToDo toDo){
         this.toDos.add(toDo);
+    }
+
+    public Set<Team> getTeams(){
+        return teams;
+    }
+
+    // Methods for User-Manage
+    public List<Event> getManaged() {
+        return managed;
+    }
+
+    public void addManaged(Event event){
+        this.managed.add(event);
     }
 
 }
