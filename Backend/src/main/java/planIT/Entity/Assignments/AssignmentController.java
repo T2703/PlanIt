@@ -1,6 +1,10 @@
 package planIT.Entity.Assignments;
 
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for assignment entity
  */
-@Api(value = "AssignmentController", description = "Rest API for assignment entity")
+@Schema(description = "Rest API for assignment entity")
 @RestController
 public class AssignmentController {
 
@@ -24,7 +28,7 @@ public class AssignmentController {
      * Returns all assignments from repository as a List object
      * @return assignments
      */
-    @ApiOperation(value = "Get assignments from repository", response = assignmetnService.getAllAssignments)
+    @Operation(summary = "Get assignments from repository", description = "Get assignments from repository")
     @GetMapping(path = "/assignments")
     public List<Assignment> getAllAssignments() {
         return assignmentService.getAllAssignments();
@@ -36,7 +40,7 @@ public class AssignmentController {
      * @param id id number of the target assignment
      * @return success
      */
-    @ApiOperation(value = "Get particular assignment from repository", response = assignmetnService.getAssignmentById)
+    @Operation(summary = "Get particular assignment from repository", description = "Get particular assignment from repository")
     @GetMapping(path = "/assignments/{id}")
     public Assignment getAssignmentById(@PathVariable int id){
         return assignmentService.getAssignmentById(id);
@@ -49,7 +53,7 @@ public class AssignmentController {
      * @param assignment newly created assignment
      * @return success
      */
-    @ApiOperation(value = "Create assignment", response = assignmetnService.createAssignment)
+    @Operation(summary = "Create assignment", description = "Creates an assignment")
     @PostMapping(path = "users/{username}/assignments")
     public String createAssignment(@PathVariable String username, @RequestBody Assignment assignment){
         return assignmentService.createAssignment(username, assignment);
@@ -61,7 +65,7 @@ public class AssignmentController {
      * @param username username of target user
      * @return assignments
      */
-    @ApiOperation(value = "Get a user's assignments", response = assignmetnService.getAssignmentByUser)
+    @Operation(summary = "Get a user's assignments", description = "Get a user's assignments")
     @GetMapping(path = "users/{username}/assignments")
     public List<Assignment> getUserAssignments(@PathVariable String username){
         return assignmentService.getAssignmentByUser(username);
@@ -74,7 +78,7 @@ public class AssignmentController {
      * @param assignment assignment object with update info
      * @return success
      */
-    @ApiOperation(value = "Update Assignment", response = assignmetnService.updateAssignment)
+    @Operation(summary = "Update Assignment", description = "Updates an assignment")
     @PutMapping(path = "/assignments/{id}")
     public Assignment updateAssignment(@PathVariable int id, @RequestBody Assignment assignment){
         return assignmentService.updateAssignment(id, assignment);
@@ -86,7 +90,7 @@ public class AssignmentController {
      * @param id id of assignment to delete
      * @return success
      */
-    @ApiOperation(value = "Delete assignment", response = assignmetnService.deleteAssignment)
+    @Operation(summary = "Delete assignment", description = "Deletes an assignment")
     @DeleteMapping(path = "/assignments/{id}")
     public String deleteAssignment(@PathVariable int id){
         return assignmentService.deleteAssignment(id);

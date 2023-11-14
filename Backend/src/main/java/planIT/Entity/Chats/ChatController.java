@@ -3,6 +3,8 @@ package planIT.Entity.Chats;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,7 @@ import planIT.Entity.Teams.Team;
 /**
  * Controller class for the chat entity
  */
-@Api(value= "ChatController", description ="REST APIs for chat entity")
+@Schema(description = "Controller for Chat entity")
 @RestController
 public class ChatController {
 
@@ -35,6 +37,7 @@ public class ChatController {
      * Returns all chats from a repository as a set
      * @return chats
      */
+    @Operation(summary = "gets all Chats", description = "gets all Chats")
     @GetMapping(path = "/chats")
     public List<Chat> getAllChats() {
         return chatService.getAllChats();
@@ -47,6 +50,7 @@ public class ChatController {
      * @param id the id number of the desired chat
      * @return success
      */
+    @Operation(summary="Get chat by id", description = "Gets chat by id")
     @GetMapping(path = "/chats/{id}")
     public Chat getChatById(@PathVariable int id) {
         return chatService.getChatById(id);
@@ -58,6 +62,7 @@ public class ChatController {
      * @param chat newly created chat entity
      * @return success
      */
+    @Operation(summary = "Create chat", description = "Creates a chat")
     @PostMapping(path = "/chats")
     public String createChat(@RequestBody Chat chat) {
         return chatService.createChat(chat);
@@ -65,7 +70,6 @@ public class ChatController {
 
 
     //POST method - creates a chat from a team entity
-
     /**
      * Accesses the chatService.createTeamChat method.
      * Creates a new chat entity and immediately adds all users from a given team as
@@ -74,6 +78,7 @@ public class ChatController {
      * @param chat newly created chat entity
      * @return success
      */
+    @Operation(summary="Create team chat", description = "Creates a chat for a team")
     @PostMapping(path = "/chats/{teamId}/chat")
     public String createTeamChat(@PathVariable int teamId, @RequestBody Chat chat){
         return chatService.createTeamChat(teamId, chat);
@@ -86,6 +91,7 @@ public class ChatController {
      * @param message newly created message entity
      * @return success
      */
+    @Operation(summary = "Create message in chat", description = "Creates a message in a chat")
     @PostMapping(path = "chats/{id}/messages")
     public String createMessageInChat(@PathVariable int id, @RequestBody Message message){
         return chatService.createMessageInChat(id, message);
@@ -99,6 +105,7 @@ public class ChatController {
      * @param chat chat entity with the info to be updated
      * @return success
      */
+    @Operation(summary = "update chat", description = "Updates a chat")
     @PutMapping(path = "/chats/{id}")
     public Chat updateChat(@PathVariable int id, @RequestBody Chat chat) {
         return chatService.updateChat(id, chat);
@@ -112,6 +119,7 @@ public class ChatController {
      * @param chatId id number of the target chat entity
      * @return success
      */
+    @Operation(summary = "Add User to Chat", description = "Adds a user to a chat")
     @PutMapping(path = "/chats/{chatId}/users/{username}")
     public String addUserToChat(@PathVariable String username, @PathVariable int chatId) {
         return chatService.addUserToChat(username, chatId);
@@ -125,6 +133,7 @@ public class ChatController {
      * @param messageId id number of the target message
      * @return success
      */
+    @Operation(summary = "Add message to chat", description = "Adds a message to a chat")
     @PutMapping(path = "/chats/{chatId}/messages/{messageId}")
     public String addMessageToChat(@PathVariable int chatId, @PathVariable int messageId) {
         return chatService.addMessageToChat(chatId, messageId);
@@ -137,6 +146,7 @@ public class ChatController {
      * @param id id number of the target chat
      * @return success
      */
+    @Operation(summary = "delete chat", description = "Deletes a message from a chat")
     @DeleteMapping(path = "/chats/{id}")
     public String deleteChat(@PathVariable int id) {
         return chatService.deleteChat(id);
@@ -150,6 +160,7 @@ public class ChatController {
      * @param chatID id number of the chat
      * @return success
      */
+    @Operation(summary = "remove user from chat", description = "Removes a user from a chat")
     @DeleteMapping(path = "/chats/{chatID}/users/{username}")
     public String removeUserFromChat(@PathVariable String username, int chatID) {
         return chatService.removeUserFromChat(username, chatID);
