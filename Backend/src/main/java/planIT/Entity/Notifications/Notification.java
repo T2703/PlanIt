@@ -84,12 +84,24 @@ public class Notification {
      */
     public String getDescription() { return description; }
 
+    /**
+     * Set notification description
+     * @param description description of notification
+     */
     public void setDescription(String description) { this.description = description; }
 
+    /**
+     * Gets the user attached to notification
+     * @return user
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Sets the user of the notification
+     * @param user new user
+     */
     public void setUser(User user) {
         this.user = user;
     }
