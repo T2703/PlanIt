@@ -1,4 +1,3 @@
-// Author: Tristan Nono
 package events;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,18 +9,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+
 import androidx.appcompat.widget.SearchView;
-
-import android.widget.PopupMenu;
-import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,14 +24,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.myapplication.NavBar;
 import com.example.myapplication.R;
+
 import api.VolleySingleton;
 import calendar.CalendarMonthlyPage;
-import calendar.CalendarWeeklyPage;
 import websockets.WebSocketManager;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,67 +40,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-/*
-The events list viewer page where you can see all your events.
- */
-public class EventsListViewer extends AppCompatActivity  {
-    /*
-    The button for going back.
-    */
+public class EventsListViewer extends AppCompatActivity {
     private ImageButton back_button;
-
-    /*
-    Recycler view aka from what I know it's how we display the list of items.
-     */
     private RecyclerView recycler_view;
-
-    /*
-    This manages the layout yeah I suppose. It says in the name.
-     */
     private LinearLayoutManager layout_manager;
-
-    /*
-    Array list for the event lists the list of them (List of a list please ignore this).
-     */
     private List<Event> event_list;
-
-    /*
-    The search bar this can be used to search things like events.
-     */
     private SearchView search_bar;
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
-
-    /*
-    The event adapter for the event list.
-     */
     private EventAdapter adapter;
-
-    /*
-    Toolbar
-     */
     private Toolbar toolbar;
-
-    /*
-    The button that brings up the popup menu displaying the types for the groups.
-    */
     private ImageButton menu_button;
-
-    /*
-    Shared preferences.
-     */
     private SharedPreferences sharedPreferences;
-
-    /*
-    Text type for retrieving said data.
-     */
     private Set<String> eventTextTypes = new HashSet<>();
-
-    /*
-    How to search up the events.
-     */
     private SearchView search_view;
 
+
+    /**
+     * Called when the activity is first created. Initializes UI components, adapters,
+     * and performs a request to the server to get the list of events.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null
+     *                           if the activity is being started fresh.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,8 +124,7 @@ public class EventsListViewer extends AppCompatActivity  {
                         if (isChecked) {
                             Log.d("PRIVATE", "PTR Checked");
                             eventTextTypes.add("Private");
-                        }
-                        else {
+                        } else {
                             Log.d("PRIVATE", "PTR Unchecked");
                             eventTextTypes.remove("Private");
                         }
@@ -187,8 +140,7 @@ public class EventsListViewer extends AppCompatActivity  {
                         if (isChecked) {
                             Log.d("PUBLIC", "PTR Checked");
                             eventTextTypes.add("Public");
-                        }
-                        else {
+                        } else {
                             Log.d("PUBLIC", "PTR Unchecked");
                             eventTextTypes.remove("Public");
                         }
@@ -203,8 +155,7 @@ public class EventsListViewer extends AppCompatActivity  {
                         if (isChecked) {
                             Log.d("GROUP", "PTR Checked");
                             eventTextTypes.add("Group");
-                        }
-                        else {
+                        } else {
                             Log.d("GROUP", "PTR Unchecked");
                             eventTextTypes.remove("Group");
                         }
@@ -219,6 +170,12 @@ public class EventsListViewer extends AppCompatActivity  {
         });
     }
 
+    /**
+     * Creates the options menu for the activity, including the search bar.
+     *
+     * @param menu The options menu in which the items are placed.
+     * @return {@code true} if the menu is to be displayed; {@code false} otherwise.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // So yeah basically creates the search bar.
@@ -242,9 +199,11 @@ public class EventsListViewer extends AppCompatActivity  {
         return true;
     }
 
-    /*
-    Method that filters the text so the user can find their events without issues.
-    Gotta think of the users. :D
+    /**
+     * Filters the list of events based on the entered text and selected event types.
+     *
+     * @param text       The text to be searched in event names.
+     * @param eventTypes The set of selected event types for filtering.
      */
     private void filterText(String text, Set<String> eventTypes) {
         // List to filter the data.
@@ -271,12 +230,14 @@ public class EventsListViewer extends AppCompatActivity  {
         // Well I mean there is nothing lol so you'll get this.
         if (filtered_event_list.isEmpty()) {
             Log.d("We Are The Empty", "DeSense"); // This a cool song you should totally check it out!
-        }
-        else {
+        } else {
             adapter.filterEventList(filtered_event_list);
         }
     }
 
+    /**
+     * Performs a request to the server to get the list of events for the current user.
+     */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
         Log.d("GET REQUEST", URL_STRING_REQ + username + "/events");
@@ -322,9 +283,6 @@ public class EventsListViewer extends AppCompatActivity  {
                     }
                 }
         );
-
-        // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
-
 };

@@ -14,11 +14,13 @@ import planIT.Entity.Assignments.Assignment;
 import planIT.Entity.Users.User;
 
 /**
+ * RESTful controller for managing Team-related operations.
+ * This controller handles HTTP requests related to Team entities, such as retrieval, creation, update, and deletion.
+ * Requests are processed using the corresponding methods provided by the TeamService.
  *
  * @author Melani Hodge
  *
  */
-
 @RestController
 public class TeamController {
 
@@ -26,36 +28,68 @@ public class TeamController {
     @Autowired
     private TeamService teamService;
 
-    // GET method - retreives all teams from the database.
+    /**
+     * Retrieves all Teams from the service.
+     *
+     * @return List of Team entities.
+     */
     @GetMapping(path = "/teams")
     public List<Team> getAllTeams() {
         return teamService.getAllTeams();
     }
 
-    // GET method - retreives a team from the database.
+    /**
+     * Retrieves a specific Team from the service based on the provided ID.
+     *
+     * @param id The unique identifier of the Team.
+     * @return The Team entity corresponding to the provided ID.
+     */
     @GetMapping(path = "/teams/{id}")
     public Team getTeamById(@PathVariable int id) {
         return teamService.getTeamById(id);
     }
 
-    // POST method - adds a team to the database.
+    /**
+     * Creates a new Team in the service.
+     *
+     * @param team The Team entity to be created.
+     * @return A success or failure message as a JSON string.
+     */
     @PostMapping(path = "/teams")
     public String createTeam(@RequestBody Team team) {
         return teamService.createTeam(team);
     }
 
+    /**
+     * Adds a user to a specific Team in the service.
+     *
+     * @param id       The unique identifier of the Team.
+     * @param username The username of the user to be added.
+     * @return A success or failure message as a JSON string.
+     */
     @PostMapping(path = "teams/{id}/user/{username}")
     public String addUserToTeam(@PathVariable int id, @RequestBody String username){
         return teamService.addUserToTeam(id, username);
     }
 
-    // PUT method - updates a team in the database.
+    /**
+     * Updates an existing Team in the service based on the provided ID.
+     *
+     * @param id   The unique identifier of the Team to be updated.
+     * @param team The updated Team entity.
+     * @return The updated Team entity.
+     */
     @PutMapping(path = "/teams/{id}")
     public Team updateTeam(@PathVariable int id, @RequestBody Team team) {
         return teamService.updateTeam(id, team);
     }
 
-    // DELETE method - deletes a team from the database.
+    /**
+     * Deletes a Team from the service based on the provided ID.
+     *
+     * @param id The unique identifier of the Team to be deleted.
+     * @return A success or failure message as a JSON string.
+     */
     @DeleteMapping(path = "/teams/{id}")
     public String deleteTeam(@PathVariable int id) {
         return teamService.deleteTeam(id);

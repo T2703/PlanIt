@@ -2,13 +2,10 @@ package notifications;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +17,37 @@ import java.util.List;
 
 import homepage.HomePage;
 
+/**
+ * The {@code NotificationPage} class represents the activity for displaying a list of notifications.
+ * It extends the AppCompatActivity and provides functionality for handling notifications,
+ * including selecting all notifications and navigating back to the home page.
+ * <p>
+ * The activity uses a RecyclerView to display a list of notifications, and it utilizes the
+ * {@code NotificationAdapter} class to manage the adapter for the RecyclerView.
+ * </p>
+ *
+ * @see AppCompatActivity
+ * @see NotificationAdapter
+ * @see Notification
+ * @author Joshua Gutierrez
+ * @version 1.0
+ */
 public class NotificationPage extends AppCompatActivity {
     private ImageButton backButton;
     private RecyclerView notificationItemRecycler;
     private NotificationAdapter adapter;
+
+    /**
+     * Called when the activity is starting. This is where most initialization should go:
+     * calling {@code setContentView(int)} to inflate the activity's UI, using
+     * {@code findViewById(int)} to programmatically interact with widgets in the UI,
+     * and configuring the activity's behavior as needed.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being
+     *                           shut down, then this Bundle contains the data it most recently
+     *                           supplied in {@link #onSaveInstanceState}. Note: Otherwise, it is
+     *                           null.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_page);
@@ -63,6 +87,11 @@ public class NotificationPage extends AppCompatActivity {
         });
     }
 
+    /**
+     * Creates a list of sample notifications for testing purposes.
+     *
+     * @return A list of {@code Notification} objects.
+     */
     private List<Notification> createNotificationList() {
         List<Notification> notifications = new ArrayList<>();
 

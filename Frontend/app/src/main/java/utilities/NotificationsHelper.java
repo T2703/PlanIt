@@ -1,6 +1,5 @@
 package utilities;
 
-import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -11,13 +10,31 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import api.VolleySingleton;
 
+/**
+ * The {@code NotificationsHelper} class provides utility methods for handling notifications,
+ * including retrieving the number of unread notifications from a server.
+ * It contains a constant {@code URL_STRING_REQ} representing the base URL for notification requests.
+ * <p>
+ * This class uses the Volley library for network requests to interact with the server.
+ * The method {@code setNumberOfUnreadNotifications} is designed to update a {@code TextView} with
+ * the number of unread notifications obtained from the server.
+ * </p>
+ *
+ * @author Joshua Gutierrez
+ */
 public class NotificationsHelper {
+    /**
+     * The base URL for notification requests.
+     */
     public static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/notifications";
 
+    /**
+     * Retrieves the number of unread notifications from the server and updates the provided {@code TextView}.
+     *
+     * @param number The {@code TextView} to be updated with the number of unread notifications.
+     */
     public static void setNumberOfUnreadNotifications(TextView number) {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
