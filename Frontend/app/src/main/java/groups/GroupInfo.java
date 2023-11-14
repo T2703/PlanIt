@@ -1,5 +1,3 @@
-// Author: Tristan Nono
-
 package groups;
 
 import androidx.annotation.Nullable;
@@ -33,11 +31,14 @@ import java.util.List;
 import api.VolleySingleton;
 import messages.MessageView;
 
-/*
-This is where the group info is shown like their profile picture and the just
-the general info.
+/**
+ * This is where the group info is shown like their profile picture and the just
+ * the general info.
  */
 public class GroupInfo extends AppCompatActivity {
+    /**
+     *
+     */
     private static final int EDIT_GROUP_REQUEST_CODE = 1;
     /*
     At this point we should know what it does. It goes back.
