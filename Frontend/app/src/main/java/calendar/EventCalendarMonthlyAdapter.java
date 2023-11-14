@@ -1,4 +1,3 @@
-// Author: Tristan Nono
 package calendar;
 
 import android.annotation.SuppressLint;
@@ -28,25 +27,37 @@ import events.EditEventPage;
 import events.Event;
 import websockets.WebSocketManager;
 
-/*
-This one is for the events but for the calendar monthly page.
+/**
+ * The item adapter for making the individual item for the calendar events.
+ * Basically, just an individual item for the list of events.
+ * @author Tristan Nono
  */
 public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalendarMonthlyAdapter.EventViewHolder> {
-    /*
-    The list of the events.
-    */
+    /**
+     * List of events in the list.
+     */
     private List<Event> event_list;
+
+    /**
+     * The context.
+     */
     private Context context;
 
 
-    /*
-    Constructs the apdater.
+    /**
+     * Adapter constructor for constructing the adapter.
+     * @param context
+     * @param event_list
      */
     public EventCalendarMonthlyAdapter(Context context, List<Event> event_list) {
         this.context = context;
         this.event_list = event_list;
     }
 
+    /**
+     * Sets the events for the event list.
+     * @param eventList
+     */
     public void setEvents(List<Event> eventList) {
         this.event_list = eventList;
         notifyDataSetChanged();
@@ -112,6 +123,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         });
     }
 
+    /**
+     * Method to make the delete request for the event.
+     * @param deleteUrl
+     * @param eventId
+     */
     private void makeDeleteRequest(String deleteUrl, String eventId) {
         int positionToDelete = -1;
 
@@ -151,6 +167,10 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
 
     }
 
+    /**
+     * Method for getting the list of events to store the info for each item.
+     * @param eventId
+     */
     private void getEvent(String eventId) {
         String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
 
@@ -197,29 +217,33 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         return event_list.size();
     }
 
+    /**
+     * Class for the holding the attributes of the event item.
+     */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        /*
-        The event title.
+        /**
+         * The event name.
          */
         TextView event_name;
 
-        /*
-        The event start time.
+        /**
+         * The event start time
          */
         TextView event_start_time;
 
-        /*
-        The event end time.
-        */
+        /**
+         * The event end time.
+         */
         TextView event_end_time;
 
-        /*
-        The button for the options for the event items (Edit or Delete).
+        /**
+         * The button for the options for the event items (Edit or Delete).
          */
         ImageButton options_button;
 
-        /*
-        This holds all the variables in place for the events.
+        /**
+         * This holds all the attributes for the item.
+         * @param item_view
          */
         EventViewHolder(View item_view) {
             super(item_view);

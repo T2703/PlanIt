@@ -1,5 +1,3 @@
-// Author: Tristan Nono
-
 package groups;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,34 +21,35 @@ import api.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/*
-Welcome to the add group page where we can add groups by creating them ofc!
-Overall, this is where the new groups gets created.
+/**
+ * Welcome to the add group page where we can add groups by creating them ofc!
+ * Overall, this is where the new groups gets created.
+ * @author Tristan Nono
  */
 public class AddGroup extends AppCompatActivity {
-    /*
-    This button creates the group.
+    /**
+     * Button that creates the group.
      */
     private Button create_group_button;
 
-    /*
-    We go back.
-    */
+    /**
+     * Button to go back.
+     */
     private ImageButton back_button;
 
-    /*
-    The group name input from the user.
+    /**
+     * Input for the group name from the user.
      */
     private EditText group_name;
 
-    /*
-    The description that the use inputs
+    /**
+     * Input for the group description from the user.
      */
     private EditText group_description;
 
-    /*
-    The URL for making the calls.
-    */
+    /**
+     * URL for making calls.
+     */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
 
     @Override
@@ -121,10 +120,10 @@ public class AddGroup extends AppCompatActivity {
 
     }
 
-    /*
-    This checks for empty values in the edit text variables so in other words,
-    if there's nothing in both the group name and description then, it shouldn't go through.
-    */
+    /**
+     * This checks for empty values in the edit text variables so in other words,
+     * if there's nothing in both the group name and description then, it shouldn't go through.
+     */
     private void checkFieldsForEmptyValues() {
         String group_name_input = group_name.getText().toString();
         String group_description_input = group_description.getText().toString();
@@ -138,10 +137,10 @@ public class AddGroup extends AppCompatActivity {
         }
     }
 
-    /*
-    This is the request for creating a group (well we call it teams or whatever).
-    This POSTs the group on to the server.
-    */
+    /**
+     * This is the request for creating a group (well we call it teams or whatever).
+     * This POSTs the group on to the server.
+     */
     private void createGroup() {
         // Find the values of each field
         EditText input_group_name = findViewById(R.id.group_name);
