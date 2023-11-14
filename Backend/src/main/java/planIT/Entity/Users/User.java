@@ -16,6 +16,7 @@ import planIT.Entity.Notifications.Notification;
 import planIT.Entity.Tags.Tag;
 import planIT.Entity.Teams.Team;
 import planIT.Entity.ToDos.ToDo;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Represents a user in the PlanIT application.
@@ -36,15 +37,19 @@ public class User {
     // Generated ID for each User
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of user")
     private int id;
 
     // Username for each User
+    @Schema(description = "Username of user")
     private String username;
 
     // Password for each User
+    @Schema(description = "Password of user")
     private String password;
 
     // Email for each User
+    @Schema(description = "Email of user")
     private String email;
 
     @JsonIgnoreProperties("users")
