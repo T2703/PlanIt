@@ -10,42 +10,43 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
-/*
-The navbar view this is the main functionally of the navbar and
-should display on every page.
+/**
+ * Navigation bar for navigating throughout the pages and app.
+ * @author Tristan Nono
  */
 public class NavBarView extends RelativeLayout {
-    /*
-    The button for the calendar.
+    /**
+     * Button for navigating to the calendar.
      */
     private ImageButton calendar_button;
 
-    /*
-    The button for the messages.
+    /**
+     * Button for navigating to messages.
      */
     private ImageButton messages_button;
 
-    /*
-    The button for the home.
+    /**
+     * Button for navigating to the home page.
      */
     private ImageButton home_button;
 
-    /*
-    The button for the profile.
+    /**
+     * Button for navigating to the user's profile.
      */
     private ImageButton profile_button;
 
-    /*
-    The button for creating events (yep this guy right here).
+    /**
+     * Button for creating events.
      */
     private ImageButton create_event_button;
 
-    /*
-    This variable checks if a button has been clicked.
+    /**
+     * Variable to check if a button has been clicked.
      */
     private OnButtonClickListener button_click_listener;
 
-    /*
+
+    /**
     An interface mainly used for calling these methods for the navbar
     since, we can't just use intent here it won't work.
      */
@@ -58,8 +59,10 @@ public class NavBarView extends RelativeLayout {
     }
 
 
-    /*
-    Constructor for the navbar view.
+    /**
+     * The view for the navbar.
+     * @param context
+     * @param attrs
      */
     public NavBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -116,10 +119,11 @@ public class NavBarView extends RelativeLayout {
         });
     }
 
-    /*
-    This method here sets the color of the selected button on the navbar depending on what is clicked.
-    Example: if calendar button is clicked then the calendar button is lit up.
-    */
+    /**
+     * This method here sets the color of the selected button on the navbar depending on what is clicked.
+     * Example: if calendar button is clicked then the calendar button is lit up.
+     * @param button
+     */
     public void setSelectedButton(ImageButton button) {
         // Deselect all buttons
         calendar_button.setSelected(false);
@@ -145,28 +149,41 @@ public class NavBarView extends RelativeLayout {
 
     }
 
-    /*
+    /**
     Sets the button click listener.
      */
     public void setOnButtonClickListener(OnButtonClickListener listener) {
         this.button_click_listener = listener;
     }
 
-    /*
-    All of these are gets so, we don't want to take away private.
+    /**
+     * Gets the calendar button.
+     * @return calendar_button
      */
     public ImageButton getCalendarButton() {
         return calendar_button;
     }
 
+    /**
+     * Gets the message button.
+     * @return message button
+     */
     public ImageButton getMessagesButton() {
         return messages_button;
     }
 
+    /**
+     * Gets the profile button.
+     * @return profile button
+     */
     public ImageButton getProfileButton() {
         return profile_button;
     }
 
+    /**
+     * Gets the home button.
+     * @return home button
+     */
     public ImageButton getHomeButton() {
         return home_button;
     }

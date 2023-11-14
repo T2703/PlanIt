@@ -51,84 +51,85 @@ import profile.LoginFormPage;
 import profile.ProfilePage;
 import websockets.WebSocketManager;
 
-/*
-The calendar page but this time it's the weekly page.
-"Code may be spaghetti but it works"
-    -Some random dude named Tristan.
+/**
+ * The calendar weekly page where the users can see their events in a weekly view.
+ * @author Tristan Nono
  */
 public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
-    /*
-    The week range of the week.
-     */
-    private LinearLayout weekLayout;
-
-    /*
-    The buttons for going to the next or previous week.
+    /**
+     * The buttons for going to the next or previous week.
      */
     private TextView weekButtonNext, weekButtonPrev;
 
-    /*
-    The dates of the day mon-sun.
+    /**
+     * The dates of the day from Mon-Sun.
      */
     private TextView sunDate, monDate, tueDate, wedDate, thuDate, friDate, satDate;
 
-    /*
-    The current month.
+    /**
+     * The current month.
      */
     private TextView currentMonth;
 
-    /*
-    The current year.
+    /**
+     * The current year.
      */
     private TextView currentYear;
 
-    /*
-    Gesture Dector.
+    /**
+     * Gesture Detector.
      */
     private GestureDetector gestureDetector;
 
-    /*
-    Calendar thing.
+    /**
+     * Calendar instance.
      */
     private Calendar calendar, currentWeek;
 
-    /*
-    It's our navbar.
-    */
+    /**
+     * It's our navbar.
+     */
     private NavBarView navbar_view;
 
-    /*
-    Recycler view aka from what I know it's how we display the list of items.
-    */
+    /**
+     * Recycler view, used to display a list of items.
+     */
     private RecyclerView recycler_view;
 
-    /*
-    Array list.
-    */
+    /**
+     * Array event list.
+     */
     private List<Event> event_list;
 
-    /*
-    This manages the layout.
-    */
+    /**
+     * Manages the layout for the RecyclerView.
+     */
     private LinearLayoutManager layout_manager;
 
-    /*
-    The event adapter for the event list.
-    */
+    /**
+     * Event adapter for the event list.
+     */
     private EventCalendarMonthlyAdapter adapter;
 
-    /*
-    This grabs the date.
-    */
+    /**
+     * Grabs the date.
+     */
     private static String date_getter;
 
-    /*
-    The button that brings up the popup menu displaying the views of the calendars.
-    */
+    /**
+     * The button that brings up the popup menu displaying the views of the calendars.
+     */
     private ImageButton menu_button;
 
+
+    /**
+     * Button to go to the analyze week page.
+     */
     private Button analyzeWeek;
 
+    /**
+     * URL request for the users mainly used for making the api calls and method requests.
+     */
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     @Override
@@ -176,24 +177,6 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
             currentWeek.add(Calendar.DAY_OF_MONTH, -1);
             currentDayOfWeek = (currentDayOfWeek - 1) % 7;
         }
-
-
-        // Calculate days of the week and month
-        /*sunDate.setText(sdf.format(calendar.getTime())); // Sunday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        monDate.setText(sdf.format(calendar.getTime())); // Monday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        tueDate.setText(sdf.format(calendar.getTime())); // Tuesday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        wedDate.setText(sdf.format(calendar.getTime())); // Wednesday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        thuDate.setText(sdf.format(calendar.getTime())); // Thursday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        friDate.setText(sdf.format(calendar.getTime())); // Friday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        satDate.setText(sdf.format(calendar.getTime())); // Saturday
-
-         */
 
         // Calculate days of the week and month using the 'calendar' object
         for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
@@ -357,7 +340,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     }
 
 
-    /*
+    /**
     Updates the calendar view.
      */
     private void updateCalendarView() {
@@ -420,8 +403,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent);
     }
 
-    /*
-    Gets the current date for the day.
+    /**
+     * Gets the current date for the certain day.
+     * @param dayOfWeek
+     * @return formatted date
      */
     private String getCurrentDateForDay(int dayOfWeek) {
         Calendar calendar = Calendar.getInstance();
@@ -430,6 +415,9 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * The method to call the list of events from the user.
+     */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
         StringRequest stringRequest = new StringRequest(
@@ -497,8 +485,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
-    /*
-    Method to get the date for the day of the week.
+    /**
+     * Method to get the date for the day of the week.
+     * @param dayOfWeek
+     * @param baseDate
+     * @return formatted date
      */
     private String getDateForDayOfWeek(int dayOfWeek, Calendar baseDate) {
         Calendar date = (Calendar) baseDate.clone();
