@@ -1,33 +1,38 @@
-// Author: Tristan Nono
-
 package groups;
 
-/*
-A member for the list of members.
+/**
+ * Represents a group.
+ * Information about the group such as its name, description, and ID.
+ *
+ * @author Tristan Nono
  */
 public class Member {
-    /*
-    The username.
+    /**
+     * The username (currently commented out and not used).
      */
     private String username;
 
-    /*
-    Group's ID number.
-    */
+    /**
+     * Group's ID number.
+     */
     private String group_id;
 
-    /*
-    Group's name.
+    /**
+     * Group's name.
      */
     private String group_name;
 
-    /*
-    Group's description.
-    */
+    /**
+     * Group's description.
+     */
     private String description;
 
-    /*
-    Constructor for member.
+    /**
+     * Constructor for the Member class.
+     *
+     * @param group_name The name of the group.
+     * @param description The description of the group.
+     * @param group_id The ID number of the group.
      */
     public Member(String group_name, String description, String group_id) {
         //this.username = username;
@@ -36,30 +41,38 @@ public class Member {
         this.group_id = group_id;
     }
 
-    /*
-    Get the username.
+    /**
+     * Get the username (currently not used).
+     *
+     * @return The username (may be null or an empty string).
      */
     public String getUsername() {
         return username;
     }
 
-    /*
-    Get the group's name.
-    */
+    /**
+     * Get the name of the group.
+     *
+     * @return The name of the group.
+     */
     public String getGroupName() {
         return group_name;
     }
 
-    /*
-    Get the description.
-    */
+    /**
+     * Get the description of the group.
+     *
+     * @return The description of the group.
+     */
     public String getDescription() {
         return description;
     }
 
-    /*
-    Get the group ID.
-    */
+    /**
+     * Get the ID number of the group.
+     *
+     * @return The ID number of the group.
+     */
     public String getGroupId() {
         return group_id;
     }

@@ -41,55 +41,59 @@ import events.Event;
 import homepage.HomePage;
 import profile.ProfilePage;
 
-/*
-The page for viewing the group members.
+/**
+ * The MemberViewer class represents the page for viewing group members.
+ * It includes functionality for displaying and managing group members using a RecyclerView.
+ * This class also handles interactions with the navigation bar and provides options for creating new groups.
+ *
+ * @author Tristan Nono
  */
 public class MemberViewer extends AppCompatActivity implements NavBarView.OnButtonClickListener {
-    /*
-    Create group button for creating groups
+    /**
+     * Create group button for creating groups
      */
     private ImageButton create_group_button;
 
-    /*
-    Recycler view to display the list of items.
+    /**
+     * Recycler view to display the list of items.
      */
     private RecyclerView recycler_view;
 
-    /*
-    Manages the layout as stated in the name.
+    /**
+     * Manages the layout as stated in the name.
      */
     private LinearLayoutManager layout_manger;
 
-    /*
-    Array list for the members to display them.
+    /**
+     * Array list for the members to display them.
      */
     private List<Member> member_list;
 
-    /*
-    Member adapter for the member list.
+    /**
+     * Member adapter for the member list.
      */
     private MemberAdapter adapter;
 
-    /*
-    Hi there navbar, fancy seeing you here. Yeah, it's the same one.l
-    */
+    /**
+     * Navbar.
+     */
     private NavBarView navbar_view;
 
-    /*
-    This is for the transitioning between pages.
-    */
+    /**
+     * This is for the transitioning between pages.
+     */
     private ActivityOptions options;
 
-    /*
-    Toolbar
-     */
-    private Toolbar toolbar;
-
-    /*
-    The URL for making the calls.
+    /**
+     * The URL for making the calls.
      */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
 
+    /**
+     * Initializes the MemberViewer activity, setting up the UI components and handling user interactions.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, if available.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +123,11 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         //member_list.add(new Member("Tristan", "Group 1", "1"));
 
         create_group_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * The button to navigate to the create event page
+             *
+             * @param view The View that was clicked.
+             */
             @Override
             public void onClick(View view) {
                 Log.d("MemberViewer", "Number of members: " + member_list.size());
@@ -129,6 +138,12 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
 
     }
 
+    /**
+     * Creates the options menu for the activity, including a search bar for filtering group members.
+     *
+     * @param menu The options menu in which you place your items.
+     * @return true for the menu to be displayed; false otherwise.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // So yeah basically creates the search bar.
@@ -137,11 +152,23 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         SearchView search_view = (SearchView) search_event.getActionView();
 
         search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            /**
+             * Called when the user submits the query.
+             *
+             * @param text The submitted query text.
+             * @return true if the query has been handled, false otherwise.
+             */
             @Override
             public boolean onQueryTextSubmit(String text) {
                 return false;
             }
 
+            /**
+             * Called when the query text is changed by the user.
+             *
+             * @param newText The new text in the query.
+             * @return true if the query text change has been handled, false otherwise.
+             */
             @Override
             public boolean onQueryTextChange(String newText) {
                 filterText(newText);
@@ -152,9 +179,10 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         return true;
     }
 
-    /*
-    Method that filters the text so the user can find their events without issues.
-    Gotta think of the users. :D
+    /**
+     * Filters the displayed group members based on the provided text.
+     *
+     * @param text The text used for filtering group members.
      */
     private void filterText(String text) {
         // List to filter the data.
@@ -179,15 +207,21 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         }
     }
 
-    /*
-    This is the request for getting the data for groups.
-    This GETs the groups from the server.
-    */
+    /**
+     * Initiates a request to the server to retrieve group data and populates the member list accordingly.
+     */
     private void getGroupsRequest() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
                 TEAMS_URL,
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         JSONArray responseArray;
@@ -217,6 +251,13 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request
@@ -229,6 +270,10 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCalendarButtonClick() {
         Intent intent = new Intent(MemberViewer.this, CalendarMonthlyPage.class);
@@ -236,6 +281,10 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onHomeButtonClick() {
         Intent intent = new Intent(MemberViewer.this, HomePage.class);
@@ -243,6 +292,10 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onMessagesButtonClick() {
         /*
@@ -250,6 +303,10 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
          */
     }
 
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onProfileButtonClick() {
         Intent intent = new Intent(MemberViewer.this, ProfilePage.class);
@@ -257,6 +314,10 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCreateEventButtonClick() {
         //Log.d("MemberViewer", "Create Event button clicked.");
