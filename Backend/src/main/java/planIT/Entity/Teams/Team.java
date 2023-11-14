@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import planIT.Entity.Users.User;
@@ -24,17 +26,21 @@ import planIT.Entity.Users.User;
  *
  */
 @Entity
+@Tag(name = "Team", description = "Represents a Team entity in the system.")
 public class Team {
 
     // Generated ID for each Team
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of team")
     private int id;
 
     // Name for each Team
+    @Schema(description = "Name of team")
     private String name;
 
     // Description for each Team
+    @Schema(description = "Description of team")
     private String description;
 
     // @JsonIgnoreProperties - Used to ignore the "users" property when serializing to JSON.

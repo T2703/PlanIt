@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import planIT.Entity.Chats.Chat;
 import planIT.Entity.Notifications.Notification;
 import planIT.Entity.Users.User;
-
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import jakarta.persistence.*;
  */
 
 @Entity
+@Tag(name = "Message", description = "Message entity for containing message info within a chat.")
 public class Message {
 
     // Generated ID for each Message
@@ -27,16 +29,20 @@ public class Message {
     @JsonIgnoreProperties("message")
     @ManyToOne
     @JoinColumn(name = "chat_id")
+    @Schema(description = "Chat")
     private Chat chat;
 
 
     // Body for each Message
+    @Schema(description = "Body of message")
     private String body;
 
     // Send time for each Message
+    @Schema(description = "Send time of message")
     private Date sendTime;
 
     // Receive time for each Message
+    @Schema(description = "Receive time of message")
     private Date receiveTime;
 
     // Message constructor (with parameters)

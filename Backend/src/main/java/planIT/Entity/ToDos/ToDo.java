@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import planIT.Entity.Users.User;
@@ -20,18 +22,24 @@ import planIT.Entity.Users.User;
  *
  */
 @Entity
+@Tag(name = "ToDo", description = "Represents a To-Do entity in the system.")
 public class ToDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of ToDo")
     private int id;
 
+    @Schema(description = "Name of ToDo")
     private String name;
 
+    @Schema(description = "Description of ToDo")
     private String description;
 
+    @Schema(description = "Remind time of ToDo")
     private Date remindTime;
 
+    @Schema(description = "Due date of ToDo")
     private Date dueDate;
 
     // @JsonIgnoreProperties - Used to ignore the "ToDos" property when serializing to JSON.
