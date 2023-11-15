@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -87,7 +88,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     /**
      * The buttons for going to the next or previous week.
      */
-    private TextView weekButtonNext, weekButtonPrev;
+    private ImageButton weekButtonNext, weekButtonPrev;
 
     /**
      * The dates of the day from Mon-Sun.
@@ -179,8 +180,8 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         thuDate = findViewById(R.id.thuDate);
         friDate = findViewById(R.id.friDate);
         satDate = findViewById(R.id.satDate);
-        weekButtonNext = findViewById(R.id.nextWeek);
-        weekButtonPrev = findViewById(R.id.prevWeek);
+        weekButtonNext = findViewById(R.id.nextWeekButton);
+        weekButtonPrev = findViewById(R.id.prevWeekButton);
         currentMonth = findViewById(R.id.month_text_view);
         currentYear = findViewById(R.id.year_text_view);
         menu_button = findViewById(R.id.menu_calendar_button);
@@ -269,14 +270,16 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                             startActivity(intent, options.toBundle());
                         }
 
-                        else if (menuItem.getItemId() == R.id.all_events) {
-                            Intent intent = new Intent(CalendarWeeklyPage.this, EventsListViewer.class);
+                        else if (menuItem.getItemId() == R.id.daily_view) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, CalendarDailyPage.class);
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
                             startActivity(intent, options.toBundle());
                         }
 
-                        else if (menuItem.getItemId() == R.id.daily_view) {
-                            Log.d("THING", date_getter);
+                        else if (menuItem.getItemId() == R.id.all_events) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, EventsListViewer.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
                         }
 
                         return true;
