@@ -1,5 +1,3 @@
-// Author: Tristan Nono
-
 package groups;
 
 import androidx.annotation.Nullable;
@@ -33,65 +31,87 @@ import java.util.List;
 import api.VolleySingleton;
 import messages.MessageView;
 
-/*
-This is where the group info is shown like their profile picture and the just
-the general info.
+/**
+ * Activity class for displaying group information including the group's profile picture and general details.
+ * This class also allows users, especially group administrators, to perform various actions such as editing,
+ * deleting, and navigating to the group's chat.
+ *
+ * <p>
+ * Intent Extras required to launch this activity:
+ * - "group_name": The name of the group.
+ * - "group_description": The description of the group.
+ * - "group_id": The unique identifier for the group.
+ * </p>
+ *
+ * @author Tristan Nono
  */
 public class GroupInfo extends AppCompatActivity {
+    /**
+     * The request code for editing the group.
+     */
     private static final int EDIT_GROUP_REQUEST_CODE = 1;
-    /*
-    At this point we should know what it does. It goes back.
-    */
+
+    /**
+     * Back button.
+     */
     private ImageButton back_button;
 
-    /*
-    Name of the group.
+    /**
+     * Name of the group.
      */
     private TextView group_name;
 
-    /*
-    Description of the group.
+    /**
+     * Description of the group.
      */
     private TextView group_description;
 
-    /*
-    The button that brings up the popup menu displaying:
-    Going to the chat or if you're admin deleting the group or editing the info.
+    /**
+     * The button that brings up the popup menu displaying:
+     * Going to the chat or if you're admin deleting the group or editing the info.
      */
     private ImageButton menu_button;
 
-    /*
-    The list of the groups.
-    */
+    /**
+     * The list of groups.
+     */
     private List<Member> member_list;
 
-    /*
-    Context: context
+    /**
+     * Context: context
      */
     private Context context;
 
-    /*
-    Gets the group name.
-    */
+    /**
+     * Gets the group name.
+     */
     private String getting_group_name;
 
-    /*
-    Gets the group description.
+    /**
+     * Gets the group description.
      */
     private String getting_group_desc;
 
-    /*
-    Gets the group id.
+    /**
+     * Gets the group ID.
      */
     private String getting_group_id;
 
-    /*
-    Member adapter for the member list.
+    /**
+     * Group adapter for the groups (I have forgotten to rename this).
      */
     private MemberAdapter adapter;
 
+    /**
+     * The teams url for making the request.
+     */
     private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
 
+    /**
+     * Initializes the activity and sets up UI components.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +189,13 @@ public class GroupInfo extends AppCompatActivity {
 
     }
 
+    /**
+     * Handles the result of the activity started for editing the group.
+     *
+     * @param requestCode The request code passed to startActivityForResult().
+     * @param resultCode  The result code returned by the child activity.
+     * @param data        An Intent, which can return result data to the caller.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -186,10 +213,10 @@ public class GroupInfo extends AppCompatActivity {
         }
     }
 
-    /*
-    This is the request for getting the data for groups.
-    This GETs the groups from the server.
-    */
+    /**
+     * This is the request for getting the data for groups.
+     * This GETs the groups from the server.
+     */
     private void getGroupsRequest() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
@@ -236,10 +263,13 @@ public class GroupInfo extends AppCompatActivity {
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
-    /*
-    Makes the delete request call. That's all it does really should be
-    self explanatory.
-    */
+    /**
+     * Initiates a delete request for the group with the specified group ID.
+     * Removes the deleted group from the list and updates the UI accordingly.
+     *
+     * @param deleteUrl The URL for the delete request.
+     * @param group_id  The unique identifier of the group to be deleted.
+     */
     private void makeDeleteRequest(String deleteUrl, String group_id) {
         // Find the position of the item with the given group_id
         Log.d("TAG", String.valueOf(member_list.size()));
@@ -285,6 +315,9 @@ public class GroupInfo extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates the UI with the received group data.
+     */
     private void updateUIWithGroupData() {
         // Update your UI components with the new group data
         group_name.setText(getting_group_name);

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -51,86 +52,120 @@ import profile.LoginFormPage;
 import profile.ProfilePage;
 import websockets.WebSocketManager;
 
-/*
-The calendar page but this time it's the weekly page.
-"Code may be spaghetti but it works"
-    -Some random dude named Tristan.
+/**
+ * Activity class for displaying a weekly view of the calendar with user events.
+ * Users can navigate through weeks using gesture detection and view events for each day.
+ *
+ * <p>
+ * UI components:
+ * - TextView: sunDate, monDate, tueDate, wedDate, thuDate, friDate, satDate (Displays dates for each day of the week)
+ * - TextView: currentMonth, currentYear (Displays the current month and year)
+ * - TextView: weekButtonNext, weekButtonPrev (Buttons for navigating to the next or previous week)
+ * - ImageButton: menu_button (Button to show a popup menu with calendar view options)
+ * - NavBarView: navbar_view (Custom navigation bar for switching between app sections)
+ * - RecyclerView: recycler_view (Displays a list of events for the selected date)
+ * - Button: analyzeWeek (Button to go to the Analyze Week page)
+ * </p>
+ *
+ * <p>
+ * Functionalities:
+ * - Displays a weekly view of the calendar with dates for each day of the week.
+ * - Allows users to navigate to the next or previous week.
+ * - Provides options to switch to a monthly view, daily view, or view all events through a popup menu.
+ * - Uses gesture detection for navigating between weeks.
+ * - Uses a RecyclerView to display a list of events for the selected week.
+ * - Implements the NavBarView.OnButtonClickListener interface for handling navigation button clicks.
+ * - Makes API requests to get the user's events for the selected week.
+ * </p>
+ *
+ * <p>
+ * The class also uses the EventCalendarMonthlyAdapter for managing the event list in the RecyclerView.
+ * </p>
+ *
+ * @author Tristan Nono
  */
 public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
-    /*
-    The week range of the week.
+    /**
+     * The buttons for going to the next or previous week.
      */
-    private LinearLayout weekLayout;
+    private ImageButton weekButtonNext, weekButtonPrev;
 
-    /*
-    The buttons for going to the next or previous week.
-     */
-    private TextView weekButtonNext, weekButtonPrev;
-
-    /*
-    The dates of the day mon-sun.
+    /**
+     * The dates of the day from Mon-Sun.
      */
     private TextView sunDate, monDate, tueDate, wedDate, thuDate, friDate, satDate;
 
-    /*
-    The current month.
+    /**
+     * The current month.
      */
     private TextView currentMonth;
 
-    /*
-    The current year.
+    /**
+     * The current year.
      */
     private TextView currentYear;
 
-    /*
-    Gesture Dector.
+    /**
+     * Gesture Detector.
      */
     private GestureDetector gestureDetector;
 
-    /*
-    Calendar thing.
+    /**
+     * Calendar instance.
      */
     private Calendar calendar, currentWeek;
 
-    /*
-    It's our navbar.
-    */
+    /**
+     * It's our navbar.
+     */
     private NavBarView navbar_view;
 
-    /*
-    Recycler view aka from what I know it's how we display the list of items.
-    */
+    /**
+     * Recycler view, used to display a list of items.
+     */
     private RecyclerView recycler_view;
 
-    /*
-    Array list.
-    */
+    /**
+     * Array event list.
+     */
     private List<Event> event_list;
 
-    /*
-    This manages the layout.
-    */
+    /**
+     * Manages the layout for the RecyclerView.
+     */
     private LinearLayoutManager layout_manager;
 
-    /*
-    The event adapter for the event list.
-    */
+    /**
+     * Event adapter for the event list.
+     */
     private EventCalendarMonthlyAdapter adapter;
 
-    /*
-    This grabs the date.
-    */
+    /**
+     * Grabs the date.
+     */
     private static String date_getter;
 
-    /*
-    The button that brings up the popup menu displaying the views of the calendars.
-    */
+    /**
+     * The button that brings up the popup menu displaying the views of the calendars.
+     */
     private ImageButton menu_button;
 
+
+    /**
+     * Button to go to the analyze week page.
+     */
     private Button analyzeWeek;
 
+    /**
+     * URL request for the users mainly used for making the api calls and method requests.
+     */
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
+    /**
+     * Initializes the activity, sets up UI components, and retrieves events for the current week.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,8 +180,8 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         thuDate = findViewById(R.id.thuDate);
         friDate = findViewById(R.id.friDate);
         satDate = findViewById(R.id.satDate);
-        weekButtonNext = findViewById(R.id.nextWeek);
-        weekButtonPrev = findViewById(R.id.prevWeek);
+        weekButtonNext = findViewById(R.id.nextWeekButton);
+        weekButtonPrev = findViewById(R.id.prevWeekButton);
         currentMonth = findViewById(R.id.month_text_view);
         currentYear = findViewById(R.id.year_text_view);
         menu_button = findViewById(R.id.menu_calendar_button);
@@ -177,24 +212,6 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
             currentDayOfWeek = (currentDayOfWeek - 1) % 7;
         }
 
-
-        // Calculate days of the week and month
-        /*sunDate.setText(sdf.format(calendar.getTime())); // Sunday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        monDate.setText(sdf.format(calendar.getTime())); // Monday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        tueDate.setText(sdf.format(calendar.getTime())); // Tuesday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        wedDate.setText(sdf.format(calendar.getTime())); // Wednesday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        thuDate.setText(sdf.format(calendar.getTime())); // Thursday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        friDate.setText(sdf.format(calendar.getTime())); // Friday
-        currentWeek.add(Calendar.DAY_OF_MONTH, -1);
-        satDate.setText(sdf.format(calendar.getTime())); // Saturday
-
-         */
-
         // Calculate days of the week and month using the 'calendar' object
         for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -223,6 +240,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
 
 
         menu_button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Creates and displays a {@link PopupMenu}
+             * anchored to the clicked view, inflates the options menu for the calendar, and shows the popup menu.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(CalendarWeeklyPage.this, view);
@@ -230,6 +254,14 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                 popup_menu.show();
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    /**
+                     * Called when a menu item in the options menu is clicked.
+                     * Performs actions based on the selected menu item, such as starting a new activity.
+                     *
+                     * @param menuItem The menu item that was clicked.
+                     *                 It can be used to identify which menu item triggered the click event.
+                     * @return true if the menu item click has been handled, false otherwise.
+                     */
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.monthly_view) {
@@ -238,14 +270,16 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                             startActivity(intent, options.toBundle());
                         }
 
-                        else if (menuItem.getItemId() == R.id.all_events) {
-                            Intent intent = new Intent(CalendarWeeklyPage.this, EventsListViewer.class);
+                        else if (menuItem.getItemId() == R.id.daily_view) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, CalendarDailyPage.class);
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
                             startActivity(intent, options.toBundle());
                         }
 
-                        else if (menuItem.getItemId() == R.id.daily_view) {
-                            Log.d("THING", date_getter);
+                        else if (menuItem.getItemId() == R.id.all_events) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, EventsListViewer.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
                         }
 
                         return true;
@@ -257,6 +291,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         weekButtonNext.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified code v (view) is clicked. Increments the current week by one,
+             * updates the date getter, updates the calendar view, and requests events for the updated date.
+             *
+             * @param v The view that was clicked.
+             *          It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View v) {
                 currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
@@ -269,6 +310,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         weekButtonPrev.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified v (view) is clicked. Decrements the current week by one,
+             * updates the date getter, updates the calendar view, and requests events for the updated date.
+             *
+             * @param v The view that was clicked.
+             *          It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View v) {
                 currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
@@ -280,6 +328,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         sunDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Sunday, requests events for the updated date, and logs the selected Sunday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.SUNDAY, currentWeek);
@@ -289,6 +344,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         monDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Monday, requests events for the updated date, and logs the selected Monday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.MONDAY, currentWeek);
@@ -298,6 +360,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         tueDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Tuesday, requests events for the updated date, and logs the selected Tuesday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.TUESDAY, currentWeek);
@@ -307,6 +376,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         wedDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Wednesday requests events for the updated date, and logs the selected Wednesday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.WEDNESDAY, currentWeek);
@@ -316,6 +392,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         thuDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Thursday, requests events for the updated date, and logs the selected Thursday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.THURSDAY, currentWeek);
@@ -325,6 +408,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         friDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Friday, requests events for the updated date, and logs the selected Friday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.FRIDAY, currentWeek);
@@ -334,6 +424,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         satDate.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Updates the date getter with the date
+             * of the current week's Saturday, requests events for the updated date, and logs the selected Saturday's date.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                 date_getter = getDateForDayOfWeek(Calendar.SATURDAY, currentWeek);
@@ -343,6 +440,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         });
 
         analyzeWeek.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the specified view is clicked. Launches an Intent to navigate
+             * from the current CalendarWeeklyPage to the AnalyzeSchedule activity.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
             @Override
             public void onClick(View view) {
                Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
@@ -357,7 +461,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     }
 
 
-    /*
+    /**
     Updates the calendar view.
      */
     private void updateCalendarView() {
@@ -387,11 +491,19 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
 
     }
 
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCalendarButtonClick() {
         // Does nothing.
     }
 
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onHomeButtonClick() {
         Intent intent = new Intent(CalendarWeeklyPage.this, HomePage.class);
@@ -399,6 +511,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onMessagesButtonClick() {
         Intent intent = new Intent(CalendarWeeklyPage.this, MemberViewer.class);
@@ -406,6 +522,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onProfileButtonClick() {
         Intent intent = new Intent(CalendarWeeklyPage.this, ProfilePage.class);
@@ -413,6 +533,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent, options.toBundle());
     }
 
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
     @Override
     public void onCreateEventButtonClick() {
         // Navigate to Create Events page
@@ -420,8 +544,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         startActivity(intent);
     }
 
-    /*
-    Gets the current date for the day.
+    /**
+     * Gets the current date for a specified day of the week.
+     *
+     * @param dayOfWeek The day of the week (Calendar.DAY_OF_WEEK) for which to get the current date.
+     * @return A formatted date string (yyyy-MM-dd) for the specified day.
      */
     private String getCurrentDateForDay(int dayOfWeek) {
         Calendar calendar = Calendar.getInstance();
@@ -430,12 +557,23 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Makes a request to the server to get the list of events for the user.
+     * Populates the event_list and updates the adapter to reflect the changes.
+     */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
                 URL_STRING_REQ + username + "/events",
                 new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
                     @Override
                     public void onResponse(String response) {
                         JSONArray responseArray;
@@ -485,6 +623,13 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                     }
                 },
                 new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request
@@ -497,8 +642,12 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
-    /*
-    Method to get the date for the day of the week.
+    /**
+     * Gets the date for a specific day of the week relative to a base date.
+     *
+     * @param dayOfWeek The day of the week (Calendar.DAY_OF_WEEK) to get the date for.
+     * @param baseDate   The base date from which the calculation starts.
+     * @return A formatted date string (yyyy-MM-dd) for the specified day of the week.
      */
     private String getDateForDayOfWeek(int dayOfWeek, Calendar baseDate) {
         Calendar date = (Calendar) baseDate.clone();

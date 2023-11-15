@@ -15,40 +15,51 @@ import websockets.WebSocketManager;
 
 import org.java_websocket.handshake.ServerHandshake;
 
-/*
-The message view for the messaging of the app like DMs and GCs (group chats).
+/**
+ * The MessageView class represents the message view for the messaging feature of the app,
+ * including direct messages (DMs) and group chats (GCs). It provides a user interface for sending
+ * and receiving messages through a WebSocket connection.
+ *
+ * This class implements the WebSocketListener interface to handle WebSocket events.
+ *
+ * @author Tristan Nono
  */
 public class MessageView extends AppCompatActivity implements WebSocketListener {
-    /*
-    The url for the messaging.
+    /**
+     * The url for the messaging.
      */
     private String MESSAGE_URL = "ws://10.0.2.2:8080/chat/";
 
-    /*
-    The button for sending message.
+    /**
+     * The button for sending message.
      */
     private Button send_button;
 
-    /*
-    The button for sending message.
-    */
+    /**
+     * The button for sending message.
+     */
     private Button connect;
 
-    /*
-    Where the user can send your message.
+    /**
+     * Where the user can send your message.
      */
     private EditText user_message;
 
-    /*
-    This is just a place holder.
-    */
+    /**
+     * This is just a place holder.
+     */
     private EditText username_placeholder;
 
-    /*
-    This is where the messages appear on this little box.
+    /**
+     * This is where the messages appear on this little box.
      */
     private TextView message_appear_screen;
 
+    /**
+     * Initializes the MessageView activity, setting up the UI components, and handling user interactions.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, if available.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +86,11 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
         });
 
         connect.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles click events on the send_button, sending the user's message through the WebSocket connection.
+             *
+             * @param view The View that was clicked.
+             */
             @Override
             public void onClick(View view) {
                 try {
@@ -91,11 +107,21 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
         });
     }
 
+    /**
+     * Callback method invoked when the WebSocket connection is opened.
+     *
+     * @param handshakedata Information about the WebSocket handshake.
+     */
     @Override
     public void onWebSocketOpen(ServerHandshake handshakedata) {
 
     }
 
+    /**
+     * Callback method invoked when a message is received through the WebSocket connection.
+     *
+     * @param message The received message.
+     */
     @Override
     public void onWebSocketMessage(String message) {
         runOnUiThread(() -> {
@@ -104,6 +130,13 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
         });
     }
 
+    /**
+     * Callback method invoked when the WebSocket connection is closed.
+     *
+     * @param code   The status code of the closure.
+     * @param reason A description of the reason for the closure.
+     * @param remote Indicates whether the connection was closed remotely.
+     */
     @Override
     public void onWebSocketClose(int code, String reason, boolean remote) {
         String closed_by = remote ? "server" : "local";
@@ -113,6 +146,11 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
         });
     }
 
+    /**
+     * Callback method invoked when an error occurs in the WebSocket connection.
+     *
+     * @param ex The exception representing the error.
+     */
     @Override
     public void onWebSocketError(Exception ex) {
 

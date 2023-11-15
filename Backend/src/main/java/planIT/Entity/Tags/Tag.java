@@ -2,13 +2,13 @@ package planIT.Entity.Tags;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import io.swagger.v3.oas.annotations.media.Schema;
 import planIT.Entity.Users.User;
 
 
@@ -16,10 +16,13 @@ import planIT.Entity.Users.User;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID of tag")
     private int id;
 
+    @Schema(description = "Name of tag")
     private String name;
 
+    @Schema(description = "Description of tag")
     private String description;
 
     @JsonIgnoreProperties("tags")

@@ -8,14 +8,21 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 
+/**
+ * WebSocket endpoint for managing active users.
+ * This class handles user connections, disconnections, and broadcasts the number of active users.
+ *
+ * @author Melani Hodge
+ *
+ */
 @ServerEndpoint(value = "/active/{username}")
 @Component
 public class ActiveUserServer {
@@ -26,6 +33,9 @@ public class ActiveUserServer {
 
     private final Logger logger = LoggerFactory.getLogger(ActiveUserServer.class);
 
+    /**
+     * Broadcasts the number of active users to all connected sessions.
+     */
     private void broadcastActiveUsers() {
         sessionUsernameMap.forEach((session, username) -> {
             try {
@@ -36,6 +46,13 @@ public class ActiveUserServer {
         });
     }
 
+    /**
+     * Handles the opening of a WebSocket session.
+     *
+     * @param session  The WebSocket session.
+     * @param username The username obtained from the path parameter.
+     * @throws IOException If an I/O error occurs.
+     */
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username)
             throws IOException {
@@ -59,11 +76,24 @@ public class ActiveUserServer {
         broadcastActiveUsers();
     }
 
+    /**
+     * Handles the reception of a WebSocket message.
+     *
+     * @param session The WebSocket session.
+     * @param message The received message.
+     * @throws IOException If an I/O error occurs.
+     */
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
         broadcastActiveUsers();
     }
 
+    /**
+     * Handles the closing of a WebSocket session.
+     *
+     * @param session The WebSocket session.
+     * @throws IOException If an I/O error occurs.
+     */
     @OnClose
     public void onClose(Session session) throws IOException {
         // get the username from session-username mapping
@@ -79,6 +109,12 @@ public class ActiveUserServer {
         broadcastActiveUsers();
     }
 
+    /**
+     * Handles WebSocket errors.
+     *
+     * @param session   The WebSocket session.
+     * @param throwable The Throwable representing the error.
+     */
     @OnError
     public void onError(Session session, Throwable throwable) {
         // Do error handling here
