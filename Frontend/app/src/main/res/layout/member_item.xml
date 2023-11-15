@@ -30,8 +30,8 @@
             android:layout_height="37dp"
             android:layout_marginTop="8dp"
             android:textSize="16sp"
-            android:translationX="25dp"
-            android:translationY="-40dp" />
+            android:translationX="30dp"
+            android:translationY="-33dp" />
 
         <ImageButton
             android:id="@+id/drag_handle"
