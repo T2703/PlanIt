@@ -119,7 +119,7 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
         getGroupsRequest();
 
         // Sample data
-        //member_list.add(new Member("Group 1", "Hello", "2"));
+        member_list.add(new Member("Group 1", "Hello", "2"));
         //member_list.add(new Member("Tristan", "Group 1", "1"));
 
         create_group_button.setOnClickListener(new View.OnClickListener() {
