@@ -31,11 +31,9 @@ public class scheduleCompare {
         schedule.sort(new startDateComparator());
 
         //IF NO EVENTS
-        /*
-        if(schedule.isEmpty()){
-            return("Available: \n  " + dateRange.getStartDate().toString() + " - " + dateRange.getEndDate().toString() + '\n');
+        if(schedule.isEmpty()) {
+            return schedule;
         }
-         */
 
         //INITIALIZE UNAVAILABLE LIST
         List<Event> unavailable = new ArrayList<>();
@@ -156,6 +154,7 @@ public class scheduleCompare {
     }
 
     //RETURNS AVAILABILITY IN HALF HOUR INCREMENTS
+    // WORK IN PROGRESS....
     static public String compareBy30(Team team, Date rangeStart, Date rangeEnd){
 
         boolean done =false;
@@ -166,7 +165,7 @@ public class scheduleCompare {
             Date newEnd = rangeStart;
             newEnd.setMinutes(rangeStart.getMinutes()+30);
 
-            temp = compareSchedule(team, rangeStart, newEnd);
+            temp = compareStandard(team, rangeStart, newEnd);
 
             if(temp.length()>15){
                 temp = temp.substring(12);
@@ -185,14 +184,21 @@ public class scheduleCompare {
 
     //HELPER METHOD, CHECKS FOR DATE INSIDE EVENT START/END
     static public boolean dateWithin(Date date, Event event) {
+        if(date ==null || event.getStartDate()==null){
+            return false;
+        }
         return ((event.getStartDate().before(date) && event.getEndDate().after(date) )
                 || event.getStartDate().equals(date) || event.getEndDate().equals(date) );
     }
 
 
-    //COMPARATOR FOR EVENTS
+    //COMPARATOR FOR EVENTS, based on startDate
     static private class startDateComparator implements Comparator<Event> {
         public int compare(Event event1, Event event2){
+            if(event1.getStartDate()==null || event2.getStartDate()==null){
+                return 0;
+            }
+
             if(event1.getStartDate().equals(event2.getStartDate())){
                 return 0;
             }
