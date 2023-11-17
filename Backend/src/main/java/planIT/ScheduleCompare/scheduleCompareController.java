@@ -11,6 +11,9 @@ import planIT.Entity.Teams.TeamRepository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Controller to access the scheduleCompare class.  API calls use 'RequestBody Event' as a container for the start/end dates of the method call.
+ */
 @RestController
 @Tag(name = "Schedule Compare Controller", description = "Finds the time availability for all members of a team and returns it as either an Event List or a String")
 public class scheduleCompareController {
