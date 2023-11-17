@@ -1,5 +1,7 @@
 package planIT.ScheduleCompare;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import planIT.Entity.Events.Event;
@@ -10,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@Tag(name = "Schedule Compare Controller", description = "Finds the time availability for all members of a team and returns it as either an Event List or a String")
 public class scheduleCompareController {
 
     private final TeamRepository teamRepository;
@@ -19,11 +22,12 @@ public class scheduleCompareController {
         this.teamRepository = teamRepository;
     }
 
-    @GetMapping(path = "/compareSchedule/{teamId}/{startDate}/{endDate}")
-    public List<Event> compareSchedule(@PathVariable int teamId, @PathVariable long startDate, @PathVariable long endDate) {
+    @GetMapping(path = "/compareSchedule/{teamId}/dates")
+    @Operation(summary = "Compares team schedules, returns Event List", description = "Compares the events of a team and returns the availability as an Event List")
+    public List<Event> compareSchedule(@PathVariable int teamId, @RequestBody Event event) {
 
-        Date start = new Date(startDate);
-        Date end = new Date(endDate);
+        Date start = event.getStartDate();
+        Date end = event.getEndDate();
 
         Team target = teamRepository.findById(teamId);
         List<Event> returnList = scheduleCompare.compareSchedule(target, start, end);
@@ -31,11 +35,12 @@ public class scheduleCompareController {
         return returnList;
     }
 
-    @GetMapping(path = "/compareStandard/{teamId}/{startDate}/{endDate}")
-    public String compareStandard(@PathVariable int teamId, @PathVariable long startDate, @PathVariable long endDate) {
+    @GetMapping(path = "/compareStandard/{teamId}/dates")
+    @Operation(summary = "Compares team schedules, returns a String", description = "Compares the events of a team and returns the availability as a String")
+    public String compareStandard(@PathVariable int teamId, @RequestBody Event event) {
 
-        Date start = new Date(startDate);
-        Date end = new Date(endDate);
+        Date start = event.getStartDate();
+        Date end = event.getEndDate();
 
         Team target = teamRepository.findById(teamId);
         String returnString = scheduleCompare.compareStandard(target, start, end);
@@ -43,17 +48,16 @@ public class scheduleCompareController {
         return returnString;
     }
 
-    @GetMapping(path = "/compareBy30/{teamId}/{startDate}/{endDate}")
-    public String compareBy30(@PathVariable int teamId, @PathVariable long startDate, @PathVariable long endDate) {
+    @GetMapping(path = "/compareBy30/{teamId}/dats")
+    @Operation(summary = "Compares team schedules by 30 mins, returns a String", description = "Compares the events of a team in 30 minute increments and returns the availability as a String")
+    public String compareBy30(@PathVariable int teamId, @RequestBody Event event) {
 
-        Date start = new Date(startDate);
-        Date end = new Date(endDate);
+        Date start = event.getStartDate();
+        Date end = event.getEndDate();
 
         Team target = teamRepository.findById(teamId);
         String returnString = scheduleCompare.compareBy30(target, start, end);
 
         return returnString;
     }
-
-
 }
