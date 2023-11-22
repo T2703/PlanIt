@@ -1,42 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp">
 
-
-    <ImageButton
-        android:id="@+id/menu_button"
-        android:layout_width="76dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:translationX="300dp"
-        app:srcCompat="@drawable/baseline_menu_24" />
-
-    <TextView
-        android:id="@+id/event_start_time"
-        android:layout_width="138dp"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:translationY="-20dp" />
-
-    <TextView
-        android:id="@+id/event_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginTop="8dp"
-        android:translationY="-20dp" />
+        android:layout_height="90dp"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/event_end_time"
-        android:layout_width="138dp"
-        android:layout_height="25dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:translationX="140dp"
-        android:translationY="-90dp" />
+        <ImageButton
+            android:id="@+id/menu_button"
+            android:layout_width="76dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:translationX="300dp"
+            app:srcCompat="@drawable/baseline_menu_24" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/event_start_time"
+            android:layout_width="138dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:translationX="40dp"
+            android:translationY="-20dp" />
+
+        <TextView
+            android:id="@+id/event_title"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="8dp"
+            android:translationX="5dp"
+            android:translationY="-20dp" />
+
+        <TextView
+            android:id="@+id/event_end_time"
+            android:layout_width="138dp"
+            android:layout_height="25dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:translationX="180dp"
+            android:translationY="-90dp" />
+
+        <ImageView
+            android:id="@+id/tag_color"
+            android:layout_width="29dp"
+            android:layout_height="35dp"
+            android:translationX="0dp"
+            android:translationY="-120dp"
+            app:srcCompat="@android:drawable/checkbox_off_background" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

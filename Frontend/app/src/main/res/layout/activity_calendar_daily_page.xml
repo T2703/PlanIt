@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="calendar.CalendarMonthlyPage">
+    tools:context="calendar.CalendarDailyPage">
 
     <com.example.myapplication.NavBarView
         android:id="@+id/navbar"
@@ -14,6 +14,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/liste"
+            android:layout_width="match_parent"
+            android:layout_height="530dp"
+            android:translationY="40dp" />
+
         <ImageButton
             android:id="@+id/menu_calendar_button"
             android:layout_width="wrap_content"
@@ -21,21 +27,36 @@
             android:background="@null"
             android:translationX="360dp"
             app:srcCompat="@drawable/baseline_menu_24" />
+
+        <ImageButton
+            android:id="@+id/prevDayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:translationX="70dp"
+            android:translationY="15dp"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
+
+        <ImageButton
+            android:id="@+id/nextDayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:translationX="320dp"
+            android:translationY="15dp"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
     </com.example.myapplication.NavBarView>
 
-    <CalendarView
-        android:id="@+id/calendar_view"
+    <TextView
+        android:id="@+id/dayOfMonthText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="16dp"
+        android:text="dayofmonth"
+        android:textSize="20dp"
+        android:translationY="-5dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:translationY="-100dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

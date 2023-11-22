@@ -1,85 +1,73 @@
 package calendar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import api.VolleySingleton;
 import events.CreateEventPage;
 import events.Event;
 import events.EventsListViewer;
 import groups.MemberViewer;
-import com.example.myapplication.NavBarView;
-
 import homepage.HomePage;
 import profile.ProfilePage;
 import websockets.WebSocketManager;
 
-import com.example.myapplication.R;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 /**
- * Activity class for displaying a monthly view of the calendar with user events.
- * Users can navigate through months using the CalendarView and view events for selected dates.
- *
- * <p>
- * UI components:
- * - CalendarView: calendar_display (Displays the calendar for selecting dates)
- * - TextView: date_view (Displays the selected date)
- * - NavBarView: navbar_view (Custom navigation bar for switching between app sections)
- * - ImageButton: menu_button (Button to show a popup menu with calendar view options)
- * - RecyclerView: recycler_view (Displays a list of events for the selected date)
- * </p>
- *
- * <p>
- * Functionalities:
- * - Displays a monthly calendar using CalendarView.
- * - Updates the displayed events based on the selected date.
- * - Provides options to switch to a weekly view or view all events through a popup menu.
- * - Uses a RecyclerView to display a list of events for the selected date.
- * - Implements the NavBarView.OnButtonClickListener interface for handling navigation button clicks.
- * - Makes API requests to get the user's events for the selected date.
- * </p>
- *
- * <p>
- * The class also uses the EventCalendarMonthlyAdapter for managing the event list in the RecyclerView.
- * </p>
+ * This class represents the daily view for the calendar page in a mobile application.
+ * It extends AppCompatActivity and implements NavBarView.OnButtonClickListener for button click events.
  *
  * @author Tristan Nono
  */
-public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
+public class CalendarDailyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {
     /**
-     * The calendar for displaying the calendar (I mean, I don't know what else to say).
+     * The buttons for going to the next or previous day.
      */
-    private CalendarView calendar_display;
+    private ImageButton dayButtonNext, dayButtonPrev;
 
     /**
-     * This grabs the date from the onSelectedDayChange.
+     * The day it is.
+     */
+    private TextView dayOfMonth;
+
+    /**
+     * This grabs the date.
      */
     private static String date_getter;
+
+    /**
+     * Calendar thing.
+     */
+    private Calendar calendar, currentWeek;
 
     /**
      * It's our navbar.
@@ -87,12 +75,12 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     private NavBarView navbar_view;
 
     /**
-     * This is for the transitioning between pages.
+     * The event adapter for the event list.
      */
-    private ActivityOptions options;
+    private EventCalendarMonthlyAdapter adapter;
 
     /**
-     * Array list for the event list.
+     * Array list.
      */
     private List<Event> event_list;
 
@@ -107,69 +95,88 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     private RecyclerView recycler_view;
 
     /**
-     * The event adapter for the event list.
-     */
-    private EventCalendarMonthlyAdapter adapter;
-
-    /**
      * The button that brings up the popup menu displaying the views of the calendars.
      */
     private ImageButton menu_button;
 
     /**
-     * URL request for the users mainly used for making the api calls and method requests.
+     * Url request for making the calls to the api.
      */
     private static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     /**
-     * Initializes the activity, sets up UI components, and retrieves events for the current date.
+     * Method called when the activity is created.
+     * Initializes components, sets up listeners, and makes an initial request for events.
      *
-     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     * @param savedInstanceState Bundle object containing the activity's previously saved state.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar_monthly_page);
+        setContentView(R.layout.activity_calendar_daily_page);
 
-        // Initialize
-        calendar_display = findViewById(R.id.calendar_view);
+        //Initialize the components
+        dayButtonNext = findViewById(R.id.nextDayButton);
+        dayButtonPrev = findViewById(R.id.prevDayButton);
+        dayOfMonth = findViewById(R.id.dayOfMonthText);
         navbar_view = findViewById(R.id.navbar);
+        navbar_view.setSelectedButton(navbar_view.getCalendarButton());
+        menu_button = findViewById(R.id.menu_calendar_button);
         navbar_view.setOnButtonClickListener(this);
+        navbar_view.setSelectedButton(navbar_view.getCalendarButton());
         event_list = new ArrayList<>();
         adapter = new EventCalendarMonthlyAdapter(this, event_list);
         layout_manager = new LinearLayoutManager(this);
-        menu_button = findViewById(R.id.menu_calendar_button);
-        recycler_view = findViewById(R.id.recycler_view);
+
+        recycler_view = findViewById(R.id.liste);
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
-        navbar_view.setSelectedButton(navbar_view.getCalendarButton());
+
+        calendar = Calendar.getInstance();
+        currentWeek = (Calendar) calendar.clone();
 
 
-        // Set the on date change listener (so when the user clicks on the date, it does something).
-        calendar_display.setOnDateChangeListener(
-                new CalendarView.OnDateChangeListener() {
+        SimpleDateFormat sdf = new SimpleDateFormat("d", Locale.getDefault());
+        SimpleDateFormat monthSdf = new SimpleDateFormat("MMMM", Locale.getDefault());
+        SimpleDateFormat yearSdf = new SimpleDateFormat("yyyy", Locale.getDefault());
+        dayOfMonth.setText(monthSdf.format(calendar.getTime()) + " " + sdf.format(calendar.getTime()) + "," + " " + yearSdf.format(calendar.getTime()));
 
-                    /**
-                     * Called when the user selects a day on the {@code calendar_view}.
-                     * Updates the selected date, displays it in the {@code date_view}, and requests events for the selected date.
-                     *
-                     * @param calendar_view The CalendarView that triggered the change event.
-                     * @param year The selected year.
-                     * @param month The selected month (0-indexed, i.e., January is 0).
-                     * @param day_of_month The selected day of the month.
-                     */
-                    @Override
-                    public void onSelectedDayChange(@NonNull CalendarView calendar_view, int year, int month, int day_of_month) {
-                        Calendar selectedDate = Calendar.getInstance();
-                        selectedDate.set(year, month, day_of_month);
+        getEventsRequest();
 
-                        date_getter = String.format("%04d-%02d-%02d", year, month + 1, day_of_month);
-                        // Request here everytime when a day is selected.
-                        getEventsRequest();
+        // Buttons
+        dayButtonNext.setOnClickListener(new View.OnClickListener() {
+            /**
+             * This onClick advances the day forward.
+             *
+             * @param v view that has been clicked
+             */
+            @Override
+            public void onClick(View v) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                //currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
+                date_getter = getDateForDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK), calendar);
+                getEventsRequest();
+                Log.d("DATE", date_getter);
+                updateDateText();
+            }
+        });
 
-                    }
-                }
-        );
+        dayButtonPrev.setOnClickListener(new View.OnClickListener() {
+            /**
+             * This onClick advances the day backward.
+             *
+             * @param v view that has been clicked
+             */
+            @Override
+            public void onClick(View v) {
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                //currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
+                date_getter = getDateForDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK), calendar);
+                getEventsRequest();
+                Log.d("DATE", date_getter);
+                updateDateText();
+            }
+        });
 
         menu_button.setOnClickListener(new View.OnClickListener() {
             /**
@@ -181,7 +188,7 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
              */
             @Override
             public void onClick(View view) {
-                PopupMenu popup_menu = new PopupMenu(CalendarMonthlyPage.this, view);
+                PopupMenu popup_menu = new PopupMenu(CalendarDailyPage.this, view);
                 popup_menu.getMenuInflater().inflate(R.menu.options_menu_calendar, popup_menu.getMenu());
                 popup_menu.show();
 
@@ -196,15 +203,21 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                      */
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getItemId() == R.id.weekly_view) {
-                            Intent intent = new Intent(CalendarMonthlyPage.this, CalendarWeeklyPage.class);
-                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                        if (menuItem.getItemId() == R.id.monthly_view) {
+                            Intent intent = new Intent(CalendarDailyPage.this, CalendarMonthlyPage.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
+                        else if (menuItem.getItemId() == R.id.weekly_view) {
+                            Intent intent = new Intent(CalendarDailyPage.this, CalendarWeeklyPage.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
                             startActivity(intent, options.toBundle());
                         }
 
                         else if (menuItem.getItemId() == R.id.all_events) {
-                            Intent intent = new Intent(CalendarMonthlyPage.this, EventsListViewer.class);
-                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            Intent intent = new Intent(CalendarDailyPage.this, EventsListViewer.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
                             startActivity(intent, options.toBundle());
                         }
 
@@ -216,22 +229,48 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
             }
         });
 
-        // Get the current date just so it has the current date right away.
-        Calendar currentDate = Calendar.getInstance();
-        int year = currentDate.get(Calendar.YEAR);
-        int month = currentDate.get(Calendar.MONTH) + 1;
-        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+        //calendar.add(Calendar.DAY_OF_MONTH, 0);
+        date_getter = getDateForDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK), calendar);
+    }
 
-        date_getter = String.format("%04d-%02d-%02d", year, month, day);
+    /**
+     * Updates the displayed date text on the UI.
+     */
+    private void updateDateText() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+        String formattedDate = sdf.format(calendar.getTime());
+        dayOfMonth.setText(formattedDate);
+    }
 
-        // Get the current date and set it as the selected date in the CalendarView.
-        // Yeah, this basically just highlights the current day text in the calendar.
-        Calendar current_date = Calendar.getInstance();
-        long current_time_in_millis = current_date.getTimeInMillis();
-        calendar_display.setDate(current_time_in_millis);
+    /**
+     * Gets the current date for the given day of the week.
+     *
+     * @param dayOfWeek Integer representing the day of the week.
+     * @return String containing the formatted date.
+     */
+    private String getCurrentDateForDay(int dayOfWeek) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek); // Set to the selected day of the week
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
+    }
 
-        // Request events from server
-        getEventsRequest();
+    /**
+     * Gets the date for the specified day of the week based on the provided base date.
+     *
+     * @param dayOfWeek Integer representing the day of the week.
+     * @param baseDate  Calendar object representing the base date.
+     * @return String containing the formatted date.
+     */
+    private String getDateForDayOfWeek(int dayOfWeek, Calendar baseDate) {
+        Calendar date = (Calendar) baseDate.clone();
+
+        while (date.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            date.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return dateFormat.format(date.getTime());
     }
 
     /**
@@ -251,8 +290,8 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
      */
     @Override
     public void onHomeButtonClick() {
-        Intent intent = new Intent(CalendarMonthlyPage.this, HomePage.class);
-        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+        Intent intent = new Intent(CalendarDailyPage.this, HomePage.class);
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }
 
@@ -262,8 +301,8 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
      */
     @Override
     public void onMessagesButtonClick() {
-        Intent intent = new Intent(CalendarMonthlyPage.this, MemberViewer.class);
-        options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+        Intent intent = new Intent(CalendarDailyPage.this, MemberViewer.class);
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }
 
@@ -273,8 +312,8 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
      */
     @Override
     public void onProfileButtonClick() {
-        Intent intent = new Intent(CalendarMonthlyPage.this, ProfilePage.class);
-        options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+        Intent intent = new Intent(CalendarDailyPage.this, ProfilePage.class);
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }
 
@@ -285,12 +324,12 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
     @Override
     public void onCreateEventButtonClick() {
         // Navigate to Create Events page
-        Intent intent = new Intent(CalendarMonthlyPage.this, CreateEventPage.class);
+        Intent intent = new Intent(CalendarDailyPage.this, CreateEventPage.class);
         startActivity(intent);
     }
 
     /**
-     * Makes an API request to get the user's events for the selected date and updates the event list.
+     * Makes a request to the server to get events for the currently logged-in user.
      */
     private void getEventsRequest() {
         String username = WebSocketManager.getInstance().getUsername();
@@ -372,5 +411,5 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
         // Adding request to request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
-
 }
+

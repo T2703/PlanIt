@@ -1,0 +1,1559 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+tags:
+  - name: Team Management System
+    description: Operations pertaining to Team management
+  - name: User Management System
+    description: Operations pertaining to user management
+  - name: Event Management System
+    description: Operations pertaining to event management
+  - name: Notification Management System
+    description: Operations pertaining to notification management
+  - name: To-Do Management System
+    description: Operations pertaining to To-Do management
+  - name: Message Management System
+    description: Operations pertaining to message management
+paths:
+  /users/{id}:
+    get:
+      tags:
+        - User Management System
+      summary: Get a user by Id
+      description: Retrieves a specific user from the database based on the provided ID
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - User Management System
+      summary: Update an existing user
+      description: Updates an existing user in the database
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - User Management System
+      summary: Delete a user by Id
+      description: Deletes a user from the database based on the provided ID
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /teams/{id}:
+    get:
+      tags:
+        - Team Management System
+      summary: Get a Team by Id
+      description: Gets a team from the repository based on id number
+      operationId: getTeamById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Team'
+    put:
+      tags:
+        - Team Management System
+      summary: Update an existing Team
+      description: Updates a team in the repository
+      operationId: updateTeam
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Team'
+    delete:
+      tags:
+        - Team Management System
+      summary: Delete a Team by Id
+      description: Deletes a team from the repository
+      operationId: deleteTeam
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /tags/{id}:
+    get:
+      tags:
+        - tag-controller
+      summary: Get a Tag by Id
+      description: Gets a tag from the repository based on id number
+      operationId: getTagById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Tag'
+    put:
+      tags:
+        - tag-controller
+      summary: Update an existing Tag
+      description: Updates a tag in the repository
+      operationId: updateTag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Tag'
+    delete:
+      tags:
+        - tag-controller
+      summary: Delete a Tag by Id
+      description: Deletes a tag from the repository
+      operationId: deleteTag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /notifications/{id}:
+    get:
+      tags:
+        - Notification Management System
+      summary: Get a Notification by Id
+      description: Gets a notification from the repository from an id number
+      operationId: getNotificationById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Notification'
+    put:
+      tags:
+        - Notification Management System
+      summary: Update an existing Notification
+      description: Updates a notification in the repository
+      operationId: updateNotification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Notification'
+    delete:
+      tags:
+        - Notification Management System
+      summary: Delete a Notification by Id
+      description: Deletes a notification from the repository
+      operationId: deleteNotification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /messages/{id}:
+    get:
+      tags:
+        - Message Management System
+      summary: Get a Message by Id
+      description: Gets a message from the repository based on id number
+      operationId: getMessageById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+    put:
+      tags:
+        - Message Management System
+      summary: Update an existing Message
+      description: Updates a message in the database
+      operationId: updateMessage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+    delete:
+      tags:
+        - Message Management System
+      summary: Delete a Message by Id
+      description: Deletes a message from the database
+      operationId: deleteMessage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /events/{id}:
+    get:
+      tags:
+        - Event Management System
+      summary: Get an Event by Id
+      description: Get an event from the repository by its id number
+      operationId: getEventById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Event'
+    put:
+      tags:
+        - Event Management System
+      summary: Update an existing Event
+      description: Updates an event in the repository
+      operationId: updateEvent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Event'
+  /chats/{id}:
+    get:
+      tags:
+        - chat-controller
+      summary: Get chat by id
+      description: Gets chat by id
+      operationId: getChatById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Chat'
+    put:
+      tags:
+        - chat-controller
+      summary: update chat
+      description: Updates a chat
+      operationId: updateChat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chat'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Chat'
+    delete:
+      tags:
+        - chat-controller
+      summary: delete chat
+      description: Deletes a message from a chat
+      operationId: deleteChat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /chats/{chatId}/users/{username}:
+    put:
+      tags:
+        - chat-controller
+      summary: Add User to Chat
+      description: Adds a user to a chat
+      operationId: addUserToChat
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /chats/{chatId}/messages/{messageId}:
+    put:
+      tags:
+        - chat-controller
+      summary: Add message to chat
+      description: Adds a message to a chat
+      operationId: addMessageToChat
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /assignments/{id}:
+    get:
+      tags:
+        - assignment-controller
+      summary: Get particular assignment from repository
+      description: Get particular assignment from repository
+      operationId: getAssignmentById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Assignment'
+    put:
+      tags:
+        - assignment-controller
+      summary: Update Assignment
+      description: Updates an assignment
+      operationId: updateAssignment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Assignment'
+    delete:
+      tags:
+        - assignment-controller
+      summary: Delete assignment
+      description: Deletes an assignment
+      operationId: deleteAssignment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /ToDos/{id}:
+    get:
+      tags:
+        - To-Do Management System
+      summary: Get a To-Do by Id
+      description: Gets a To-Do from the repository based on id number
+      operationId: getEventById_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ToDo'
+    put:
+      tags:
+        - To-Do Management System
+      summary: Update an existing To-Do
+      description: Updates a To-Do in the repository
+      operationId: updateToDo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToDo'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ToDo'
+    delete:
+      tags:
+        - To-Do Management System
+      summary: Delete a To-Do by Id
+      description: Deletes a To-Do from the repository
+      operationId: deleteToDo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /users:
+    get:
+      tags:
+        - User Management System
+      summary: View a list of all users
+      description: Retrieves all users from the database
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - User Management System
+      summary: Add a new user
+      description: Adds a new user to the database
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /users/{username}/tags:
+    get:
+      tags:
+        - tag-controller
+      summary: Get tags for a specific user
+      description: Gets all tags of a user and returns them as a List
+      operationId: getUserTags
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+    post:
+      tags:
+        - tag-controller
+      summary: Create a new Tag for a user
+      description: Adds a tag to the database
+      operationId: createTag
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /users/{username}/notifications:
+    get:
+      tags:
+        - Notification Management System
+      summary: Get Notifications for a specific user
+      description: Gets all of a user's notifications and returns them as a List
+      operationId: getUserNotifications
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+    post:
+      tags:
+        - Notification Management System
+      summary: Create a new Notification for a user
+      description: Creates a notification and attaches it to a user
+      operationId: createNotification
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /users/{username}/events:
+    get:
+      tags:
+        - Event Management System
+      summary: Get Events for a user
+      description: Returns all events a particular user has as a set
+      operationId: getUserEvents
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+    post:
+      tags:
+        - Event Management System
+      summary: Create a new Event for a user
+      description: Create a new event and attach it to a user
+      operationId: createEvent
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /users/{username}/events/{eventId}:
+    post:
+      tags:
+        - Event Management System
+      summary: Add a user to an Event
+      description: Add a preexisting user to a preexisting event
+      operationId: addUserToEvent
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /users/{username}/assignments:
+    get:
+      tags:
+        - assignment-controller
+      summary: Get a user's assignments
+      description: Get a user's assignments
+      operationId: getUserAssignments
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assignment'
+    post:
+      tags:
+        - assignment-controller
+      summary: Create assignment
+      description: Creates an assignment
+      operationId: createAssignment
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /users/{username}/ToDos:
+    post:
+      tags:
+        - To-Do Management System
+      summary: Add a To-Do to a user
+      description: Adds a To-Do to a user in the repository
+      operationId: userAddToDo
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToDo'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /teams:
+    get:
+      tags:
+        - Team Management System
+      summary: Get all Teams
+      description: Returns all teams from the repository as a List object
+      operationId: getAllTeams
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+    post:
+      tags:
+        - Team Management System
+      summary: Create a new Team
+      description: Adds a team to the database
+      operationId: createTeam
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /teams/{id}/user/{username}:
+    post:
+      tags:
+        - Team Management System
+      summary: Add a user to a Team
+      description: Adds a user to a team in the repository
+      operationId: addUserToTeam
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: username  # Add this parameter definition for "username"
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /messages:
+    get:
+      tags:
+        - Message Management System
+      summary: Get all Messages
+      description: Returns all messages in the repository as a List object
+      operationId: getAllMessages
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+    post:
+      tags:
+        - Message Management System
+      summary: Create a new Message
+      description: Adds a new message to the database
+      operationId: createMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /login:
+    post:
+      tags:
+        - login-controller
+      operationId: authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /chats:
+    get:
+      tags:
+        - chat-controller
+      summary: gets all Chats
+      description: gets all Chats
+      operationId: getAllChats
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+    post:
+      tags:
+        - chat-controller
+      summary: Create chat
+      description: Creates a chat
+      operationId: createChat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chat'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /chats/{teamId}/chat:
+    post:
+      tags:
+        - chat-controller
+      summary: Create team chat
+      description: Creates a chat for a team
+      operationId: createTeamChat
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chat'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /chats/{id}/messages:
+    post:
+      tags:
+        - chat-controller
+      summary: Create message in chat
+      description: Creates a message in a chat
+      operationId: createMessageInChat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /ToDos:
+    get:
+      tags:
+        - To-Do Management System
+      summary: Get all To-Dos
+      description: Returns all To-Dos from the repository as a List object
+      operationId: getAllToDos
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToDo'
+    post:
+      tags:
+        - To-Do Management System
+      summary: Create a new To-Do
+      description: Adds a To-Do to the database
+      operationId: createToDo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToDo'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /username/{username}:
+    get:
+      tags:
+        - User Management System
+      summary: Get a user by username
+      description: Retrieves a specific user from the database based on the provided username
+      operationId: getUserByUsername
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+  /tags:
+    get:
+      tags:
+        - tag-controller
+      summary: Get all Tags
+      description: Returns all tags from the repository as a List object
+      operationId: getAllTags
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+  /scheduleAnalysis/{userId}:
+    get:
+      tags:
+        - schedule-analysis-controller
+      operationId: test
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /notifications:
+    get:
+      tags:
+        - Notification Management System
+      summary: Get all Notifications
+      description: Returns all notifications from the repository as a List object
+      operationId: getAllNotifications
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+  /events:
+    get:
+      tags:
+        - Event Management System
+      summary: Get all Events
+      description: Get all of an event's users and return them as a List
+      operationId: getAllEvents
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /assignments:
+    get:
+      tags:
+        - assignment-controller
+      summary: Get assignments from repository
+      description: Get assignments from repository
+      operationId: getAllAssignments
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assignment'
+  /users/{username}/events/{id}:
+    delete:
+      tags:
+        - Event Management System
+      summary: Delete an Event by Id
+      description: Deletes an event from the repository
+      operationId: deleteEvent
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /chats/{chatID}/users/{username}:
+    delete:
+      tags:
+        - chat-controller
+      summary: remove user from chat
+      description: Removes a user from a chat
+      operationId: removeUserFromChat
+      parameters:
+        - name: chatID  # Add this parameter definition for "chatID"
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of assignment
+          format: int32
+        title:
+          type: string
+          description: Title of assignment
+        description:
+          type: string
+          description: Description of assignment
+        course:
+          type: string
+          description: Courses for the assignment
+        dueDate:
+          type: string
+          description: Due date of the assignment
+          format: date-time
+        isCompleted:
+          type: boolean
+          description: Checks if the assignment is completed.
+        user:
+          $ref: '#/components/schemas/User'
+    Chat:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of chat
+          format: int32
+        name:
+          type: string
+          description: Name of chat
+        users:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        messages:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of event
+          format: int32
+        name:
+          type: string
+          description: Name of event
+        description:
+          type: string
+          description: Description of event
+        location:
+          type: string
+          description: Location of event
+        type:
+          type: string
+          description: Type of event
+        startDate:
+          type: string
+          description: Start date of event
+          format: date-time
+        endDate:
+          type: string
+          description: End date of event
+          format: date-time
+        manager:
+          $ref: '#/components/schemas/User'
+        users:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        body:
+          type: string
+          description: Body of message
+        sendTime:
+          type: string
+          description: Send time of message
+          format: date-time
+        receiveTime:
+          type: string
+          description: Receive time of message
+          format: date-time
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of notification
+          format: int32
+        title:
+          type: string
+          description: Title of notification
+        description:
+          type: string
+          description: Description of notification
+        user:
+          $ref: '#/components/schemas/User'
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of tag
+          format: int32
+        name:
+          type: string
+          description: Name of tag
+        description:
+          type: string
+          description: Description of tag
+        user:
+          $ref: '#/components/schemas/User'
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of team
+          format: int32
+        name:
+          type: string
+          description: Name of team
+        description:
+          type: string
+          description: Description of team
+        users:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    ToDo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of ToDo
+          format: int32
+        name:
+          type: string
+          description: Name of ToDo
+        description:
+          type: string
+          description: Description of ToDo
+        remindTime:
+          type: string
+          description: Remind time of ToDo
+          format: date-time
+        dueDate:
+          type: string
+          description: Due date of ToDo
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of user
+          format: int32
+        username:
+          type: string
+          description: Username of user
+        password:
+          type: string
+          description: Password of user
+        email:
+          type: string
+          description: Email of user
+        events:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        chats:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Chat'
+        teams:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assignment'
+        managed:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        toDos:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToDo'
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
