@@ -12,7 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import homepage.User;
+import profile.LoginFormPage;
 import api.VolleySingleton;
+import events.Event;
 import groups.MemberViewer;
 
 import com.android.volley.Request;
@@ -22,9 +25,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import profile.UserManager;
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
 import homepage.HomePage;

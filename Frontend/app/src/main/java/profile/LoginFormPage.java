@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import homepage.User;
+import profile.UserManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
