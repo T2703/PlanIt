@@ -1,18 +1,28 @@
 package planIT.ScheduleAnalysis;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import planIT.Events.*;
-import planIT.Users.*;
+import planIT.Entity.Events.*;
+import planIT.Entity.Users.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 
-
+/**
+ * Utility class for analyzing a user's schedule and measuring weekly activity.
+ * It provides a method to measure and display the number and duration of events for each day of the week.
+ *
+ * @author Chris Smith
+ *
+ */
 public class scheduleAnalysis {
 
+    /**
+     * Measures and displays the weekly activity of a user based on their schedule.
+     *
+     * @param user The user for whom to measure weekly activity.
+     * @return A formatted string representing the weekly activity, including the number and total duration of events for each day.
+     */
     static public String measureWeeklyActivity(User user){
         if(user == null){
             return "Invalid user";
@@ -62,7 +72,12 @@ public class scheduleAnalysis {
         return week;
     }
 
-
+    /**
+     * Calculates the duration of an event in minutes.
+     *
+     * @param event The event for which to calculate the duration.
+     * @return The duration of the event in minutes.
+     */
     static private int eventLength(Event event){
         int start=0;
         int end=0;
@@ -72,6 +87,12 @@ public class scheduleAnalysis {
         return end-start;
     }
 
+    /**
+     * Generates a line of dashes representing the duration of an event.
+     *
+     * @param length The length of the line.
+     * @return A string representing the line of dashes.
+     */
     static private String toLine(int length){
         String line ="[";
         for(int i=0; i<length/10; ++i){
@@ -82,7 +103,9 @@ public class scheduleAnalysis {
     }
 
 
-    //COMPARATOR FOR EVENTS
+    /**
+     * Comparator for sorting events based on the day of the week.
+     */
     static private class startDayComparator implements Comparator<Event> {
         public int compare(Event event1, Event event2){
             Calendar cal1 = Calendar.getInstance();

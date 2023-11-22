@@ -7,9 +7,10 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 
-/*
-Manages the websocket connections in the app.
-Makes sure that there is one websocket running in the app's lifecycle.
+/**
+ * Manages the websocket connections in the app.
+ * Makes sure that there is one websocket running in the app's lifecycle.
+ * @author Tristan Nono
  */
 public class WebSocketManager {
     /*
@@ -36,7 +37,8 @@ public class WebSocketManager {
     /*
     Yeah, this is empty.
      */
-    private WebSocketManager() {}
+    private WebSocketManager() {
+    }
 
     /*
     This retrieves a synchronized instance of the websocket.
@@ -49,13 +51,14 @@ public class WebSocketManager {
         return manager_instance;
     }
 
-    public String getUsername () {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername (String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
+
 
     /*
     This handles the events like the messages and errors.

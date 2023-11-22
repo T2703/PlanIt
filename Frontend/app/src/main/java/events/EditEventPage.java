@@ -25,6 +25,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+/**
+ * @author Joshua Gutierrez
+ * The EditEventPage class is an AppCompatActivity responsible for editing an existing event
+ * and sending the updated event details to the server via a PUT request.
+ */
 public class EditEventPage extends AppCompatActivity {
     private Spinner event_type;
     private EditText event_name;
@@ -38,6 +43,13 @@ public class EditEventPage extends AppCompatActivity {
 
     private ImageButton back_button;
 
+    /**
+     * Called when the activity is starting. This is where most initialization should go.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     *                           Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +120,17 @@ public class EditEventPage extends AppCompatActivity {
 
     }
 
+    /**
+     * Sends a PUT request to the server with the updated event details.
+     *
+     * @param eventNameValue        The updated name of the event.
+     * @param eventDescriptionValue The updated description of the event.
+     * @param eventLocationValue    The updated location of the event.
+     * @param eventTypeValue        The updated type of the event.
+     * @param eventDateValue        The updated date of the event.
+     * @param eventStartTimeValue   The updated start time of the event.
+     * @param eventEndTimeValue     The updated end time of the event.
+     */
     private void sendPutRequest(String eventNameValue, String eventDescriptionValue, String eventLocationValue, String eventTypeValue, String eventDateValue, String eventStartTimeValue, String eventEndTimeValue) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         HashMap<String, String> body = new HashMap<String, String>();
@@ -144,5 +167,4 @@ public class EditEventPage extends AppCompatActivity {
 
         requestQueue.add(jsonObjectRequest);
     }
-
 }

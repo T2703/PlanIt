@@ -24,9 +24,9 @@
             android:translationX="360dp"
             app:srcCompat="@drawable/baseline_menu_24" />
 
-    <!-- Sunday -->
+        <!-- Sunday -->
 
-    <!-- Monday -->
+        <!-- Monday -->
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-    <!-- Tuesday -->
+        <!-- Tuesday -->
 
         <!-- Wednesday -->
         <LinearLayout
@@ -85,7 +85,7 @@
             android:layout_marginStart="146dp"
             android:layout_marginTop="-72dp"
             android:orientation="vertical"
-            android:translationX="-40dp"
+            android:translationX="-35dp"
             android:translationY="125dp">
 
             <TextView
@@ -109,7 +109,7 @@
             android:layout_marginStart="196dp"
             android:layout_marginTop="-104dp"
             android:orientation="vertical"
-            android:translationX="-40dp"
+            android:translationX="-30dp"
             android:translationY="157dp">
 
             <TextView
@@ -127,9 +127,9 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-    <!-- Thursday -->
+        <!-- Thursday -->
 
-    <!-- Friday -->
+        <!-- Friday -->
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -137,8 +137,8 @@
             android:layout_marginStart="246dp"
             android:layout_marginTop="-136dp"
             android:orientation="vertical"
-            android:translationX="-30dp"
-            android:translationY="190dp">
+            android:translationX="-15dp"
+            android:translationY="189dp">
 
             <TextView
                 android:id="@+id/thuText"
@@ -155,35 +155,35 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:translationX="280dp"
-        android:translationY="60dp">
-
-        <TextView
-            android:id="@+id/friText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fri"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/friDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <!-- Saturday -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:translationX="330dp"
-            android:translationY="50dp">
+            android:translationX="295dp"
+            android:translationY="53dp">
+
+            <TextView
+                android:id="@+id/friText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fri"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/friDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- Saturday -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:translationX="350dp"
+            android:translationY="53dp">
 
             <TextView
                 android:id="@+id/satText"
@@ -202,33 +202,20 @@
 
         <TextView
             android:id="@+id/month_text_view"
-            android:layout_width="152dp"
+            android:layout_width="228dp"
             android:layout_height="wrap_content"
             android:text="month"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:translationX="120dp"
             android:translationY="0dp" />
 
         <TextView
-        android:id="@+id/year_text_view"
-        android:layout_width="58dp"
-        android:layout_height="wrap_content"
-        android:text="year"
-        android:translationX="1000dp"
-        android:translationY="-120dp" />
-
-        <TextView
-            android:id="@+id/prevWeek"
-            android:layout_width="wrap_content"
+            android:id="@+id/year_text_view"
+            android:layout_width="58dp"
             android:layout_height="wrap_content"
-            android:text="Previous Week" />
-
-        <TextView
-            android:id="@+id/nextWeek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next Week"
-            android:translationX="270dp" />
+            android:text="year"
+            android:translationX="1000dp"
+            android:translationY="-120dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/event_item_list_view"
@@ -244,8 +231,23 @@
             android:scaleY="1.2"
             android:text="Activity"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:translationX="15dp"
+            android:translationX="105dp"
             android:translationY="25dp" />
+
+        <ImageButton
+            android:id="@+id/prevWeekButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
+
+        <ImageButton
+            android:id="@+id/nextWeekButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:translationX="300dp"
+            android:background="@null"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
 
     </com.example.myapplication.NavBarView>
 

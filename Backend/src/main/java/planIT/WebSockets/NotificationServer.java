@@ -5,22 +5,30 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import planIT.Notifications.Notification;
-import planIT.Notifications.NotificationRepository;
+import planIT.Entity.Notifications.Notification;
+import planIT.Entity.Notifications.NotificationRepository;
 
+/**
+ * WebSocket endpoint for handling user notifications.
+ * This class manages the WebSocket connections, processes incoming notifications,
+ * and interacts with the NotificationRepository to store chat history.
+ *
+ * @author Melani Hodge
+ *
+ */
 @ServerEndpoint(value = "/notification/{username}")
 @Component
 public class NotificationServer {
@@ -29,12 +37,15 @@ public class NotificationServer {
     // method
     private static NotificationRepository notificationRepository;
 
-    /*
-     * Grabs the MessageRepository singleton from the Spring Application
-     * Context.  This works because of the @Controller annotation on this
-     * class and because the variable is declared as static.
-     * There are other ways to set this. However, this approach is
-     * easiest.
+    /**
+     * Sets the {@link NotificationRepository} for the NotificationServer.
+     *
+     * <p>This method is annotated with {@code @Autowired} to enable Spring to inject
+     * the NotificationRepository bean. It sets the static {@code notificationRepository}
+     * variable, allowing the NotificationServer to interact with the repository.</p>
+     *
+     * @param repo The NotificationRepository bean to be injected.
+     * @see NotificationRepository
      */
     @Autowired
     public void setNotificationRepository(NotificationRepository repo) {
@@ -47,6 +58,13 @@ public class NotificationServer {
 
     private final Logger logger = LoggerFactory.getLogger(NotificationServer.class);
 
+    /**
+     * Handles the opening of a WebSocket session.
+     *
+     * @param session  The WebSocket session.
+     * @param username The username obtained from the path parameter.
+     * @throws IOException If an I/O error occurs.
+     */
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username)
             throws IOException {
@@ -58,6 +76,13 @@ public class NotificationServer {
         usernameSessionMap.put(username, session);
     }
 
+    /**
+     * Handles the reception of a WebSocket message.
+     *
+     * @param session      The WebSocket session.
+     * @param notification The received notification.
+     * @throws IOException If an I/O error occurs.
+     */
     @OnMessage
     public void onMessage(Session session, String notification) throws IOException {
 
@@ -103,6 +128,12 @@ public class NotificationServer {
         notificationRepository.save(new Notification("title", "description"));
     }
 
+    /**
+     * Handles the closing of a WebSocket session.
+     *
+     * @param session The WebSocket session.
+     * @throws IOException If an I/O error occurs.
+     */
     @OnClose
     public void onClose(Session session) throws IOException {
         String username = sessionUsernameMap.get(session);
@@ -114,6 +145,12 @@ public class NotificationServer {
         usernameSessionMap.remove(username);
     }
 
+    /**
+     * Handles WebSocket errors.
+     *
+     * @param session   The WebSocket session.
+     * @param throwable The Throwable representing the error.
+     */
     @OnError
     public void onError(Session session, Throwable throwable) {
         // Do error handling here
@@ -121,7 +158,12 @@ public class NotificationServer {
         throwable.printStackTrace();
     }
 
-
+    /**
+     * Sends a notification to a specific user.
+     *
+     * @param username The username of the recipient.
+     * @param message  The notification message.
+     */
     private void sendNotification(String username, String message) {
         try {
             usernameSessionMap.get(username).getBasicRemote().sendText(message);
@@ -131,6 +173,11 @@ public class NotificationServer {
     }
 
 
+    /**
+     * Broadcasts a message to all connected users.
+     *
+     * @param message The message to broadcast.
+     */
     private void broadcast(String message) {
         sessionUsernameMap.forEach((session, username) -> {
             try {
@@ -146,7 +193,11 @@ public class NotificationServer {
     }
 
 
-    // Gets the Chat history from the repository
+    /**
+     * Gets the notification history from the repository.
+     *
+     * @return A string representing the notification history.
+     */
     private String getNotificationHistory() {
         List<Notification> notifications = notificationRepository.findAll();
 
