@@ -34,6 +34,7 @@ import com.example.myapplication.NavBarView;
 
 import homepage.HomePage;
 import profile.ProfilePage;
+import profile.ProfilePageViewer;
 import websockets.WebSocketManager;
 
 import com.example.myapplication.R;
@@ -273,7 +274,7 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
      */
     @Override
     public void onProfileButtonClick() {
-        Intent intent = new Intent(CalendarMonthlyPage.this, ProfilePage.class);
+        Intent intent = new Intent(CalendarMonthlyPage.this, ProfilePageViewer.class);
         options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }

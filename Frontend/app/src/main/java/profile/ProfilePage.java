@@ -11,7 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import groups.EditGroup;
+import groups.GroupInfo;
 import homepage.User;
 import profile.LoginFormPage;
 import api.VolleySingleton;
@@ -21,7 +24,9 @@ import groups.MemberViewer;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 
@@ -164,6 +169,7 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             public void onClick(View view) {
                 // This will handle the button click.
                 Log.d("TAG", "Saved");
+                updateUserInfo(ID);
             }
         });
 
@@ -179,6 +185,7 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             public void onClick(View view) {
                 // This will handle the button click.
                 Log.d("TAG", "Delete");
+                makeDeleteRequest(ID);
             }
         });
 
@@ -270,6 +277,98 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         // Adding the request to the request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
+
+    /**
+     * This is the request for updating a user's info after editing.
+     * This PUTs the group on to the server.
+     */
+    private void updateUserInfo(String userID) {
+        // Find the values of each field
+        EditText input_user_name = findViewById(R.id.editTextName);
+        EditText input_email = findViewById(R.id.editTextEmail);
+        EditText input_pass = findViewById(R.id.editTextPassword);
+
+        String input_name_value = input_user_name.getText().toString();
+        String input_email_value = input_email.getText().toString();
+        String input_password_value = input_pass.getText().toString();
+
+        // Create JSON object
+        JSONObject requestBody = new JSONObject();
+
+        // Puts in the values of these variables.
+        try {
+            requestBody.put("id", userID);
+            requestBody.put("username", input_name_value);
+            requestBody.put("email", input_email_value);
+            requestBody.put("password", input_password_value);
+            Log.d("TAG",requestBody.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Making the request
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+                Request.Method.PUT,  // Use PUT method instead of POST
+                URL_USERS + userID,  // Specify the specific group ID in the URL
+                requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Server response", response.toString());
+
+                        Intent data = new Intent(ProfilePage.this, ProfilePageViewer.class);
+                        data.putExtra("username", input_name_value);
+                        data.putExtra("email", input_email_value);
+
+                        startActivity(data);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Server error", "Error: " + error.getMessage());
+                    }
+                }
+        ) {
+
+        };
+
+        // Add the request to the RequestQueue
+        Volley.newRequestQueue(this).add(jsonObjectReq);
+    }
+
+    /**
+     * Initiates a delete request for the user with the specified ID.
+     *
+     * @param user_id  The unique identifier of the user to be deleted.
+     */
+    private void makeDeleteRequest(String user_id) {
+            StringRequest stringRequest = new StringRequest(
+                    Request.Method.DELETE,
+                    URL_USERS + user_id,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("response", response);
+                            Toast.makeText(getApplicationContext(), "Account Deleted", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(ProfilePage.this, LoginFormPage.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle any errors that occur during the request
+                            Log.e("A server error has occurred", error.toString());
+                            Toast.makeText(getApplicationContext(), "Uh-oh something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+            );
+
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        }
 
     /**
      * Handles the click event on the calendar button in the navigation bar.

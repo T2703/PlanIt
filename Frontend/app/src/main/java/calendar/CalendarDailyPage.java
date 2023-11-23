@@ -40,6 +40,7 @@ import events.EventsListViewer;
 import groups.MemberViewer;
 import homepage.HomePage;
 import profile.ProfilePage;
+import profile.ProfilePageViewer;
 import websockets.WebSocketManager;
 
 /**
@@ -312,7 +313,7 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
      */
     @Override
     public void onProfileButtonClick() {
-        Intent intent = new Intent(CalendarDailyPage.this, ProfilePage.class);
+        Intent intent = new Intent(CalendarDailyPage.this, ProfilePageViewer.class);
         ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }

@@ -20,6 +20,9 @@
             android:name=".AnalyzeSchedule"
             android:exported="false" />
         <activity
+            android:name="profile.ProfilePageViewer"
+            android:exported="false" />
+        <activity
             android:name="profile.Settings"
             android:exported="false" />
         <activity
