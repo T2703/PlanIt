@@ -56,11 +56,11 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private Set<Event> events = new HashSet<>();
 
-    @JsonIgnoreProperties
+    @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users")
     private Set<Chat> chats = new HashSet<>();
 
-    @JsonIgnoreProperties
+    @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users")
     private Set<Team> teams = new HashSet<>();
 
@@ -72,7 +72,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Assignment> assignments;
 
-    @JsonIgnoreProperties("manager")
+    @JsonIgnoreProperties({"manager", "users"})
     @OneToMany(mappedBy = "manager")
     private List<Event> managed;
 
