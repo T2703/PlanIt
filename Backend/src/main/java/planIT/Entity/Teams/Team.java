@@ -44,7 +44,7 @@ public class Team {
     private String description;
 
     // @JsonIgnoreProperties - Used to ignore the "users" property when serializing to JSON.
-    @JsonIgnoreProperties("users")
+    @JsonIgnoreProperties({"users", "teams"})
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_team", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
