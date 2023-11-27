@@ -19,17 +19,19 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@color/selected_tint"
+                android:background="@color/primary_color"
                 android:padding="16dp">
 
                 <ImageButton
                     android:id="@+id/menuButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:background="@color/primary_color"
                     android:src="@drawable/baseline_menu_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
 
                 <!-- Title -->
                 <TextView
