@@ -6,8 +6,6 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.restassured.RestAssured;
@@ -23,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @RunWith(SpringRunner.class)
-public class test1 {
+public class TestCreateChat4 {
 
     @LocalServerPort
     int port;
