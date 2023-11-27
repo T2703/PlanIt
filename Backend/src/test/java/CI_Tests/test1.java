@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.restassured.RestAssured;
@@ -16,7 +18,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
 
 @RunWith(SpringRunner.class)
 public class test1 {
@@ -52,6 +56,80 @@ public class test1 {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testChatResources(){
+        //POST: 3 users, team with users 1&2
+
+        //USER 1
+        Response response = RestAssured.given().
+                header("Content-Type", "JSON").
+                header("charset", "utf-8").
+                body("        \"username\": \"A\",\n" +
+                        "        \"email\": \"A\",\n" +
+                        "        \"password\": \"A\"").
+                when().
+                post("/users");
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        //USER 2
+        Response response2 = RestAssured.given().
+                header("Content-Type", "JSON").
+                header("charset", "utf-8").
+                body("        \"username\": \"B\",\n" +
+                        "        \"email\": \"B\",\n" +
+                        "        \"password\": \"B\"").
+                when().
+                post("/users");
+        statusCode = response2.getStatusCode();
+        assertEquals(200, statusCode);
+
+        //USER 3
+        Response response3 = RestAssured.given().
+                header("Content-Type", "JSON").
+                header("charset", "utf-8").
+                body("        \"username\": \"C\",\n" +
+                        "        \"email\": \"C\",\n" +
+                        "        \"password\": \"C\"").
+                when().
+                post("/users");
+        statusCode = response3.getStatusCode();
+        assertEquals(200, statusCode);
+
+        //TEAM 1
+        Response response4 = RestAssured.given().
+                header("Content-Type", "JSON").
+                header("charset", "utf-8").
+                body("        \"name\": \"team1\",\n" +
+                        "        \"description\": \"TD\"").
+                when().
+                post("/teams");
+        statusCode = response2.getStatusCode();
+        assertEquals(200, statusCode);
+
+        //ADD USER A TO TEAM 1
+        Response response5 = RestAssured.given().
+                header("Content-Type", "JSON").
+                header("charset", "utf-8").
+                //body().
+                when().
+                post("/teams/1/user/A");
+        statusCode = response5.getStatusCode();
+        assertEquals(200, statusCode);
+
+        //ADD USER B TO TEAM 1
+        Response response6 = RestAssured.given().
+                header("Content-Type", "JSON").
+                header("charset", "utf-8").
+                //body().
+                when().
+                post("/teams/1/user/B");
+        statusCode = response6.getStatusCode();
+        assertEquals(200, statusCode);
+
+    }
+
 
     @Test
     public void testCreateTeamChat(){ //TODO create team within test?
@@ -145,14 +223,14 @@ public class test1 {
     }
 
     @Test
-    public void TestDeleteChat(){
+    public void testRemoveUserFromChat(){
 
         Response response = RestAssured.given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 //body("{\"name\": \"chat1\"}").
                 when().
-                delete("/chats/1");
+                delete("/chats/1/users/A"); //TODO make sure chat and user exist
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -168,14 +246,14 @@ public class test1 {
     }
 
     @Test
-    public void testRemoveUserFromChat(){
+    public void TestDeleteChat(){
 
         Response response = RestAssured.given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 //body("{\"name\": \"chat1\"}").
-                when().
-                delete("/chats/1/users/A"); //TODO make sure chat and user exist
+                        when().
+                delete("/chats/1");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
