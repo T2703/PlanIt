@@ -1,46 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="30dp">
 
     <TextView
         android:id="@+id/logo_homepage"
-        android:layout_width="224dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="93dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto"
         android:text="@string/homepage_title"
-        android:textAlignment="center"
         android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/homepage_login_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/homepage_login_button"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginBottom="18dp"
+        android:background="@color/primary_color"
+        android:fontFamily="@font/roboto"
         android:text="@string/login"
-        app:layout_constraintBottom_toTopOf="@+id/create_account_button"
-        app:layout_constraintStart_toStartOf="@+id/create_account_button"
-        app:layout_constraintTop_toBottomOf="@+id/logo_homepage" />
+        android:textAllCaps="true"
+        android:textSize="18sp"
+        android:layout_marginTop="30dp"
+        android:textStyle="bold" />
 
     <TextView
+        android:layout_marginTop="10dp"
         android:id="@+id/create_account_button"
-        android:layout_width="136dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="293dp"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:text="@string/create_account_link"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homepage_login_button" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textAlignment="center" />
+</LinearLayout>

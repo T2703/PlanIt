@@ -19,23 +19,26 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@color/selected_tint"
+                android:background="@color/primary_color"
                 android:padding="16dp">
 
                 <ImageButton
                     android:id="@+id/menuButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:background="@color/primary_color"
                     android:src="@drawable/baseline_menu_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
 
                 <!-- Title -->
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
                     android:gravity="center"
                     android:text="@string/home"
                     android:textColor="@color/white"
@@ -62,6 +65,7 @@
                     android:id="@+id/notificationCount"
                     android:layout_width="10dp"
                     android:layout_height="22dp"
+                    android:fontFamily="@font/roboto"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -83,6 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:fontFamily="@font/roboto"
                     android:text="Good morning Joshua" />
 
                 <TextView
@@ -90,6 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
+                    android:fontFamily="@font/roboto"
                     android:text="Monday September 20, 2023"
                     android:textStyle="bold" />
 
@@ -99,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:layout_weight="2"
+                    android:fontFamily="@font/roboto"
                     android:text="Active Users"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -128,6 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="2"
+                    android:fontFamily="@font/roboto"
                     android:text="Assignments"
                     android:textStyle="bold" />
 

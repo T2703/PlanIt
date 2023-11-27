@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
 
+    <style name="CalendarMonthlyViewCustom">
+        <item name="android:textColor">@color/black</item>
+        <item name="colorControlHighlight">@color/primary_color</item>
+        <item name="colorAccent">@color/primary_color</item>
     </style>
 </resources>
