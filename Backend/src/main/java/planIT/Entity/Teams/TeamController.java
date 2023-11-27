@@ -72,9 +72,9 @@ public class TeamController {
      * @param username The username of the user to be added.
      * @return A success or failure message as a JSON string.
      */
-    @PostMapping(path = "teams/{id}/user/{username}")
+    @PutMapping(path = "teams/{id}/user/{username}")
     @Operation(summary = "Add a user to a Team", description = "Adds a user to a team in the repository")
-    public String addUserToTeam(@PathVariable int id, @RequestBody String username){
+    public String addUserToTeam(@PathVariable int id, @PathVariable String username){
         return teamService.addUserToTeam(id, username);
     }
 
