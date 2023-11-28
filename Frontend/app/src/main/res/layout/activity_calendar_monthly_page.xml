@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:translationX="360dp"
+            android:layout_marginTop="10dp"
             app:srcCompat="@drawable/baseline_menu_24" />
     </com.example.myapplication.NavBarView>
 
@@ -30,6 +31,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="58dp"
         app:layout_constraintStart_toStartOf="parent"
+        style="@style/CalendarMonthlyViewCustom"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView

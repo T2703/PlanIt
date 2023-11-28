@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:layout_gravity="bottom"
-    android:background="@color/selected_tint"
+    android:background="@color/primary_color"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -17,11 +17,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
+        android:textColor="@color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/menuHeaderEmailAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:text="josh1015@gmail.com" />
 </LinearLayout>

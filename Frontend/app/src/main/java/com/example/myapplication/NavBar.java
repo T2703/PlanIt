@@ -135,15 +135,15 @@ public class NavBar extends AppCompatActivity {
 
         // Set tints based on the selected state
         calendar_button.setColorFilter(getResources().getColor(
-                calendar_button.isSelected() ? R.color.selected_tint : R.color.deselected_tint));
+                calendar_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));
 
         messages_button.setColorFilter(getResources().getColor(
-                messages_button.isSelected() ? R.color.selected_tint : R.color.deselected_tint));
+                messages_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));
 
         home_button.setColorFilter(getResources().getColor(
-                home_button.isSelected() ? R.color.selected_tint : R.color.deselected_tint));
+                home_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));
 
         profile_button.setColorFilter(getResources().getColor(
-                profile_button.isSelected() ? R.color.selected_tint : R.color.deselected_tint));
+                profile_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));
     }
 }

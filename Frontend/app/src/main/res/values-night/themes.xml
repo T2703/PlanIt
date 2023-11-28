@@ -2,6 +2,6 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <item name="colorPrimary">@color/selected_tint</item>
+        <item name="colorPrimary">@color/primary_color</item>
     </style>
 </resources>

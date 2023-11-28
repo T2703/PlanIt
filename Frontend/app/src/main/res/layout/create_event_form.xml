@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/create_event_header"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:entries="@array/event_types"
                 android:padding="15dp"
                 android:spinnerMode="dropdown" />
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:hint="Event Name"
                 android:inputType="text"
                 android:padding="15dp" />
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:focusable="false"
                 android:hint="Start Date"
                 android:padding="15dp" />
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:focusable="false"
                 android:hint="End Date"
                 android:inputType="date"
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:focusable="false"
                 android:hint="Start Time"
                 android:inputType="time"
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:focusable="false"
                 android:hint="End Time"
                 android:inputType="time"
@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:hint="Location"
                 android:inputType="text"
                 android:padding="15dp" />
@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:hint="Description"
                 android:inputType="text"
                 android:padding="15dp" />
@@ -135,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#FFF1F1"
+                android:background="@color/primary_shade"
                 android:hint="Add people"
                 android:inputType="text"
                 android:padding="15dp" />
@@ -143,8 +143,9 @@
             <Button
                 android:id="@+id/create_event_button"
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:background="@color/primary_shade"
                 android:layout_height="wrap_content"
                 android:text="@string/create" />
 
