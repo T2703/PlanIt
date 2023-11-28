@@ -1,5 +1,11 @@
 package CI_Tests;
 
+// Import Local classes
+import planIT.Entity.Chats.Chat;
+import planIT.Entity.Users.User;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,14 +18,11 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+//import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;	// SBv3
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
-
 @RunWith(SpringRunner.class)
 public class TestCreateChat4 {
 
@@ -29,19 +32,31 @@ public class TestCreateChat4 {
     @Before
     public void setUp(){
         RestAssured.port =port;
-        RestAssured.baseURI = "http://localhsot";
+        RestAssured.baseURI = "http://localhost";
     }
 
     @Test
     public void testCreateChat(){
 
+//        User r = new User("test", "password", "test@gmail.com");
+//
+//        System.out.println(r);
+//        // Send request and receive response
+//        Response response = RestAssured.given().
+//                contentType("application/json").
+//                body(r).
+//                when().
+//                post("/users");
+
+        Chat chat = new Chat("chat1");
+        //EncoderConfig encoderConfig = encoderConfig().encodeContentTypeAs("JSON", ContentType.TEXT);
         Response response = RestAssured.given().
-                header("Content-Type", "JSON").
-                header("charset", "utf-8").
-                body("{\"name\": \"chat1\"}").
+                contentType("application/json").
+                body(chat).
                 when().
                 post("/chats");
 
+        System.out.println(response);
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
 
@@ -72,7 +87,7 @@ public class TestCreateChat4 {
         assertEquals(200, statusCode);
 
         //USER 2
-        Response response2 = RestAssured.given().
+        Response response2 = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 body("        \"username\": \"B\",\n" +
@@ -84,7 +99,7 @@ public class TestCreateChat4 {
         assertEquals(200, statusCode);
 
         //USER 3
-        Response response3 = RestAssured.given().
+        Response response3 = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 body("        \"username\": \"C\",\n" +
@@ -96,7 +111,7 @@ public class TestCreateChat4 {
         assertEquals(200, statusCode);
 
         //TEAM 1
-        Response response4 = RestAssured.given().
+        Response response4 = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 body("        \"name\": \"team1\",\n" +
@@ -107,7 +122,7 @@ public class TestCreateChat4 {
         assertEquals(200, statusCode);
 
         //ADD USER A TO TEAM 1
-        Response response5 = RestAssured.given().
+        Response response5 = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 //body().
@@ -117,7 +132,7 @@ public class TestCreateChat4 {
         assertEquals(200, statusCode);
 
         //ADD USER B TO TEAM 1
-        Response response6 = RestAssured.given().
+        Response response6 = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 //body().
@@ -131,7 +146,7 @@ public class TestCreateChat4 {
 
     @Test
     public void testCreateTeamChat(){ //TODO create team within test?
-        Response response = RestAssured.given().
+        Response response = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 body("{\"name\": \"teamChat1\"}").
@@ -153,7 +168,7 @@ public class TestCreateChat4 {
 
     @Test
     public void testCreateMessageInChat(){
-        Response response = RestAssured.given().
+        Response response = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 body("\"body\": \"MESSAGE 1\",\n" +
@@ -178,7 +193,7 @@ public class TestCreateChat4 {
     @Test
     public void testUpdateChat(){
 
-        Response response = RestAssured.given().
+        Response response = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 body("{\"name\": \"chat1UPDATED\"}").
@@ -200,7 +215,7 @@ public class TestCreateChat4 {
 
     @Test
     public void testAddUserToChat(){
-        Response response = RestAssured.given().
+        Response response = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 //body("{\"name\": \"chat1\"}").
@@ -223,7 +238,7 @@ public class TestCreateChat4 {
     @Test
     public void testRemoveUserFromChat(){
 
-        Response response = RestAssured.given().
+        Response response = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 //body("{\"name\": \"chat1\"}").
@@ -246,7 +261,7 @@ public class TestCreateChat4 {
     @Test
     public void TestDeleteChat(){
 
-        Response response = RestAssured.given().
+        Response response = given().
                 header("Content-Type", "JSON").
                 header("charset", "utf-8").
                 //body("{\"name\": \"chat1\"}").
