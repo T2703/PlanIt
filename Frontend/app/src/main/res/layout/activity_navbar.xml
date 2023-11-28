@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/message_button"
         app:layout_constraintStart_toEndOf="@+id/calendar_button_nav"
-        app:tint="#FF5733" />
+        app:tint="@color/primary_color" />
 
     <ImageButton
         android:id="@+id/calendar_button_nav"
@@ -35,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/create_events_button"
         app:layout_constraintStart_toEndOf="@+id/home_button"
-        app:tint="#808080" />
+        app:tint="@color/primary_color" />
 
     <ImageButton
         android:id="@+id/message_button"

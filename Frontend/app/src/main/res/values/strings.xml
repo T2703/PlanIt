@@ -10,13 +10,13 @@
     <string name="create">CREATE</string>
     <string name="enter_the_event_time">Enter the event time</string>
     <string name="create_account_link">Create an account</string>
-    <string name="login">Log In</string>
+    <string name="login">Login</string>
     <string name="homepage_title">Manage your life</string>
     <string name="login_to_your_account">Login to your account</string>
     <string name="username">Username</string>
-    <string name="user_email_hint">user@email.com</string>
+    <string name="user_email_hint">Enter your username</string>
     <string name="password_hint">Password</string>
-    <string name="password">password</string>
+    <string name="password">Enter your password</string>
     <string name="welcome">Welcome</string>
     <string name="delete">Delete</string>
     <string name="select_date">Date</string>
@@ -36,6 +36,12 @@
     <string name="user_avatar_picture">User avatar picture</string>
     <string name="user_online_indicator">User online indicator</string>
     <string name="open_notifications_button">Open notifications button</string>
+    <string name="left_arrow">Left arrow for previous button which takes you to a page that was seen before the current</string>
+    <string name="create_account">Create Account</string>
+    <string name="create_account_username">Username</string>
+    <string name="email">Email</string>
+    <string name="create_account_password">Password</string>
+    <string name="create_account_button_text">Create account</string>
     <string-array name="event_types">
         <item>Select an event type</item>
         <item>Private</item>
