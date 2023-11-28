@@ -1,7 +1,6 @@
-package espresso;
+package UI_Testing;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -20,7 +19,7 @@ import homepage.HomePage;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class EspressoTest {
+public class HomepageTest {
     @Rule
     public ActivityScenarioRule<HomePage> activityRule = new ActivityScenarioRule<HomePage>(HomePage.class);
 
