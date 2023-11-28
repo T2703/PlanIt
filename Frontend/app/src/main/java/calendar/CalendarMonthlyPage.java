@@ -202,6 +202,12 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                             startActivity(intent, options.toBundle());
                         }
 
+                        else if (menuItem.getItemId() == R.id.daily_view) {
+                            Intent intent = new Intent(CalendarMonthlyPage.this, CalendarDailyPage.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
                         else if (menuItem.getItemId() == R.id.all_events) {
                             Intent intent = new Intent(CalendarMonthlyPage.this, EventsListViewer.class);
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarMonthlyPage.this, R.anim.empty_anim, R.anim.empty_anim);
