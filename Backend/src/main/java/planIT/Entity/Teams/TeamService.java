@@ -102,6 +102,9 @@ public class TeamService {
         User user = userRepository.findByUsername(username);
         Team team = teamRepository.findById(id);
         team.getUsers().add(user);
+        user.getTeams().add(team);
+        teamRepository.save(team);
+        userRepository.save(user);
 
         return success;
     }

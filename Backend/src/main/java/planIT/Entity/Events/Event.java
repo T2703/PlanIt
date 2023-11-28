@@ -53,7 +53,7 @@ public class Event {
     @JsonIgnoreProperties({"managed", "events", "chats", "teams", "notifications", "assignments", "tags", "toDos"})
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User manager;
+    private User manager = new User();
 
     @JsonIgnoreProperties({"events", "managed", "chats", "teams", "notifications", "assignments", "tags", "toDos"})
     @ManyToMany
@@ -81,9 +81,8 @@ public class Event {
         this.type = type;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.manager = manager;
     }
-
-    // Event constructor (without parameters)
 
     /**
      * Event constructor with no parameters
