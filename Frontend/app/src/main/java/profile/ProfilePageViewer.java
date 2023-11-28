@@ -1,23 +1,29 @@
 package profile;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 
@@ -68,12 +74,19 @@ public class ProfilePageViewer extends AppCompatActivity implements NavBarView.O
     private TextView name, userEmail;
     private String ID;
 
+    private String username;
+
     /*
     The image loader.
      */
     private static final int RESULT_LOAD_IMG = 1;
 
     private static final String URL_USERS = "http://coms-309-024.class.las.iastate.edu:8080/users/";
+
+    /**
+     * The URL for the POST request to authenticate user login.
+     */
+    private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/login";
 
     /**
      * Initializes the activity, sets up UI components.
@@ -96,6 +109,7 @@ public class ProfilePageViewer extends AppCompatActivity implements NavBarView.O
         UserManager userManager = UserManager.getInstance();
         ID = userManager.getUserID();
 
+        username = WebSocketManager.getInstance().getUsername();
         name.setText(WebSocketManager.getInstance().getUsername());
 
         navbar_view.setSelectedButton(navbar_view.getProfileButton());
@@ -133,9 +147,28 @@ public class ProfilePageViewer extends AppCompatActivity implements NavBarView.O
              */
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ProfilePageViewer.this, ProfilePage.class);
-                ActivityOptions options = ActivityOptions.makeCustomAnimation(ProfilePageViewer.this, R.anim.empty_anim, R.anim.empty_anim);
-                startActivity(intent, options.toBundle());
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilePageViewer.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.password_dialog, null);
+                builder.setView(dialogView);
+
+                EditText passwordEditText = dialogView.findViewById(R.id.passwordEditText);
+                Button confirmButton = dialogView.findViewById(R.id.confirmButton);
+
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                // Handle the click event for the confirm button in the dialog
+                confirmButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String enteredPassword = passwordEditText.getText().toString();
+
+                        sendPostRequest(username, enteredPassword);
+
+                        //dialog.dismiss();
+                    }
+                });
             }
         });
     }
@@ -188,7 +221,6 @@ public class ProfilePageViewer extends AppCompatActivity implements NavBarView.O
 
                             // Extract user information from the JSON response
                             String email = jsonObject.getString("email");
-                            String password = jsonObject.getString("password");
 
                             userEmail.setText(email);
                             //editPass.setText(password);
@@ -210,6 +242,65 @@ public class ProfilePageViewer extends AppCompatActivity implements NavBarView.O
 
         // Adding the request to the request queue
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+
+    /**
+     * Sends a POST request to the server to authenticate user login.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     */
+    private void sendPostRequest(String username, String password) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JSONObject body = new JSONObject();
+
+        try {
+            body.put("username", username);
+            body.put("password", password);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Make the request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                URL_POST_REQUEST,
+                body,
+                new Response.Listener<JSONObject>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Intent intent = new Intent(ProfilePageViewer.this, ProfilePage.class);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ProfilePageViewer.this, "Incorrect password", Toast.LENGTH_SHORT);
+                    }
+                }
+        );
+
+        requestQueue.add(jsonObjectRequest);
     }
 
     /**

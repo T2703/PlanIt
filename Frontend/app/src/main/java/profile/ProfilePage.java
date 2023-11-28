@@ -2,10 +2,12 @@ package profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import events.Event;
 import groups.MemberViewer;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -96,12 +99,21 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
 
     private String ID;
 
+    private String username;
+
+    private Boolean isSave = false, isDelete = false, isEditPass;
+
     /*
     The image loader.
      */
     private static final int RESULT_LOAD_IMG = 1;
 
     private static final String URL_USERS = "http://coms-309-024.class.las.iastate.edu:8080/users/";
+
+    /**
+     * The URL for the POST request to authenticate user login.
+     */
+    private static final String URL_POST_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/login";
 
     /**
      * Initializes the activity, sets up UI components.
@@ -126,7 +138,7 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         navbar_view.setOnButtonClickListener(this);
         UserManager userManager = UserManager.getInstance();
         ID = userManager.getUserID();
-
+        username = WebSocketManager.getInstance().getUsername();
         editName.setText(WebSocketManager.getInstance().getUsername());
 
         navbar_view.setSelectedButton(navbar_view.getProfileButton());
@@ -169,7 +181,25 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             public void onClick(View view) {
                 // This will handle the button click.
                 Log.d("TAG", "Saved");
-                updateUserInfo(ID);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilePage.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.password_dialog, null);
+                builder.setView(dialogView);
+
+                EditText passwordEditText = dialogView.findViewById(R.id.passwordEditText);
+                Button confirmButton = dialogView.findViewById(R.id.confirmButton);
+
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                confirmButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        isSave = true;
+                        String enteredPassword = passwordEditText.getText().toString();
+                        sendPostRequest(username, enteredPassword);
+                    }
+                });
             }
         });
 
@@ -185,7 +215,24 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             public void onClick(View view) {
                 // This will handle the button click.
                 Log.d("TAG", "Delete");
-                makeDeleteRequest(ID);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilePage.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.password_dialog, null);
+                builder.setView(dialogView);
+
+                EditText passwordEditText = dialogView.findViewById(R.id.passwordEditText);
+                Button confirmButton = dialogView.findViewById(R.id.confirmButton);
+
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                confirmButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        isDelete = true;
+                        String enteredPassword = passwordEditText.getText().toString();
+                        sendPostRequest(username, enteredPassword);
+                    }
+                });
             }
         });
 
@@ -286,11 +333,9 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
         // Find the values of each field
         EditText input_user_name = findViewById(R.id.editTextName);
         EditText input_email = findViewById(R.id.editTextEmail);
-        EditText input_pass = findViewById(R.id.editTextPassword);
 
         String input_name_value = input_user_name.getText().toString();
         String input_email_value = input_email.getText().toString();
-        String input_password_value = input_pass.getText().toString();
 
         // Create JSON object
         JSONObject requestBody = new JSONObject();
@@ -300,7 +345,6 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             requestBody.put("id", userID);
             requestBody.put("username", input_name_value);
             requestBody.put("email", input_email_value);
-            requestBody.put("password", input_password_value);
             Log.d("TAG",requestBody.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -368,7 +412,72 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
             );
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+
+    /**
+     * Sends a POST request to the server to authenticate user login.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     */
+    private void sendPostRequest(String username, String password) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JSONObject body = new JSONObject();
+
+        try {
+            body.put("username", username);
+            body.put("password", password);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        // Make the request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                URL_POST_REQUEST,
+                body,
+                new Response.Listener<JSONObject>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (isSave) {
+                                updateUserInfo(ID);
+                                isSave = false;
+                            }
+                            else if (isDelete) {
+                                makeDeleteRequest(ID);
+                                isDelete = false;
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ProfilePage.this, "Incorrect password", Toast.LENGTH_SHORT);
+                    }
+                }
+        );
+
+        requestQueue.add(jsonObjectRequest);
+    }
 
     /**
      * Handles the click event on the calendar button in the navigation bar.
