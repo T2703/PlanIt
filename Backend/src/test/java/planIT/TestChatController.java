@@ -8,9 +8,6 @@ import planIT.Entity.Users.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
