@@ -1,8 +1,11 @@
 package UI_Testing;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -19,12 +22,19 @@ import homepage.HomePage;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class HomepageTest {
+public class HomePageTest {
     @Rule
     public ActivityScenarioRule<HomePage> activityRule = new ActivityScenarioRule<HomePage>(HomePage.class);
 
     @Test
     public void numberOfNotificationsIsDisplayed() {
-        onView(ViewMatchers.withId(R.id.notificationCount)).check(ViewAssertions.matches(ViewMatchers.withText(Matchers.containsString("0"))));
+        onView(withId(R.id.notificationCount)).check(matches(ViewMatchers.withText(Matchers.containsString("0"))));
+    }
+
+    @Test
+    public void navigateToNotificationsPage() {
+        onView(withId(R.id.notificationIcon)).perform(click());
+
+        onView(withId(R.id.notificationsPageHeader)).check(matches(isDisplayed()));
     }
 }
