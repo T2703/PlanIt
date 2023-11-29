@@ -50,6 +50,8 @@ public class TestChatController {
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
 
+        System.out.print(response.getBody());
+
         String returnString = response.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
     }
