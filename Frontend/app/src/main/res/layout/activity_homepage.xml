@@ -68,6 +68,7 @@
                     android:fontFamily="@font/roboto"
                     android:textColor="@color/white"
                     android:textSize="20sp"
+                    android:text="0"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/notificationIcon"
                     app:layout_constraintEnd_toEndOf="@id/notificationIcon"
