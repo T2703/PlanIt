@@ -38,6 +38,7 @@ public class TestChatController {
 
     @Test
     public void testCreateChat(){
+        System.out.println("testCreateChat");
 
         Chat chat = new Chat("chat1");
         Response response = RestAssured.given().
@@ -59,7 +60,7 @@ public class TestChatController {
 
     @Test
     public void testCreateTeamChat(){
-
+        System.out.println("testCreateTeamChat");
         //USER C
         User user1 = new User("A", "A", "A");
         Response response = RestAssured.given().
@@ -103,6 +104,7 @@ public class TestChatController {
 
     @Test
     public void testCreateMessageInChat(){
+        System.out.println("testCreateMessageInChat");
 
         Message msg1 = new Message("MESSAGE 1", new Date(), new Date());
         Response response =RestAssured.given().
@@ -119,6 +121,7 @@ public class TestChatController {
 
     @Test
     public void testUpdateChat(){
+        System.out.println("testUpdateChat");
 
         Chat chat2 = new Chat("Chat 1 Updated");
         Response response =RestAssured.given().
@@ -132,6 +135,7 @@ public class TestChatController {
 
     @Test
     public void testAddUserToChat(){
+        System.out.println("testAddUserToChat");
 
         //USER B
         User user1 = new User("B", "B", "B");
@@ -156,6 +160,7 @@ public class TestChatController {
 
     @Test
     public void testRemoveUserFromChat(){
+        System.out.println("testRemoveUserFromChat");
 
         //USER C
         User user1 = new User("C", "C", "C");
@@ -187,6 +192,7 @@ public class TestChatController {
 
     @Test
     public void testDeleteChat(){
+        System.out.println("testDeleteChat");
 
         Response response =RestAssured.given().
                 when().
