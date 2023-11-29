@@ -162,7 +162,7 @@ public class ChatController {
      */
     @Operation(summary = "remove user from chat", description = "Removes a user from a chat")
     @DeleteMapping(path = "/chats/{chatID}/users/{username}")
-    public String removeUserFromChat(@PathVariable String username, int chatID) {
+    public String removeUserFromChat(@PathVariable String username,@PathVariable int chatID) {
         return chatService.removeUserFromChat(username, chatID);
     }
 }
