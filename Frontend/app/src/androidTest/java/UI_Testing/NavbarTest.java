@@ -41,6 +41,7 @@ public class NavbarTest {
         Espresso.onView(withId(R.id.calendar_button_nav)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.message_button)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.profile_button)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.save_changes_button)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -48,11 +49,13 @@ public class NavbarTest {
         // Click on the menu button to open the popup menu
         Espresso.onView(withId(R.id.calendar_button_nav)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.home_button)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.drawerLayout)).check(matches(isDisplayed()));
     }
 
     @Test
     public void homepageToProfile() {
         Espresso.onView(withId(R.id.profile_button)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.profileImageView)).check(matches(isDisplayed()));
     }
 
 }
