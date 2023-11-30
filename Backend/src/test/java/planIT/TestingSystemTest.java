@@ -5,9 +5,9 @@ import planIT.Entity.Users.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,9 +56,9 @@ public class TestingSystemTest {
         // Check response body for correct response
         String returnString = response.getBody().asString();
         try {
-            JSONArray returnArr = new JSONArray(returnString);
-            JSONObject returnObj = returnArr.getJSONObject(returnArr.length()-1);
-            assertEquals(success, returnObj.get("data"));
+            JSONTokener token = new JSONTokener(returnString);
+            JSONObject obj = new JSONObject(token);
+            assertEquals(success, obj.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
