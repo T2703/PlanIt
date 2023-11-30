@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Login.Password;
+
 /**
  * RESTful controller for managing user-related operations.
  * This controller handles HTTP requests related to user entities, such as retrieval, creation, update, and deletion.
@@ -116,11 +118,11 @@ public class UserController {
     }
 
     @PutMapping("/change-password/{username}")
-    public String changePassword(@PathVariable String username, @RequestBody String password) {
+    public String changePassword(@PathVariable String username, @RequestBody Password password) {
 
         User user = userService.findUserByUsername(username);
 
-        String hashed_password = BCrypt.hashpw(password, BCrypt.gensalt());
+        String hashed_password = BCrypt.hashpw(password.getPassword(), BCrypt.gensalt());
 
         user.setPassword(hashed_password);
 
