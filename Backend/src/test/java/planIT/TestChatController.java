@@ -57,6 +57,41 @@ public class TestChatController {
         assertEquals("{\"message\":\"success\"}", returnString);
     }
 
+    @Test
+    public void testGetChatById(){
+        System.out.println("testGetChatById");
+
+        Response response = RestAssured.given().
+                when().
+                get("/chats/1");
+
+        System.out.println(response);
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        System.out.print(response.getBody());
+
+//        String returnString = response.getBody().asString();   //TODO
+//        assertEquals("{\"message\":\"success\"}", returnString);
+    }
+
+    @Test
+    public void testGetAllChats(){
+        System.out.println("testGetAllChats");
+
+        Response response = RestAssured.given().
+                when().
+                get("/chats");
+
+        System.out.println(response);
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        System.out.print(response.getBody());
+
+//        String returnString = response.getBody().asString();   //TODO
+//        assertEquals("{\"message\":\"success\"}", returnString);
+    }
 
     @Test
     public void testCreateTeamChat(){
@@ -112,6 +147,23 @@ public class TestChatController {
                 body(msg1).
                 when().
                 post("/chats/1/messages");
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        String returnString = response.getBody().asString();
+        assertEquals("{\"message\":\"success\"}", returnString);
+    }
+
+    @Test
+    public void testAddMessageToChat(){
+        System.out.println("testAddMessageToChat");
+
+        Message msg2 = new Message("MESSAGE 2", new Date(), new Date());
+        Response response =RestAssured.given().
+                contentType("application/json").
+                body(msg2).
+                when().
+                put("/chats/1/messages/2");
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
 
