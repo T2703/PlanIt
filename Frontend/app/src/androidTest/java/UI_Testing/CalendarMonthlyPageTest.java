@@ -86,4 +86,28 @@ public class CalendarMonthlyPageTest {
         // Click on the "Weekly View" option in the popup menu
         Espresso.onView(ViewMatchers.withText("Weekly")).perform(ViewActions.click());
     }
+
+    @Test
+    public void navigateToEventView() {
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Weekly View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Events")).perform(ViewActions.click());
+    }
+
+    @Test
+    public void navigateToDailyToEventView() {
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Daily View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Daily")).perform(ViewActions.click());
+
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Weekly View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Events")).perform(ViewActions.click());
+    }
 }
