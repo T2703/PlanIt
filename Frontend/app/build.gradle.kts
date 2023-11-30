@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("jacoco")
 }
 
 android {
@@ -16,17 +17,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        debug {
-            enableAndroidTestCoverage
-        }
+    testCoverage {
+        jacocoVersion = "0.8.11"
+    }
 
+    buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+
+        debug {
+            enableAndroidTestCoverage = true
         }
     }
     compileOptions {
@@ -36,8 +41,7 @@ android {
 }
 
 dependencies {
-
-    implementation ("org.java-websocket:Java-WebSocket:1.5.1")
+    implementation("org.java-websocket:Java-WebSocket:1.5.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
