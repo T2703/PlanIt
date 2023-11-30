@@ -114,5 +114,19 @@ public class UserController {
     public String deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
     }
+
+    @PutMapping("/change-password/{username}")
+    public String changePassword(@PathVariable String username, @RequestBody String password) {
+
+        User user = userService.findUserByUsername(username);
+
+        String hashed_password = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        user.setPassword(hashed_password);
+
+        userService.updateUser(user.getId(), user);
+
+        return success;
+    }
 }
 
