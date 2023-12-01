@@ -202,7 +202,7 @@ public class TestChatController {
         //ADD USER B TO CHAT 1
         Response response3 =RestAssured.given().
                 when().
-                put("/chats/1/users/B");
+                put("/chats/2/users/B");
         statusCode = response3.getStatusCode();
         assertEquals(200, statusCode);
 
