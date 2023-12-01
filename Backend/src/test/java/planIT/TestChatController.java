@@ -189,20 +189,20 @@ public class TestChatController {
     public void testAddUserToChat(){
         System.out.println("testAddUserToChat");
 
-        //USER B
-        User user1 = new User("B", "B", "B");
-        Response response = RestAssured.given().
-                contentType("application/json").
-                body(user1).
-                when().
-                post("/users");
-        int statusCode = response.getStatusCode();
-        assertEquals(200, statusCode);
+//        //USER B
+//        User user1 = new User("B", "B", "B");
+//        Response response = RestAssured.given().
+//                contentType("application/json").
+//                body(user1).
+//                when().
+//                post("/users");
+//        int statusCode = response.getStatusCode();
+//        assertEquals(200, statusCode);
 
         Response responseDEBUG = RestAssured.given().
                 when().
                 get("/username/B");
-        statusCode = responseDEBUG.getStatusCode();
+        int statusCode = responseDEBUG.getStatusCode();
         assertEquals(200, statusCode);
 
         //ADD USER B TO CHAT 1
@@ -212,7 +212,7 @@ public class TestChatController {
         statusCode = response3.getStatusCode();
         assertEquals(200, statusCode);
 
-        String returnString = response.getBody().asString();
+        String returnString = response3.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
     }
 
