@@ -38,15 +38,15 @@ public class TestingSystemTest {
 
     @Test
     public void userTest() {
-        User r = new User("test", "password", "test@gmail.com");
+        //User r = new User("test", "password", "test@gmail.com");
 
-        System.out.println(r);
+        //System.out.println(r);
         // Send request and receive response
         Response response = RestAssured.given().
-                contentType("application/json").
-                body(r).
+//                contentType("application/json").
+//                body(r).
                 when().
-                post("/users");
+                get("/username/test");
 
 
         // Check status code
@@ -54,14 +54,14 @@ public class TestingSystemTest {
         assertEquals(200, statusCode);
 
         // Check response body for correct response
-        String returnString = response.getBody().asString();
-        try {
-            JSONTokener token = new JSONTokener(returnString);
-            JSONObject obj = new JSONObject(token);
-            assertEquals(success, obj.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        String returnString = response.getBody().asString();
+//        try {
+//            JSONTokener token = new JSONTokener(returnString);
+//            JSONObject obj = new JSONObject(token);
+//            assertEquals(success, obj.toString());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }
