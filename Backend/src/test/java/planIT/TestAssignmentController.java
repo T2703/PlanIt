@@ -47,7 +47,7 @@ public class TestAssignmentController {
                 contentType("application/json").
                 body(ass1).
                 when().
-                post("/assignments");
+                post("users/A/assignments");
         System.out.println(response);
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -92,7 +92,70 @@ public class TestAssignmentController {
         //assertEquals("{\"message\":\"success\"}", returnString);
     }
 
+    @Test
+    public void testGetUserAssignments(){
+        System.out.println("testGetAllAssignments");
 
+        User userB = new User("B", "B", "B");
+        Response response = RestAssured.given().
+                contentType("application/json").
+                body(userB).
+                when().
+                post("/users");
+        System.out.println(response);
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        System.out.println(response.getBody().asString());
+
+        Response response2 = RestAssured.given().
+                when().
+                get("users/B/assignments");
+        System.out.println(response);
+        statusCode = response2.getStatusCode();
+        assertEquals(200, statusCode);
+
+        //System.out.print(response.getBody());
+        //String returnString = response.getBody().asString(); //TODO
+        //assertEquals("{\"message\":\"success\"}", returnString);
+    }
+
+    @Test
+    public void testUpdateAssignment(){
+        System.out.println("testUpdateAssignments");
+
+        Assignment assUp = new Assignment("Assignment1", "Ass1 UPDATE", "Course1", new Date(), false);
+        Response response = RestAssured.given().
+                contentType("application/json").
+                body(assUp).
+                when().
+                put("assignments/1");
+        System.out.println(response);
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        System.out.print(response.getBody());
+
+//        String returnString = response.getBody().asString();
+//        assertEquals("{\"message\":\"success\"}", returnString);
+    }
+
+    @Test
+    public void testDeleteAssignment(){
+        System.out.println("testDeleteAssignment");
+
+        Response response = RestAssured.given().
+                when().
+                delete("assignments/1");
+        System.out.println(response);
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        System.out.print(response.getBody());
+
+        String returnString = response.getBody().asString();
+        assertEquals("{\"message\":\"success\"}", returnString);
+    }
 
 
 }
