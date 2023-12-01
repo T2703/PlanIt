@@ -199,10 +199,16 @@ public class TestChatController {
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
 
+        Response responseDEBUG = RestAssured.given().
+                when().
+                get("/username/B");
+        statusCode = responseDEBUG.getStatusCode();
+        assertEquals(200, statusCode);
+
         //ADD USER B TO CHAT 1
         Response response3 =RestAssured.given().
                 when().
-                put("/chats/2/users/B");
+                put("/chats/1/users/B");
         statusCode = response3.getStatusCode();
         assertEquals(200, statusCode);
 
