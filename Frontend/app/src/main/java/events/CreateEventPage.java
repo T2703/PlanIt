@@ -27,10 +27,13 @@ import com.example.myapplication.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
+
 import websockets.WebSocketManager;
 
 
@@ -204,11 +207,22 @@ public class CreateEventPage extends AppCompatActivity {
             body.put("description", eventDescriptionValue);
             body.put("location", eventLocationValue);
             body.put("type", eventTypeValue);
-            body.put("startDate", eventStartDateValue);
-            body.put("endDate", eventEndDateValue);
+            //body.put("startDate", eventStartDateValue);
+            //body.put("endDate", eventEndDateValue);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date startDate = sdf.parse(eventStartDateValue);
+            Date endDate = sdf.parse(eventEndDateValue);
+
+            body.put("startDate", sdf.format(startDate));
+            body.put("endDate", sdf.format(endDate));
+
 
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
 
         String username = WebSocketManager.getInstance().getUsername();

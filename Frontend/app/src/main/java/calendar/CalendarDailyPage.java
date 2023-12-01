@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import api.VolleySingleton;
 import events.CreateEventPage;
@@ -368,24 +369,29 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
                                 String startDateStr  = jsonObject.getString("startDate");
                                 String endDateStr  = jsonObject.getString("endDate");
 
-                                SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                                SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault());
+                                inputDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
                                 Date startDate = inputDateFormat.parse(startDateStr);
                                 Date endDate = inputDateFormat.parse(endDateStr);
 
-                                //event_list.add(new Event(id, name, description, start_date, end_date));
-                                SimpleDateFormat militaryTimeFormat = new SimpleDateFormat("HH:mm");
-                                String startTime = militaryTimeFormat.format(startDate);
-                                String endTime = militaryTimeFormat.format(endDate);
-                                Log.d("START", startDateStr);
+                                Log.d("StartDate", startDate.toString());
+
+                                // Convert to local time zone
+                                SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+                                outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                                String startTime = outputFormat.format(startDate);
+                                String endTime = outputFormat.format(endDate);
+
+                                Log.d("StartDate", startDate.toString());
 
                                 if (startDateStr.startsWith(date_getter)) {
                                     event_list.add(new Event(id, name, description, eventType, startTime, endTime));
                                 }
 
-                            } catch (JSONException e) {
+                            } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
-                            } catch (ParseException e) {
-                                throw new RuntimeException(e);
                             }
                         }
 
