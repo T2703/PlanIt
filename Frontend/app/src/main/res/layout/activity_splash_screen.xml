@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DA5A5A"
+    android:background="@color/primary_color"
     tools:context=".SplashScreen">
 
     <ImageView
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="500dp"
-        android:background="#00DA5A5A"
+        android:background="@color/primary_color"
         android:fontFamily="@font/bahiana"
         android:text="P L A N I T"
         android:textAlignment="center"
