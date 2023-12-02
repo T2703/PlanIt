@@ -38,37 +38,30 @@ public class TestingSystemTest {
 
     @Test
     public void userTest() {
+        User r = new User("test", "password", "test@gmail.com");
 
-//        User r = new User("test", "password", "test@gmail.com");
-//        System.out.println(r);
-//        // Send request and receive response
-//        Response response = RestAssured.given().
-//                contentType("application/json").
-//                body(r).
-//                when().
-//                post("/users");
-//
-//        // Check status code
-//        int statusCode = response.getStatusCode();
-//        assertEquals(200, statusCode);
-
-        Response response2 = RestAssured.given().
+        System.out.println(r);
+        // Send request and receive response
+        Response response = RestAssured.given().
+                contentType("application/json").
+                body(r).
                 when().
-                get("/users/231");
+                post("/users");
+
 
         // Check status code
-        int statusCode2 = response2.getStatusCode();
-        assertEquals(200, statusCode2);
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
 
         // Check response body for correct response
-        String returnString = response2.getBody().asString();
-//        try {
-//            JSONTokener token = new JSONTokener(returnString);
-//            JSONObject obj = new JSONObject(token);
-//            assertEquals(success, obj.toString());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        String returnString = response.getBody().asString();
+        try {
+            JSONTokener token = new JSONTokener(returnString);
+            JSONObject obj = new JSONObject(token);
+            assertEquals(success, obj.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }
