@@ -3,6 +3,7 @@ package planIT;
 
 // Import Local classes
 import org.glassfish.jaxb.runtime.v2.runtime.output.SAXOutput;
+import org.springframework.beans.factory.annotation.Autowired;
 import planIT.Entity.Assignments.Assignment;
 import planIT.Entity.Chats.Chat;
 import planIT.Entity.Messages.Message;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 //import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.boot.test.web.server.LocalServerPort;	// SBv3
+import planIT.Entity.Users.UserRepository;
 
 import java.util.Date;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,6 +34,9 @@ public class TestAssignmentController {
     @LocalServerPort
     int port;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Before
     public void setUp() {
         RestAssured.port = port;
@@ -40,6 +45,10 @@ public class TestAssignmentController {
 
     @Test
     public void testCreateAssignment(){
+
+        // Clear UserRepository Before Tests
+        userRepository.deleteAll();
+
         System.out.println("testCreateAssignment");
 
         Assignment ass1 = new Assignment("Assignment1", "Desc1", "Course1", new Date(), false);

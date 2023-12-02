@@ -1,6 +1,7 @@
 package planIT;
 
 // Import Local classes
+import org.springframework.beans.factory.annotation.Autowired;
 import planIT.Entity.Chats.Chat;
 import planIT.Entity.Messages.Message;
 import planIT.Entity.Teams.Team;
@@ -20,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 //import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.boot.test.web.server.LocalServerPort;	// SBv3
+import planIT.Entity.Users.UserRepository;
+import planIT.Entity.Users.UserService;
 
 import java.util.Date;
 
@@ -30,6 +33,9 @@ public class TestChatController {
     @LocalServerPort
     int port;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Before
     public void setUp(){
         RestAssured.port =port;
@@ -38,6 +44,9 @@ public class TestChatController {
 
     @Test
     public void testCreateChat(){
+
+        // Clear UserRepository Before Tests
+        userRepository.deleteAll();
         System.out.println("testCreateChat");
 
         Chat chat = new Chat("chat1");
