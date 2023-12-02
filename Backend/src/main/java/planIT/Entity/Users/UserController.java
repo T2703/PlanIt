@@ -84,6 +84,10 @@ public class UserController {
             return "Please complete all fields.";
         }
 
+        if(userService.findUserByUsername(user.getUsername()) != null){
+            return "Username already taken";
+        }
+
         // Hash the password
         String hashed_password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
