@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Login.LoginRequest;
 import planIT.Login.Password;
 
 /**
@@ -84,6 +85,10 @@ public class UserController {
             return "Please complete all fields.";
         }
 
+        if(userService.findUserByUsername(user.getUsername()) != null){
+            return "Username already taken";
+        }
+
         // Hash the password
         String hashed_password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
@@ -127,6 +132,20 @@ public class UserController {
         user.setPassword(hashed_password);
 
         userService.updateUser(user.getId(), user);
+
+        return success;
+    }
+
+    @PostMapping("/login")
+    public String authentication(@RequestBody LoginRequest loginRequest) {
+
+        User user = userService.findUserByUsername(loginRequest.getUsername());
+
+        boolean check_password = BCrypt.checkpw(loginRequest.getPassword(), user.getPassword());
+
+        if (user == null || !check_password) {
+            return "Incorrect Username or Password.";
+        }
 
         return success;
     }

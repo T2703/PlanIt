@@ -11,6 +11,14 @@ public class Password {
 
     private String password;
 
+    public Password(String password) {
+        this.password = password;
+    }
+
+    public Password() {
+
+    }
+
     /**
      * Gets the password from the login request.
      *
