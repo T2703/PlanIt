@@ -26,7 +26,7 @@ import homepage.HomePage;
 /**
  * A test to test the navbar simulating navigating through different pages on the navbar.
  *
- * @author Tristan Nono
+ * @author Joshua Gutierrez
  */
 public class NavbarTest {
     @Rule
