@@ -1,6 +1,7 @@
 package planIT;
 
 // Import Local classes
+import io.restassured.path.json.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import planIT.Entity.Chats.Chat;
 import planIT.Entity.Messages.Message;
@@ -44,9 +45,6 @@ public class TestChatController {
 
     @Test
     public void testCreateChat(){
-
-        // Clear UserRepository Before Tests
-        userRepository.deleteAll();
         System.out.println("testCreateChat");
 
         Chat chat = new Chat("chat1");
@@ -144,6 +142,22 @@ public class TestChatController {
 
         String returnString = response.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
+
+        // DELTE TESTING USER
+        Response response5 = RestAssured.given().
+                when().
+                get("/username/A");
+
+        statusCode = response5.getStatusCode();
+        assertEquals(200, statusCode);
+
+        JsonPath path = response5.jsonPath();
+        assertEquals("A", path.getString("username"));
+
+        // Get the User From the ID
+        Response response1 = RestAssured.given().
+                when().
+                get("/users/" + path.getString("id"));
     }
 
     @Test
@@ -198,20 +212,20 @@ public class TestChatController {
     public void testAddUserToChat(){
         System.out.println("testAddUserToChat");
 
-//        //USER B
-//        User user1 = new User("B", "B", "B");
-//        Response response = RestAssured.given().
-//                contentType("application/json").
-//                body(user1).
-//                when().
-//                post("/users");
-//        int statusCode = response.getStatusCode();
-//        assertEquals(200, statusCode);
+        //USER B
+        User user1 = new User("B", "B", "B");
+        Response response = RestAssured.given().
+                contentType("application/json").
+                body(user1).
+                when().
+                post("/users");
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
 
         Response responseDEBUG = RestAssured.given().
                 when().
                 get("/username/B");
-        int statusCode = responseDEBUG.getStatusCode();
+        statusCode = responseDEBUG.getStatusCode();
         assertEquals(200, statusCode);
 
         //ADD USER B TO CHAT 1
@@ -223,6 +237,23 @@ public class TestChatController {
 
         String returnString = response3.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
+
+
+        // DELTE TESTING USER
+        Response response5 = RestAssured.given().
+                when().
+                get("/username/B");
+
+        statusCode = response5.getStatusCode();
+        assertEquals(200, statusCode);
+
+        JsonPath path = response5.jsonPath();
+        assertEquals("B", path.getString("username"));
+
+        // Get the User From the ID
+        Response response1 = RestAssured.given().
+                when().
+                get("/users/" + path.getString("id"));
     }
 
     @Test
@@ -255,6 +286,22 @@ public class TestChatController {
 
         String returnString = response3.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
+
+        // DELTE TESTING USER
+        Response response5 = RestAssured.given().
+                when().
+                get("/username/C");
+
+        statusCode = response5.getStatusCode();
+        assertEquals(200, statusCode);
+
+        JsonPath path = response5.jsonPath();
+        assertEquals("C", path.getString("username"));
+
+        // Get the User From the ID
+        Response response1 = RestAssured.given().
+                when().
+                get("/users/" + path.getString("id"));
     }
 
     @Test
@@ -269,6 +316,7 @@ public class TestChatController {
 
         String returnString = response.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
+        
     }
 
 }
