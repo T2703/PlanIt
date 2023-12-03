@@ -38,6 +38,8 @@ import websockets.WebSocketManager;
 
 import com.example.myapplication.R;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -362,6 +364,23 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                                 e.printStackTrace();
                             }
                         }
+
+                        Collections.sort(event_list, new Comparator<Event>() {
+                            @Override
+                            public int compare(Event event1, Event event2) {
+                                SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+
+                                try {
+                                    Date startTime1 = timeFormat.parse(event1.getStartTime());
+                                    Date startTime2 = timeFormat.parse(event2.getStartTime());
+
+                                    return startTime1.compareTo(startTime2);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    return 0;
+                                }
+                            }
+                        });
 
                         adapter.notifyDataSetChanged();
                     }
