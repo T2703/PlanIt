@@ -2,7 +2,10 @@ package planIT;
 
 
 // Import Local classes
+import io.restassured.path.json.JsonPath;
 import org.glassfish.jaxb.runtime.v2.runtime.output.SAXOutput;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import planIT.Entity.Assignments.Assignment;
 import planIT.Entity.Chats.Chat;
@@ -22,9 +25,7 @@ import io.restassured.response.Response;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
-//import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.boot.test.web.server.LocalServerPort;	// SBv3
-import planIT.Entity.Users.UserRepository;
 
 import java.util.Date;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,9 +34,6 @@ public class TestAssignmentController {
 
     @LocalServerPort
     int port;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Before
     public void setUp() {
@@ -46,10 +44,16 @@ public class TestAssignmentController {
     @Test
     public void testCreateAssignment(){
 
-        // Clear UserRepository Before Tests
-        userRepository.deleteAll();
-
         System.out.println("testCreateAssignment");
+
+        User user1 = new User("A", "A", "A");
+        Response responseA = RestAssured.given().
+                contentType("application/json").
+                body(user1).
+                when().
+                post("/users");
+        int statusCodeA = responseA.getStatusCode();
+        assertEquals(200, statusCodeA);
 
         Assignment ass1 = new Assignment("Assignment1", "Desc1", "Course1", new Date(), false);
         Response response = RestAssured.given().
@@ -77,11 +81,6 @@ public class TestAssignmentController {
         System.out.println(response);
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
-
-        //System.out.print(response.getBody());
-
-        //String returnString = response.getBody().asString(); //TODO
-        //assertEquals("{\"message\":\"success\"}", returnString);
     }
 
     @Test
@@ -94,39 +93,41 @@ public class TestAssignmentController {
         System.out.println(response);
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
-
-        //System.out.print(response.getBody());
-
-        //String returnString = response.getBody().asString(); //TODO
-        //assertEquals("{\"message\":\"success\"}", returnString);
     }
 
     @Test
     public void testGetUserAssignments(){
-        System.out.println("testGetAllAssignments");
+        System.out.println("testGetUserAssignments");
 
-        User userB = new User("B", "B", "B");
-        Response response = RestAssured.given().
+        User user1 = new User("A", "A", "A");
+        Response responseA = RestAssured.given().
                 contentType("application/json").
-                body(userB).
+                body(user1).
                 when().
                 post("/users");
+
+        Response response = RestAssured.given().
+                when().
+                get("users/A/assignments");
         System.out.println(response);
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
 
-        System.out.println(response.getBody().asString());
-
-        Response response2 = RestAssured.given().
+        // DELTE TESTING USER
+        Response response5 = RestAssured.given().
                 when().
-                get("users/B/assignments");
-        System.out.println(response);
-        statusCode = response2.getStatusCode();
+                get("/username/A");
+
+        statusCode = response5.getStatusCode();
         assertEquals(200, statusCode);
 
-        //System.out.print(response.getBody());
-        //String returnString = response.getBody().asString(); //TODO
-        //assertEquals("{\"message\":\"success\"}", returnString);
+        JsonPath path = response5.jsonPath();
+        assertEquals("A", path.getString("username"));
+
+        // Get the User From the ID
+        Response response1 = RestAssured.given().
+                when().
+                delete("/users/" + path.getString("id"));
     }
 
     @Test
@@ -142,11 +143,6 @@ public class TestAssignmentController {
         System.out.println(response);
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
-
-        System.out.print(response.getBody());
-
-//        String returnString = response.getBody().asString();
-//        assertEquals("{\"message\":\"success\"}", returnString);
     }
 
     @Test
@@ -164,6 +160,26 @@ public class TestAssignmentController {
 
         String returnString = response.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
+
+        // DELTE TESTING USER
+        Response response5 = RestAssured.given().
+                when().
+                get("/username/A");
+
+        statusCode = response5.getStatusCode();
+        assertEquals(200, statusCode);
+
+        JsonPath path = response5.jsonPath();
+        try {
+            assertEquals("A", path.getString("username"));
+
+            // Get the User From the ID
+            Response response1 = RestAssured.given().
+                when().
+                delete("/users/" + path.getString("id"));
+        }catch(Exception e){
+            System.out.println("");
+        }
     }
 
 

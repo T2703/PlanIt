@@ -103,7 +103,7 @@ public class TestChatController {
     @Test
     public void testCreateTeamChat(){
         System.out.println("testCreateTeamChat");
-        //USER C
+        //USER A
         User user1 = new User("A", "A", "A");
         Response response = RestAssured.given().
                 contentType("application/json").
@@ -140,7 +140,7 @@ public class TestChatController {
         statusCode = response4.getStatusCode();
         assertEquals(200, statusCode);
 
-        String returnString = response.getBody().asString();
+        String returnString = response4.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
 
         // DELTE TESTING USER
@@ -157,7 +157,11 @@ public class TestChatController {
         // Get the User From the ID
         Response response1 = RestAssured.given().
                 when().
-                get("/users/" + path.getString("id"));
+                delete("/users/" + path.getString("id"));
+
+        Response response6 = RestAssured.given().
+                when().
+                delete("/chats/2");
     }
 
     @Test
@@ -238,7 +242,6 @@ public class TestChatController {
         String returnString = response3.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
 
-
         // DELTE TESTING USER
         Response response5 = RestAssured.given().
                 when().
@@ -253,7 +256,7 @@ public class TestChatController {
         // Get the User From the ID
         Response response1 = RestAssured.given().
                 when().
-                get("/users/" + path.getString("id"));
+                delete("/users/" + path.getString("id"));
     }
 
     @Test
@@ -301,22 +304,58 @@ public class TestChatController {
         // Get the User From the ID
         Response response1 = RestAssured.given().
                 when().
-                get("/users/" + path.getString("id"));
+                delete("/users/" + path.getString("id"));
     }
 
     @Test
     public void testDeleteChat(){
         System.out.println("testDeleteChat");
 
+        //chats/{chatID}/users/{username}
+
+
+
         Response response =RestAssured.given().
                 when().
-                delete("/chats/2");
+                delete("/chats/3");
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
 
         String returnString = response.getBody().asString();
         assertEquals("{\"message\":\"success\"}", returnString);
-        
+
+        // DELTE TESTING USER
+        Response response5 = RestAssured.given().
+                when().
+                get("/username/A");
+
+        statusCode = response5.getStatusCode();
+        assertEquals(200, statusCode);
+
+        JsonPath path = response5.jsonPath();
+        assertEquals("A", path.getString("username"));
+
+        // Get the User From the ID
+        Response response1 = RestAssured.given().
+                when().
+                delete("/users/" + path.getString("id"));
+
+        // DELTE TESTING USER
+        Response response6 = RestAssured.given().
+                when().
+                get("/username/B");
+
+        statusCode = response6.getStatusCode();
+        assertEquals(200, statusCode);
+
+        JsonPath path6 = response6.jsonPath();
+        assertEquals("B", path6.getString("username"));
+
+        // Get the User From the ID
+        Response response7 = RestAssured.given().
+                when().
+                delete("/users/" + path6.getString("id"));
+
     }
 
 }
