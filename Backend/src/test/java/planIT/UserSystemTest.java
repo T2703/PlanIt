@@ -30,7 +30,6 @@ public class UserSystemTest {
     @LocalServerPort
     int port;
 
-
     private String success = "{\"message\":\"success\"}";
 
     @Before
@@ -228,6 +227,23 @@ public class UserSystemTest {
 
         String body1 = response1.getBody().asString();
         assertEquals(success, body1);
+
+
+        // Get Users After Delete Method
+        Response response2 = RestAssured.given().
+                when().
+                get("/users");
+
+        int statusCode2 = response2.getStatusCode();
+        assertEquals(200, statusCode2);
+
+        String body2 = response2.getBody().asString();
+        try {
+            JSONArray array = new JSONArray(body2);
+            assertEquals(0, array.length());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
