@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserService;
 
 /**
  * RESTful controller for managing To-Do-related operations.
@@ -29,6 +31,9 @@ public class ToDoController {
 
     @Autowired
     private ToDoService toDoService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Retrieves all To-Dos from the service.
@@ -54,18 +59,6 @@ public class ToDoController {
     }
 
     /**
-     * Creates a new To-Do in the service.
-     *
-     * @param toDo The To-Do entity to be created.
-     * @return A success or failure message as a JSON string.
-     */
-    @PostMapping(path = "/ToDos")
-    @Operation(summary = "Create a new To-Do", description = "Adds a To-Do to the database")
-    public String createToDo(@RequestBody ToDo toDo){
-        return toDoService.createToDo(toDo);
-    }
-
-    /**
      * Adds a To-Do to a specific user.
      *
      * @param username The username of the user.
@@ -74,7 +67,9 @@ public class ToDoController {
      */
     @PostMapping(path = "users/{username}/ToDos")
     @Operation(summary = "Add a To-Do to a user", description = "Adds a To-Do to a user in the repository")
-    public String userAddToDo(@PathVariable String username, @RequestBody ToDo toDo){
+    public String createToDo(@PathVariable String username, @RequestBody ToDo toDo){
+        toDoService.createToDo(toDo);
+
         return toDoService.userAddToDo(username, toDo);
     }
 
@@ -87,7 +82,7 @@ public class ToDoController {
      */
     @PutMapping(path = "/ToDos/{id}")
     @Operation(summary = "Update an existing To-Do", description = "Updates a To-Do in the repository")
-    public ToDo updateToDo(@PathVariable int id, @RequestBody ToDo toDo){
+    public String updateToDo(@PathVariable int id, @RequestBody ToDo toDo){
         return toDoService.updateToDo(id, toDo);
     }
 
@@ -97,9 +92,11 @@ public class ToDoController {
      * @param id The unique identifier of the To-Do to be deleted.
      * @return A success or failure message as a JSON string.
      */
-    @DeleteMapping(path = "/ToDos/{id}")
+    @DeleteMapping(path = "users/{username}/ToDos/{id}")
     @Operation(summary = "Delete a To-Do by Id", description = "Deletes a To-Do from the repository")
-    public String deleteToDo(@PathVariable int id){
+    public String deleteToDo(@PathVariable String username, @PathVariable int id){
+        User user = userService.findUserByUsername(username);
+        user.getToDos().remove(toDoService.getToDoById(id));
         return toDoService.deleteToDo(id);
     }
 }

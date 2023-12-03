@@ -9,14 +9,12 @@ import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import planIT.Entity.Users.User;
-import planIT.Entity.Users.UserRepository;
 import planIT.Login.LoginRequest;
 import planIT.Login.Password;
 
@@ -32,9 +30,6 @@ public class UserSystemTest {
     @LocalServerPort
     int port;
 
-    @Autowired
-    private UserRepository userRepository;
-
     private String success = "{\"message\":\"success\"}";
 
     @Before
@@ -45,9 +40,6 @@ public class UserSystemTest {
 
     @Test
     public void userTestA() {
-        // Clear UserRepository Before Tests
-        userRepository.deleteAll();
-
         // Get Users Before Post Method
         Response response1 = RestAssured.given().
                 when().
@@ -234,6 +226,23 @@ public class UserSystemTest {
 
         String body1 = response1.getBody().asString();
         assertEquals(success, body1);
+
+        // Get Users After Delete Method
+        Response response2 = RestAssured.given().
+                when().
+                get("/users");
+
+        int statusCode2 = response2.getStatusCode();
+        assertEquals(200, statusCode2);
+
+        String body2 = response2.getBody().asString();
+        try {
+            JSONArray array = new JSONArray(body2);
+            assertEquals(0, array.length());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
