@@ -50,6 +50,7 @@ public class UserSystemTest {
         assertEquals(200, statusCode1);
 
         String body1 = response1.getBody().asString();
+        System.out.println("HERE>>>" +response1.getBody().asString()); //DEBUG
         try {
             JSONArray array = new JSONArray(body1);
             assertEquals(0, array.length());

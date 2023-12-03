@@ -102,5 +102,18 @@ public class TeamController {
     public String deleteTeam(@PathVariable int id) {
         return teamService.deleteTeam(id);
     }
+
+    /**
+     * Adds a user to a specific Team in the service.
+     *
+     * @param id       The unique identifier of the Team.
+     * @param username The username of the user to be added.
+     * @return A success or failure message as a JSON string.
+     */
+    @DeleteMapping(path = "teams/{id}/user/{username}")
+    @Operation(summary = "Add a user to a Team", description = "Adds a user to a team in the repository")
+    public String removeUserFromTeam(@PathVariable int id, @PathVariable String username){
+        return teamService.addUserToTeam(id, username);
+    }
 }
 
