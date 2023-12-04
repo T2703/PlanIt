@@ -30,6 +30,7 @@ import java.util.List;
 
 import api.VolleySingleton;
 import messages.MessageView;
+import websockets.WebSocketManager;
 
 /**
  * Activity class for displaying group information including the group's profile picture and general details.
@@ -105,7 +106,7 @@ public class GroupInfo extends AppCompatActivity {
     /**
      * The teams url for making the request.
      */
-    private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
+    private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
 
     /**
      * Initializes the activity and sets up UI components.
@@ -158,7 +159,8 @@ public class GroupInfo extends AppCompatActivity {
                         }
 
                         else if (menuItem.getItemId() == R.id.delete_option) {
-                            String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + getting_group_id;
+                            String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams" + "/" + getting_group_id;
+                            Log.d("URL", delete_url);
                             makeDeleteRequest(delete_url, getting_group_id);
                             Log.d("GID", getting_group_id);
 
