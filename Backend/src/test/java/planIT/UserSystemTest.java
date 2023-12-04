@@ -31,6 +31,7 @@ public class UserSystemTest {
     int port;
 
     private String success = "{\"message\":\"success\"}";
+    private String failure = "{\"message\":\"failure\"}";
 
     @Before
     public void setUp() {
@@ -93,6 +94,41 @@ public class UserSystemTest {
     @Test
     public void userTestB() {
 
+        // Should Not Create a User With The Same Username
+        User r = new User("test", "password", "test@gmail.com");
+        Response response1 = RestAssured.given().
+                contentType("application/json").
+                body(r).
+                when().
+                post("/users");
+
+        int statusCode1 = response1.getStatusCode();
+        assertEquals(200, statusCode1);
+
+        String body1 = response1.getBody().asString();
+
+        assertEquals("Username already taken.", body1);
+
+        // Should Not Create a User With Empty Fields
+        User p = new User("", "", "");
+        Response response2 = RestAssured.given().
+                contentType("application/json").
+                body(p).
+                when().
+                post("/users");
+
+        int statusCode2 = response2.getStatusCode();
+        assertEquals(200, statusCode2);
+
+        String body2 = response2.getBody().asString();
+
+        assertEquals("Please complete all fields.", body2);
+
+    }
+
+    @Test
+    public void userTestC() {
+
         // Get the "test" User ID
         Response response = RestAssured.given().
                 when().
@@ -140,7 +176,26 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestC() {
+    public void userTestD() {
+
+        // Should Return Null for the User Does Not Exist
+        User r = new User("test", "password", "test@gmail.com");
+        Response response = RestAssured.given().
+                contentType("application/json").
+                body(r).
+                when().
+                put("/users/63");
+
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        String body = response.getBody().asString();
+        assertEquals(failure, body);
+
+    }
+
+    @Test
+    public void userTestE() {
 
         // Test Successful User Login Request
         LoginRequest request1 = new LoginRequest("test-updated", "password");
@@ -173,7 +228,7 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestD() {
+    public void userTestF() {
 
         // Changes the "test" User's Password
         Password password = new Password("password-updated");
@@ -206,7 +261,7 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestE() {
+    public void userTestG() {
 
         // Get the "test" User ID
         Response response = RestAssured.given().
