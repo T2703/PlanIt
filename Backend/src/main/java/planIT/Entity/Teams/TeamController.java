@@ -40,10 +40,10 @@ public class TeamController {
      *
      * @return List of Team entities.
      */
-    @GetMapping(path = "/teams")
-    @Operation(summary = "Get all Teams", description = "Returns all teams from the repository as a List object")
-    public List<Team> getAllTeams() {
-        return teamService.getAllTeams();
+    @GetMapping(path = "users/{username}/teams")
+    @Operation(summary = "Get all User Teams", description = "Returns all teams from the repository as a List object")
+    public List<Team> getAllTeams(@PathVariable String username) {
+        return userService.findUserByUsername(username).getTeams();
     }
 
     /**
