@@ -114,4 +114,23 @@ public class TeamService {
 
         return success;
     }
+
+    /**
+     * Removes a user from a specific team
+     *
+     * @param id The unique identifier of the Team.
+     * @param username The username of the user to be removed.
+     * @return A success or failure message as a JSON string.
+     */
+    public String removeUserFromTeam(int id, String username){
+
+        User user = userRepository.findByUsername(username);
+        Team team = teamRepository.findById(id);
+        team.getUsers().remove(user);
+        user.getTeams().remove(team);
+        teamRepository.save(team);
+        userRepository.save(user);
+
+        return success;
+    }
 }

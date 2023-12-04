@@ -92,7 +92,8 @@ public class ChatService {
         Chat chat = chatRepository.findById(chatId);
         user.getChats().add(chat);
         chat.getUsers().add(user);
-        chatRepository.save(chat);
+        userRepository.save(user);
+        //chatRepository.save(chat);
         return success;
     }
 
