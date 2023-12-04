@@ -143,10 +143,10 @@ public class EventSystemTest {
                 when().
                 get("/username/testUser2");
         JsonPath path3 = response3.jsonPath();
-        RestAssured.given().
+        Response response4 = RestAssured.given().
                 when().
-                delete("/users/" + path.getString("id"));
-        int statusCode3 = response3.getStatusCode();
+                delete("/users/" + path3.getString("id"));
+        int statusCode3 = response4.getStatusCode();
         assertEquals(200, statusCode3);
 
     }
