@@ -16,13 +16,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import planIT.Entity.Teams.Team;
+import planIT.Entity.Tags.Tag;
 import planIT.Entity.Users.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class TeamSystemTest {
+public class TagSystemTest {
 
     @LocalServerPort
     int port;
@@ -37,9 +37,9 @@ public class TeamSystemTest {
     }
 
     @Test
-    public void teamTestA() {
+    public void tagTestA() {
 
-        // Create a User to Use with Teams
+        // Create a User to Use with Tags
         User r = new User("test", "password", "test@gmail.com");
         RestAssured.given().
                 contentType("application/json").
@@ -47,10 +47,10 @@ public class TeamSystemTest {
                 when().
                 post("/users");
 
-        // Get Teams Before Post Method
+        // Get Tags Before Post Method
         Response response1 = RestAssured.given().
                 when().
-                get("/teams");
+                get("/users/test/tags");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -63,13 +63,13 @@ public class TeamSystemTest {
             e.printStackTrace();
         }
 
-        // Post Team To Database
-        Team t = new Team("test", "description");
+        // Post Tag To Database
+        Tag t = new Tag("test", "description");
         Response response2 = RestAssured.given().
                 contentType("application/json").
                 body(t).
                 when().
-                post("/users/test/teams");
+                post("/users/test/tags");
 
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
@@ -77,10 +77,10 @@ public class TeamSystemTest {
         String body2 = response2.getBody().asString();
         assertEquals(success, body2);
 
-        // Get Teams After Post Method
+        // Get Tags After Post Method
         Response response3 = RestAssured.given().
                 when().
-                get("/teams");
+                get("/users/test/tags");
 
         int statusCode3 = response3.getStatusCode();
         assertEquals(200, statusCode3);
@@ -95,24 +95,24 @@ public class TeamSystemTest {
     }
 
     @Test
-    public void teamTestB() {
+    public void tagTestB() {
 
-        // Get the Teams Before Put Method
+        // Get the Tags Before Put Method
         Response response = RestAssured.given().
                 when().
-                get("/teams/1");
+                get("/tags/1");
 
         JsonPath path = response.jsonPath();
 
         assertEquals("test", path.getString("name"));
 
-        // Updates the Teams (Put)
-        Team t = new Team("test-updated", "description");
+        // Updates the Tags (Put)
+        Tag t = new Tag("test-updated", "description");
         Response response1 = RestAssured.given().
                 contentType("application/json").
                 body(t).
                 when().
-                put("/teams/1");
+                put("/tags/1");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -120,10 +120,10 @@ public class TeamSystemTest {
         String body1 = response1.getBody().asString();
         assertEquals(success, body1);
 
-        // Get the Teams After Put Method
+        // Get the Tags After Put Method
         Response response2 = RestAssured.given().
                 when().
-                get("/teams/1");
+                get("/tags/1");
 
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
@@ -134,76 +134,15 @@ public class TeamSystemTest {
     }
 
     @Test
-    public void teamTestC() {
+    public void tagTestC() {
 
-        // Create a User to Add to Teams
-        User r = new User("test-add", "password", "test@gmail.com");
-        RestAssured.given().
-                contentType("application/json").
-                body(r).
-                when().
-                post("/users");
-
-        // Check to See One User in Team
-        Response response1 = RestAssured.given().
-                when().
-                get("/teams/1");
-
-        JsonPath path1 = response1.jsonPath();
-
-        assertEquals(1, path1.getList("users").size());
-
-        // Add New User to Team
-        Response response = RestAssured.given().
-                when().
-                put("teams/1/add-user/test-add");
-
-        int statusCode = response.getStatusCode();
-        assertEquals(200, statusCode);
-
-        String body = response.getBody().asString();
-        assertEquals(success, body);
-
-        // Check to See New User Is Added
-        Response response2 = RestAssured.given().
-                when().
-                get("/teams/1");
-
-        JsonPath path2 = response2.jsonPath();
-
-        assertEquals(2, path2.getList("users").size());
-
-        // Remove the New User
-        Response response3 = RestAssured.given().
-                when().
-                put("teams/1/remove-user/test-add");
-
-        int statusCode3 = response3.getStatusCode();
-        assertEquals(200, statusCode3);
-
-        String body3 = response3.getBody().asString();
-        assertEquals(success, body3);
-
-        // Remove the New User
-        Response response4 = RestAssured.given().
-                when().
-                get("/teams/1");
-
-        JsonPath path4 = response4.jsonPath();
-
-        assertEquals(1, path4.getList("users").size());
-    }
-
-    @Test
-    public void teamTestD() {
-
-        // Should Return Null for the ToDos Does Not Exist
-        Team t = new Team("test-updated", "description");
+        // Should Return Null for the Tags Does Not Exist
+        Tag t = new Tag("test-updated", "description");
         Response response = RestAssured.given().
                 contentType("application/json").
                 body(t).
                 when().
-                put("/teams/2");
+                put("/tags/2");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -213,12 +152,12 @@ public class TeamSystemTest {
     }
 
     @Test
-    public void teamTestE() {
+    public void teamTestD() {
 
-        // Deletes ToDos From Database
+        // Deletes Tags From Database
         Response response = RestAssured.given().
                 when().
-                delete("users/test/teams/1");
+                delete("users/test/tags/1");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -226,10 +165,10 @@ public class TeamSystemTest {
         String body = response.getBody().asString();
         assertEquals(success, body);
 
-        // Get Teams After Delete Method
+        // Get User Tags After Delete Method
         Response response1 = RestAssured.given().
                 when().
-                get("/teams");
+                get("/users/test/tags");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -253,18 +192,6 @@ public class TeamSystemTest {
         RestAssured.given().
                 when().
                 delete("/users/" + path.getString("id"));
-
-        // Get the "test" User ID
-        Response response3 = RestAssured.given().
-                when().
-                get("/username/test-add");
-
-        JsonPath path3 = response3.jsonPath();
-
-        // Delete the User From the ID
-        RestAssured.given().
-                when().
-                delete("/users/" + path3.getString("id"));
 
     }
 }

@@ -2,8 +2,6 @@ package planIT;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
@@ -12,14 +10,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import planIT.Entity.Chats.Chat;
 import planIT.Entity.Messages.Message;
-import planIT.Entity.Teams.Team;
-import planIT.Entity.Users.User;
-import planIT.Login.LoginRequest;
-import planIT.Login.Password;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

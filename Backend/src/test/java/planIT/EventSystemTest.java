@@ -2,8 +2,6 @@ package planIT;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
@@ -30,8 +28,6 @@ public class EventSystemTest {
 
     @LocalServerPort
     int port;
-
-    private String success = "{\"message\":\"success\"}";
 
     @Before
     public void setUp() {
@@ -101,7 +97,7 @@ public class EventSystemTest {
 
         Response response2 = RestAssured.given().
                 when().
-                post("/users/testUser2/events/1");
+                put("/users/testUser2/events/1");
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
     }
@@ -135,19 +131,15 @@ public class EventSystemTest {
         RestAssured.given().
                 when().
                 delete("/users/" + path.getString("id"));
-        int statusCode2 = response2.getStatusCode();
-        assertEquals(200, statusCode2);
 
         // Delete test users
         Response response3 = RestAssured.given().
                 when().
                 get("/username/testUser2");
         JsonPath path3 = response3.jsonPath();
-        Response response4 = RestAssured.given().
+        RestAssured.given().
                 when().
                 delete("/users/" + path3.getString("id"));
-        int statusCode3 = response4.getStatusCode();
-        assertEquals(200, statusCode3);
 
     }
 
