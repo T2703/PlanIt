@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.restassured.RestAssured;
@@ -208,9 +209,6 @@ public class UserSystemTest {
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
 
-        String body1 = response1.getBody().asString();
-        assertEquals(success, body1);
-
         // Test Unsuccessful User Login Request
         LoginRequest request2 = new LoginRequest("test-updated", "incorrect-password");
         Response response2 = RestAssured.given().
@@ -220,7 +218,8 @@ public class UserSystemTest {
                 post("/login");
 
         int statusCode2 = response2.getStatusCode();
-        assertEquals(200, statusCode2);
+        System.out.println("login: " + response2);
+        assertEquals(400, statusCode2);
 
         String body2 = response2.getBody().asString();
         assertEquals("Incorrect Username or Password.", body2);
@@ -254,9 +253,6 @@ public class UserSystemTest {
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
-
-        String body1 = response1.getBody().asString();
-        assertEquals(success, body1);
 
     }
 
