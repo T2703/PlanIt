@@ -70,7 +70,7 @@ public class EventController {
      * @param eventId id number of target event
      * @return success
      */
-    @PostMapping(path = "/users/{username}/events/{eventId}")
+    @PutMapping(path = "/users/{username}/events/{eventId}")
     @Operation(summary = "Add a user to an Event", description = "Add a preexisting user to a preexisting event")
     public String addUserToEvent(@PathVariable String username, @PathVariable int eventId) {
         return eventService.addUserToEvent(username, eventId);

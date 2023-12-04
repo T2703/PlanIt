@@ -3,16 +3,9 @@ package planIT;
 
 // Import Local classes
 import io.restassured.path.json.JsonPath;
-import org.glassfish.jaxb.runtime.v2.runtime.output.SAXOutput;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import planIT.Entity.Assignments.Assignment;
-import planIT.Entity.Chats.Chat;
-import planIT.Entity.Messages.Message;
-import planIT.Entity.Teams.Team;
 import planIT.Entity.Users.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
