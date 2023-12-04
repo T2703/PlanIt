@@ -120,7 +120,10 @@ public class ChatSystemTest {
         int statusCode8 = response8.getStatusCode();
         assertEquals(200, statusCode8);
 
+    }
 
+    @Test
+    public void createDeleteTeamChat(){
         //CREATE/DELETE TEAM CHAT
         Team team1 = new Team();
         Response response9 = RestAssured.given().
@@ -131,6 +134,10 @@ public class ChatSystemTest {
         int statusCode9 = response9.getStatusCode();
         assertEquals(200, statusCode9);
 
-
+        Response response10 = RestAssured.given().
+                when().
+                post("/chats/1/chat");
+        int statusCode10 = response10.getStatusCode();
+        assertEquals(200, statusCode10);
     }
 }
