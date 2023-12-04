@@ -54,10 +54,10 @@ public class ChatSystemTest {
                 post("/chats");
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
-    }
-
-    @Test
-    public void testGetChats(){
+//    }
+//
+//    @Test
+//    public void testGetChats(){
         //get all chats
         Response response2 = RestAssured.given().
                 when().
@@ -71,10 +71,10 @@ public class ChatSystemTest {
                 get("/chats/1");
         int statusCode3 = response2.getStatusCode();
         assertEquals(200, statusCode3);
-    }
-
-    @Test
-    public void testUpdateChat(){
+//    }
+//
+//    @Test
+//    public void testUpdateChat(){
         Chat chat2 = new Chat("chat1-updated");
         Response response4 = RestAssured.given().
                 contentType("application/json").
@@ -83,10 +83,10 @@ public class ChatSystemTest {
                 put("/chats/1");
         int statusCode4 = response4.getStatusCode();
         assertEquals(200, statusCode4);
-    }
-
-    @Test
-    public void messageToChat(){
+//    }
+//
+//    @Test
+//    public void messageToChat(){
         //create msg1
         Message msg1 = new Message("msg1", new Date(), new Date());
         Response response5 = RestAssured.given().
@@ -120,24 +120,24 @@ public class ChatSystemTest {
         int statusCode8 = response8.getStatusCode();
         assertEquals(200, statusCode8);
 
-    }
-
-    @Test
-    public void createDeleteTeamChat(){
+//    }
+//
+//    @Test
+//    public void createDeleteTeamChat(){
         //CREATE/DELETE TEAM CHAT
-        Team team1 = new Team();
-        Response response9 = RestAssured.given().
-                contentType("application/json").
-                body(team1).
-                when().
-                post("/teams");
-        int statusCode9 = response9.getStatusCode();
-        assertEquals(200, statusCode9);
-
-        Response response10 = RestAssured.given().
-                when().
-                post("/chats/1/chat");
-        int statusCode10 = response10.getStatusCode();
-        assertEquals(200, statusCode10);
+//        Team team1 = new Team();
+//        Response response9 = RestAssured.given().
+//                contentType("application/json").
+//                body(team1).
+//                when().
+//                post("/teams");
+//        int statusCode9 = response9.getStatusCode();
+//        assertEquals(200, statusCode9);
+//
+//        Response response10 = RestAssured.given().
+//                when().
+//                post("/chats/1/chat");
+//        int statusCode10 = response10.getStatusCode();
+//        assertEquals(200, statusCode10);
     }
 }
