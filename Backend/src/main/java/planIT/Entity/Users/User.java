@@ -76,6 +76,10 @@ public class User {
     @OneToMany(mappedBy = "manager")
     private List<Event> managed;
 
+    @JsonIgnoreProperties({"admin", "users"})
+    @OneToMany(mappedBy = "admin")
+    private List<Team> administrates;
+
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
     private List<Tag> tags;
@@ -321,6 +325,24 @@ public class User {
      */
     public void addManaged(Event event){
         this.managed.add(event);
+    }
+
+    /**
+     * Gets the list of teams that the user administrates.
+     *
+     * @return The list of admin teamed.
+     */
+    public List<Team> getAdministrates() {
+        return administrates;
+    }
+
+    /**
+     * Adds an event to the list of events that the user manages.
+     *
+     * @param team The event to add.
+     */
+    public void addAdministrates(Team team){
+        this.administrates.add(team);
     }
 
 }

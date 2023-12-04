@@ -13,18 +13,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
-
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import planIT.Entity.ToDos.ToDo;
+import planIT.Entity.Teams.Team;
 import planIT.Entity.Users.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class ToDoSystemTest {
+public class TeamSystemTest {
 
     @LocalServerPort
     int port;
@@ -39,9 +37,9 @@ public class ToDoSystemTest {
     }
 
     @Test
-    public void toDoTestA() {
+    public void teamTestA() {
 
-        // Create a User to Use with ToDos
+        // Create a User to Use with Teams
         User r = new User("test", "password", "test@gmail.com");
         RestAssured.given().
                 contentType("application/json").
@@ -49,10 +47,10 @@ public class ToDoSystemTest {
                 when().
                 post("/users");
 
-        // Get Users Before Post Method
+        // Get Teams Before Post Method
         Response response1 = RestAssured.given().
                 when().
-                get("/ToDos");
+                get("/teams");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -65,13 +63,13 @@ public class ToDoSystemTest {
             e.printStackTrace();
         }
 
-        // Post User To Database
-        ToDo t = new ToDo("test", "description", new Date("January 1, 2020 03:00:00"), new Date("January 1, 2020 02:30:00"));
+        // Post Team To Database
+        Team t = new Team("test", "description");
         Response response2 = RestAssured.given().
                 contentType("application/json").
                 body(t).
                 when().
-                post("/users/test/ToDos");
+                post("/users/test/teams");
 
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
@@ -79,10 +77,10 @@ public class ToDoSystemTest {
         String body2 = response2.getBody().asString();
         assertEquals(success, body2);
 
-        // Get Users Before Post Method
+        // Get Teams After Post Method
         Response response3 = RestAssured.given().
                 when().
-                get("/ToDos");
+                get("/teams");
 
         int statusCode3 = response3.getStatusCode();
         assertEquals(200, statusCode3);
@@ -97,24 +95,24 @@ public class ToDoSystemTest {
     }
 
     @Test
-    public void toDoTestB() {
+    public void teamTestB() {
 
-        // Get the ToDos Before Put Method
+        // Get the Teams Before Put Method
         Response response = RestAssured.given().
                 when().
-                get("/ToDos/1");
+                get("/teams/1");
 
         JsonPath path = response.jsonPath();
 
         assertEquals("test", path.getString("name"));
 
-        // Updates the ToDos (Put)
-        ToDo t = new ToDo("test-updated", "description", new Date("January 1, 2020 03:00:00"), new Date("January 1, 2020 02:30:00"));
+        // Updates the Teams (Put)
+        Team t = new Team("test-updated", "description");
         Response response1 = RestAssured.given().
                 contentType("application/json").
                 body(t).
                 when().
-                put("/ToDos/1");
+                put("/teams/1");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -122,10 +120,10 @@ public class ToDoSystemTest {
         String body1 = response1.getBody().asString();
         assertEquals(success, body1);
 
-        // Get the ToDos After Put Method
+        // Get the Teams After Put Method
         Response response2 = RestAssured.given().
                 when().
-                get("/ToDos/1");
+                get("/teams/1");
 
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
@@ -136,15 +134,56 @@ public class ToDoSystemTest {
     }
 
     @Test
-    public void toDoTestC() {
+    public void teamTestC() {
+
+        // Create a User to Add to Teams
+        User r = new User("test-add", "password", "test@gmail.com");
+        RestAssured.given().
+                contentType("application/json").
+                body(r).
+                when().
+                post("/users");
+
+        // Check to See One User in Team
+        Response response1 = RestAssured.given().
+                when().
+                get("/teams/1");
+
+        JsonPath path1 = response1.jsonPath();
+
+        assertEquals(1, path1.getList("users").size());
+
+        // Add New User to Team
+        Response response = RestAssured.given().
+                when().
+                put("teams/1/user/test-add");
+
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        String body = response.getBody().asString();
+        assertEquals(success, body);
+
+        // Check to See New User Is Added
+        Response response2 = RestAssured.given().
+                when().
+                get("/teams/1");
+
+        JsonPath path2 = response2.jsonPath();
+
+        assertEquals(2, path2.getList("users").size());
+    }
+
+    @Test
+    public void teamTestD() {
 
         // Should Return Null for the ToDos Does Not Exist
-        ToDo t = new ToDo("test-updated", "description", new Date("January 1, 2020 03:00:00"), new Date("January 1, 2020 02:30:00"));
+        Team t = new Team("test-updated", "description");
         Response response = RestAssured.given().
                 contentType("application/json").
                 body(t).
                 when().
-                put("/ToDos/2");
+                put("/teams/2");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -154,12 +193,12 @@ public class ToDoSystemTest {
     }
 
     @Test
-    public void toDoTestD() {
+    public void teamTestE() {
 
         // Deletes ToDos From Database
         Response response = RestAssured.given().
                 when().
-                delete("users/test/ToDos/1");
+                delete("users/test/teams/1");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -167,10 +206,10 @@ public class ToDoSystemTest {
         String body = response.getBody().asString();
         assertEquals(success, body);
 
-        // Get ToDos After Delete Method
+        // Get Teams After Delete Method
         Response response1 = RestAssured.given().
                 when().
-                get("/ToDos");
+                get("/teams");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -194,6 +233,18 @@ public class ToDoSystemTest {
         RestAssured.given().
                 when().
                 delete("/users/" + path.getString("id"));
+
+        // Get the "test" User ID
+        Response response3 = RestAssured.given().
+                when().
+                get("/username/test-add");
+
+        JsonPath path3 = response3.jsonPath();
+
+        // Delete the User From the ID
+        RestAssured.given().
+                when().
+                delete("/users/" + path3.getString("id"));
 
     }
 }
