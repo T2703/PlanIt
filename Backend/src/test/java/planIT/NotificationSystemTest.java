@@ -16,13 +16,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import planIT.Entity.Tags.Tag;
+import planIT.Entity.Notifications.Notification;
 import planIT.Entity.Users.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class TagSystemTest {
+public class NotificationSystemTest {
 
     @LocalServerPort
     int port;
@@ -37,9 +37,9 @@ public class TagSystemTest {
     }
 
     @Test
-    public void tagTestA() {
+    public void notificationTestA() {
 
-        // Create a User to Use with Tags
+        // Create a User to Use with Notifications
         User r = new User("test", "password", "test@gmail.com");
         RestAssured.given().
                 contentType("application/json").
@@ -47,10 +47,10 @@ public class TagSystemTest {
                 when().
                 post("/users");
 
-        // Get Tags Before Post Method
+        // Get Notifications Before Post Method
         Response response1 = RestAssured.given().
                 when().
-                get("/users/test/tags");
+                get("/users/test/notifications");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -63,13 +63,13 @@ public class TagSystemTest {
             e.printStackTrace();
         }
 
-        // Post Tag To Database
-        Tag t = new Tag("test", "description");
+        // Post Notification To Database
+        Notification t = new Notification("test", "description");
         Response response2 = RestAssured.given().
                 contentType("application/json").
                 body(t).
                 when().
-                post("/users/test/tags");
+                post("/users/test/notifications");
 
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
@@ -77,10 +77,10 @@ public class TagSystemTest {
         String body2 = response2.getBody().asString();
         assertEquals(success, body2);
 
-        // Get Tags After Post Method
+        // Get Notifications After Post Method
         Response response3 = RestAssured.given().
                 when().
-                get("/users/test/tags");
+                get("/users/test/notifications");
 
         int statusCode3 = response3.getStatusCode();
         assertEquals(200, statusCode3);
@@ -95,69 +95,25 @@ public class TagSystemTest {
     }
 
     @Test
-    public void tagTestB() {
+    public void notificationTestB() {
 
-        // Get the Tags Before Put Method
+        // Get the Notification from the ID
         Response response = RestAssured.given().
                 when().
-                get("/tags/1");
+                get("/notifications/1");
 
         JsonPath path = response.jsonPath();
 
-        assertEquals("test", path.getString("name"));
-
-        // Updates the Tags (Put)
-        Tag t = new Tag("test-updated", "description");
-        Response response1 = RestAssured.given().
-                contentType("application/json").
-                body(t).
-                when().
-                put("/tags/1");
-
-        int statusCode1 = response1.getStatusCode();
-        assertEquals(200, statusCode1);
-
-        String body1 = response1.getBody().asString();
-        assertEquals(success, body1);
-
-        // Get the Tags After Put Method
-        Response response2 = RestAssured.given().
-                when().
-                get("/tags/1");
-
-        int statusCode2 = response2.getStatusCode();
-        assertEquals(200, statusCode2);
-
-        JsonPath path2 = response2.jsonPath();
-
-        assertEquals("test-updated", path2.getString("name"));
+        assertEquals("test", path.getString("title"));
     }
 
     @Test
-    public void tagTestC() {
+    public void notificationTestC() {
 
-        // Should Return Null for the Tags Does Not Exist
-        Tag t = new Tag("test-updated", "description");
-        Response response = RestAssured.given().
-                contentType("application/json").
-                body(t).
-                when().
-                put("/tags/2");
-
-        int statusCode = response.getStatusCode();
-        assertEquals(200, statusCode);
-
-        String body = response.getBody().asString();
-        assertEquals(failure, body);
-    }
-
-    @Test
-    public void tagTestD() {
-
-        // Deletes Tags From Database
+        // Deletes Notifications From Database
         Response response = RestAssured.given().
                 when().
-                delete("users/test/tags/1");
+                delete("users/test/notifications/1");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -165,10 +121,10 @@ public class TagSystemTest {
         String body = response.getBody().asString();
         assertEquals(success, body);
 
-        // Get User Tags After Delete Method
+        // Get User Notifications After Delete Method
         Response response1 = RestAssured.given().
                 when().
-                get("/users/test/tags");
+                get("/users/test/notifications");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
