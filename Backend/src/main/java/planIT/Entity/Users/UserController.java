@@ -86,7 +86,7 @@ public class UserController {
         }
 
         if(userService.findUserByUsername(user.getUsername()) != null){
-            return "Username already taken";
+            return "Username already taken.";
         }
 
         // Hash the password
@@ -106,7 +106,7 @@ public class UserController {
      */
     @PutMapping(path = "/users/{id}")
     @Operation(summary = "Update an existing user", description = "Updates an existing user in the database")
-    public User updateUser(@PathVariable int id, @RequestBody User user) {
+    public String updateUser(@PathVariable int id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 
