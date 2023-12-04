@@ -62,7 +62,7 @@ public class User {
 
     @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users")
-    private Set<Team> teams = new HashSet<>();
+    private List<Team> teams;
 
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
@@ -242,7 +242,7 @@ public class User {
      *
      * @return The set of teams.
      */
-    public Set<Team> getTeams(){
+    public List<Team> getTeams(){
         return teams;
     }
 

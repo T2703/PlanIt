@@ -50,7 +50,7 @@ public class TeamSystemTest {
         // Get Teams Before Post Method
         Response response1 = RestAssured.given().
                 when().
-                get("/teams");
+                get("users/test/teams");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -80,7 +80,7 @@ public class TeamSystemTest {
         // Get Teams After Post Method
         Response response3 = RestAssured.given().
                 when().
-                get("/teams");
+                get("users/test/teams");
 
         int statusCode3 = response3.getStatusCode();
         assertEquals(200, statusCode3);
@@ -229,7 +229,7 @@ public class TeamSystemTest {
         // Get Teams After Delete Method
         Response response1 = RestAssured.given().
                 when().
-                get("/teams");
+                get("users/test/teams");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
