@@ -40,6 +40,7 @@ public class UserSystemTest {
 
     @Test
     public void userTestA() {
+
         // Get Users Before Post Method
         Response response1 = RestAssured.given().
                 when().
@@ -49,6 +50,7 @@ public class UserSystemTest {
         assertEquals(200, statusCode1);
 
         String body1 = response1.getBody().asString();
+        System.out.println("HERE>>>" +response1.getBody().asString()); //DEBUG
         try {
             JSONArray array = new JSONArray(body1);
             assertEquals(0, array.length());
@@ -226,6 +228,7 @@ public class UserSystemTest {
 
         String body1 = response1.getBody().asString();
         assertEquals(success, body1);
+
 
         // Get Users After Delete Method
         Response response2 = RestAssured.given().
