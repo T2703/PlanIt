@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.ManyToOne;
 import planIT.Entity.Users.User;
 
 /**
@@ -44,10 +46,15 @@ public class Team {
     private String description;
 
     // @JsonIgnoreProperties - Used to ignore the "users" property when serializing to JSON.
-    @JsonIgnoreProperties({"users", "teams"})
+    @JsonIgnoreProperties({"users", "teams", "assignments", "managed", "administrates", "chats", "toDos", "events", "notifications", "tags"})
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_team", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
+
+    @JsonIgnoreProperties({"managed", "events", "chats", "teams", "notifications", "assignments", "tags", "toDos"})
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User admin = new User();
 
 
     /**
@@ -115,6 +122,18 @@ public class Team {
      * @param description The new description to set.
      */
     public void setDescription(String description) { this.description = description; }
+
+    /**
+     * Gets team admin
+     * @return admin
+     */
+    public User getAdmin() { return admin; }
+
+    /**
+     * Sets team admin
+     * @param admin user to be new team admin
+     */
+    public void setAdmin(User admin) { this.admin = admin; }
 
     /**
      * Gets the set of users associated with the Team.

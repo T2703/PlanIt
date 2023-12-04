@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Login.LoginRequest;
+import planIT.Login.Password;
+
 /**
  * RESTful controller for managing user-related operations.
  * This controller handles HTTP requests related to user entities, such as retrieval, creation, update, and deletion.
@@ -82,6 +85,10 @@ public class UserController {
             return "Please complete all fields.";
         }
 
+        if(userService.findUserByUsername(user.getUsername()) != null){
+            return "Username already taken";
+        }
+
         // Hash the password
         String hashed_password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
@@ -116,15 +123,29 @@ public class UserController {
     }
 
     @PutMapping("/change-password/{username}")
-    public String changePassword(@PathVariable String username, @RequestBody String password) {
+    public String changePassword(@PathVariable String username, @RequestBody Password password) {
 
         User user = userService.findUserByUsername(username);
 
-        String hashed_password = BCrypt.hashpw(password, BCrypt.gensalt());
+        String hashed_password = BCrypt.hashpw(password.getPassword(), BCrypt.gensalt());
 
         user.setPassword(hashed_password);
 
         userService.updateUser(user.getId(), user);
+
+        return success;
+    }
+
+    @PostMapping("/login")
+    public String authentication(@RequestBody LoginRequest loginRequest) {
+
+        User user = userService.findUserByUsername(loginRequest.getUsername());
+
+        boolean check_password = BCrypt.checkpw(loginRequest.getPassword(), user.getPassword());
+
+        if (user == null || !check_password) {
+            return "Incorrect Username or Password.";
+        }
 
         return success;
     }

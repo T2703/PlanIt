@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserService;
 
 /**
  * RESTful controller for managing Team-related operations.
@@ -29,6 +31,9 @@ public class TeamController {
     // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Retrieves all Teams from the service.
@@ -59,10 +64,10 @@ public class TeamController {
      * @param team The Team entity to be created.
      * @return A success or failure message as a JSON string.
      */
-    @PostMapping(path = "/teams")
+    @PostMapping(path = "users/{username}/teams")
     @Operation(summary = "Create a new Team", description = "Adds a team to the database")
-    public String createTeam(@RequestBody Team team) {
-        return teamService.createTeam(team);
+    public String createTeam(@PathVariable String username, @RequestBody Team team) {
+        return teamService.createTeam(username, team);
     }
 
     /**
@@ -87,7 +92,7 @@ public class TeamController {
      */
     @PutMapping(path = "/teams/{id}")
     @Operation(summary = "Update an existing Team", description = "Updates a team in the repository")
-    public Team updateTeam(@PathVariable int id, @RequestBody Team team) {
+    public String updateTeam(@PathVariable int id, @RequestBody Team team) {
         return teamService.updateTeam(id, team);
     }
 
@@ -97,10 +102,26 @@ public class TeamController {
      * @param id The unique identifier of the Team to be deleted.
      * @return A success or failure message as a JSON string.
      */
-    @DeleteMapping(path = "/teams/{id}")
+    @DeleteMapping(path = "users/{username}/teams/{id}")
     @Operation(summary = "Delete a Team by Id", description = "Deletes a team from the repository")
-    public String deleteTeam(@PathVariable int id) {
+    public String deleteTeam(@PathVariable String username, @PathVariable int id) {
+        teamService.getTeamById(id).getUsers().clear();
+        User user = userService.findUserByUsername(username);
+        user.getAdministrates().remove(teamService.getTeamById(id));
         return teamService.deleteTeam(id);
+    }
+
+    /**
+     * Adds a user to a specific Team in the service.
+     *
+     * @param id       The unique identifier of the Team.
+     * @param username The username of the user to be added.
+     * @return A success or failure message as a JSON string.
+     */
+    @DeleteMapping(path = "teams/{id}/user/{username}")
+    @Operation(summary = "Add a user to a Team", description = "Adds a user to a team in the repository")
+    public String removeUserFromTeam(@PathVariable int id, @PathVariable String username){
+        return teamService.addUserToTeam(id, username);
     }
 }
 

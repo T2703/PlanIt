@@ -7,34 +7,16 @@ package planIT.Login;
  * @author Melani Hodge
  *
  */
-public class LoginRequest {
+public class Password {
 
-    private String username;
     private String password;
 
-    public LoginRequest(String username, String password) {
-        this.username = username;
+    public Password(String password) {
         this.password = password;
     }
 
-    public LoginRequest() { }
+    public Password() {
 
-    /**
-     * Gets the username from the login request.
-     *
-     * @return The username submitted in the login request.
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Sets the username in the login request.
-     *
-     * @param username The username to be set in the login request.
-     */
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     /**
