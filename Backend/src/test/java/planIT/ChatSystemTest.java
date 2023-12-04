@@ -44,7 +44,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void A_testCreateChat(){
+    public void chatTestA(){
         // Create a chat
         Chat chat1 = new Chat("chat1");
         Response response1 = RestAssured.given().
@@ -57,7 +57,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void B_testGetChats(){
+    public void chatTestB(){
         //get all chats
         Response response2 = RestAssured.given().
                 when().
@@ -74,7 +74,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void C_testUpdateChat(){
+    public void chatTestC(){
         Chat chat2 = new Chat("chat1-updated");
         Response response4 = RestAssured.given().
                 contentType("application/json").
@@ -86,7 +86,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void D_messageToChat(){
+    public void chatTestD(){
         //create msg1
         Message msg1 = new Message("msg1", new Date(), new Date());
         Response response5 = RestAssured.given().

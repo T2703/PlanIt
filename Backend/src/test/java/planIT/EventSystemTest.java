@@ -40,7 +40,7 @@ public class EventSystemTest {
     }
 
     @Test
-    public void testA(){
+    public void eventTestA(){
         //create user for testing
         User testUser = new User("testUser", "password", "test@gmail.com");
         Response response1 = RestAssured.given().
@@ -64,7 +64,7 @@ public class EventSystemTest {
     }
 
     @Test
-    public void testB(){
+    public void eventTestB(){
         //get all events
         Response response1 = RestAssured.given().
                 when().
@@ -88,7 +88,7 @@ public class EventSystemTest {
     }
 
     @Test
-    public void testC(){
+    public void eventTestC(){
         //create user for testing
         User testUser = new User("testUser2", "password", "test@gmail.com");
         Response response1 = RestAssured.given().
@@ -107,7 +107,7 @@ public class EventSystemTest {
     }
 
     @Test
-    public void testD(){
+    public void eventTestD(){
         //Update event
         Event event1Update = new Event("event1-Update", "desc1", "loc 1", "Type 1", new Date(), new Date());
         Response response1 = RestAssured.given().
@@ -120,7 +120,7 @@ public class EventSystemTest {
     }
 
     @Test
-    public void testE(){
+    public void eventTestE(){
         Response response1 = RestAssured.given().
                 when().
                 delete("/users/testUser/events/1");
