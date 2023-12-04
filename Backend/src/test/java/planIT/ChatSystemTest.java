@@ -44,7 +44,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void testCreateChat(){
+    public void A_testCreateChat(){
         // Create a chat
         Chat chat1 = new Chat("chat1");
         Response response1 = RestAssured.given().
@@ -54,10 +54,10 @@ public class ChatSystemTest {
                 post("/chats");
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
-//    }
-//
-//    @Test
-//    public void testGetChats(){
+    }
+
+    @Test
+    public void B_testGetChats(){
         //get all chats
         Response response2 = RestAssured.given().
                 when().
@@ -71,10 +71,10 @@ public class ChatSystemTest {
                 get("/chats/1");
         int statusCode3 = response2.getStatusCode();
         assertEquals(200, statusCode3);
-//    }
-//
-//    @Test
-//    public void testUpdateChat(){
+    }
+
+    @Test
+    public void C_testUpdateChat(){
         Chat chat2 = new Chat("chat1-updated");
         Response response4 = RestAssured.given().
                 contentType("application/json").
@@ -83,10 +83,10 @@ public class ChatSystemTest {
                 put("/chats/1");
         int statusCode4 = response4.getStatusCode();
         assertEquals(200, statusCode4);
-//    }
-//
-//    @Test
-//    public void messageToChat(){
+    }
+
+    @Test
+    public void D_messageToChat(){
         //create msg1
         Message msg1 = new Message("msg1", new Date(), new Date());
         Response response5 = RestAssured.given().
