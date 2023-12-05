@@ -3,20 +3,13 @@ package planIT.Entity.Teams;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.ManyToOne;
+import planIT.Entity.Chats.Chat;
 import planIT.Entity.Users.User;
 
 /**
@@ -55,6 +48,10 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User admin = new User();
+
+    @OneToOne
+    @JoinColumn
+    private Chat chat = new Chat();
 
 
     /**
