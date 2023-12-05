@@ -50,9 +50,8 @@ public class Team {
     private User admin = new User();
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn(name = "chat_id")
     private Chat chat = new Chat();
-
 
     /**
      * Constructs a new Team with the specified name and description.
@@ -139,6 +138,23 @@ public class Team {
      */
     public Set<User> getUsers() {
         return users;
+    }
+
+
+    /**
+     * Sets the associated chat
+     * @param chat
+     */
+    public void setChat(Chat chat){
+        this.chat = chat;
+    }
+
+    /**
+     * Gets the associated chat
+     * @return chat
+     */
+    public Chat getChat(){
+        return chat;
     }
 
 }

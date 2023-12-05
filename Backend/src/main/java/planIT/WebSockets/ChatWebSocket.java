@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Chris Smith
  *
  */
-@ServerEndpoint(value = "/chatSocket/{username}")
+@ServerEndpoint(value = "/chatSocket/{chatId}/{username}")
 @Component
 public class ChatWebSocket {
 
