@@ -100,7 +100,7 @@ public class TeamSystemTest {
         // Get the Teams Before Put Method
         Response response = RestAssured.given().
                 when().
-                get("/teams/1");
+                get("/teams/2");
 
         JsonPath path = response.jsonPath();
 
@@ -112,7 +112,7 @@ public class TeamSystemTest {
                 contentType("application/json").
                 body(t).
                 when().
-                put("/teams/1");
+                put("/teams/2");
 
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
@@ -123,7 +123,7 @@ public class TeamSystemTest {
         // Get the Teams After Put Method
         Response response2 = RestAssured.given().
                 when().
-                get("/teams/1");
+                get("/teams/2");
 
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
@@ -147,7 +147,7 @@ public class TeamSystemTest {
         // Check to See One User in Team
         Response response1 = RestAssured.given().
                 when().
-                get("/teams/1");
+                get("/teams/2");
 
         JsonPath path1 = response1.jsonPath();
 
@@ -156,7 +156,7 @@ public class TeamSystemTest {
         // Add New User to Team
         Response response = RestAssured.given().
                 when().
-                put("teams/1/add-user/test-add");
+                put("teams/2/add-user/test-add");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -167,7 +167,7 @@ public class TeamSystemTest {
         // Check to See New User Is Added
         Response response2 = RestAssured.given().
                 when().
-                get("/teams/1");
+                get("/teams/2");
 
         JsonPath path2 = response2.jsonPath();
 
@@ -176,7 +176,7 @@ public class TeamSystemTest {
         // Remove the New User
         Response response3 = RestAssured.given().
                 when().
-                put("teams/1/remove-user/test-add");
+                put("teams/2/remove-user/test-add");
 
         int statusCode3 = response3.getStatusCode();
         assertEquals(200, statusCode3);
@@ -187,7 +187,7 @@ public class TeamSystemTest {
         // Remove the New User
         Response response4 = RestAssured.given().
                 when().
-                get("/teams/1");
+                get("/teams/2");
 
         JsonPath path4 = response4.jsonPath();
 
@@ -203,7 +203,7 @@ public class TeamSystemTest {
                 contentType("application/json").
                 body(t).
                 when().
-                put("/teams/2");
+                put("/teams/3");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
@@ -218,7 +218,7 @@ public class TeamSystemTest {
         // Deletes ToDos From Database
         Response response = RestAssured.given().
                 when().
-                delete("users/test/teams/1");
+                delete("users/test/teams/2");
 
         int statusCode = response.getStatusCode();
         assertEquals(200, statusCode);
