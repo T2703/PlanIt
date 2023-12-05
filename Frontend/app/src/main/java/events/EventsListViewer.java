@@ -81,6 +81,8 @@ public class EventsListViewer extends AppCompatActivity {
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
 
+        getSupportActionBar().setTitle("");
+
         // Request events from server
         getEventsRequest();
 
