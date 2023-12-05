@@ -3,16 +3,9 @@ package planIT;
 
 // Import Local classes
 import io.restassured.path.json.JsonPath;
-import org.glassfish.jaxb.runtime.v2.runtime.output.SAXOutput;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import planIT.Entity.Assignments.Assignment;
-import planIT.Entity.Chats.Chat;
-import planIT.Entity.Messages.Message;
-import planIT.Entity.Teams.Team;
 import planIT.Entity.Users.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +26,7 @@ import java.util.Date;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class TestAssignmentController {
+public class AssignmentSystemTest {
 
     @LocalServerPort
     int port;
@@ -45,7 +38,7 @@ public class TestAssignmentController {
     }
 
     @Test
-    public void A_testCreateAndDeleteAssignment(){
+    public void assignmentTestA(){
 
         System.out.println("testCreateAssignment");
 
@@ -105,7 +98,7 @@ public class TestAssignmentController {
     }
 
     @Test
-    public void B_testGetAssignmentById(){
+    public void assignmentTestB(){
         System.out.println("testGetAssignmentById");
 
         Response response = RestAssured.given().
@@ -117,7 +110,7 @@ public class TestAssignmentController {
     }
 
     @Test
-    public void C_testGetAllAssignments(){
+    public void assignmentTestC(){
         System.out.println("testGetAllAssignments");
 
         Response response = RestAssured.given().
@@ -129,7 +122,7 @@ public class TestAssignmentController {
     }
 
     @Test
-    public void D_testGetUserAssignments(){
+    public void assignmentTestD(){
         System.out.println("testGetUserAssignments");
 
         User user1 = new User("E", "E", "E");
@@ -160,7 +153,7 @@ public class TestAssignmentController {
     }
 
     @Test
-    public void E_testUpdateAssignment(){
+    public void assignmentTestE(){
         System.out.println("testUpdateAssignments");
 
         Assignment assUp = new Assignment("Assignment1", "Ass1 UPDATE", "Course1", new Date(), false);
@@ -175,7 +168,7 @@ public class TestAssignmentController {
     }
 
     @Test
-    public void F_testDeleteAssignment(){
+    public void assignmentTestF(){
         System.out.println("testDeleteAssignment");
 
         Response response = RestAssured.given().

@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tags;
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserService;
 
 @RestController
 public class TagController {
@@ -19,11 +20,8 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
-    @GetMapping(path = "/tags")
-    @Operation(summary = "Get all Tags", description = "Returns all tags from the repository as a List object")
-    public List<Tag> getAllTags(){
-        return tagService.getAllTags();     //Change?
-    }
+    @Autowired
+    private UserService userService;
 
     @GetMapping(path = "/tags/{id}")
     @Operation(summary = "Get a Tag by Id", description = "Gets a tag from the repository based on id number")
@@ -47,13 +45,15 @@ public class TagController {
 
     @PutMapping(path = "/tags/{id}")
     @Operation(summary = "Update an existing Tag", description = "Updates a tag in the repository")
-    public Tag updateTag(@PathVariable int id, @RequestBody Tag tag){
+    public String updateTag(@PathVariable int id, @RequestBody Tag tag){
         return tagService.updateTag(id, tag);
     }
 
-    @DeleteMapping(path = "/tags/{id}")
+    @DeleteMapping(path = "users/{username}/tags/{id}")
     @Operation(summary = "Delete a Tag by Id", description = "Deletes a tag from the repository")
-    public String deleteTag(@PathVariable int id){
+    public String deleteTag(@PathVariable String username, @PathVariable int id){
+        User user = userService.findUserByUsername(username);
+        user.getTags().remove(tagService.getTagById(id));
         return tagService.deleteTag(id);
     }
 }
