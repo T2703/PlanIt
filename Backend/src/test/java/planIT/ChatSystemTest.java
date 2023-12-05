@@ -2,8 +2,6 @@ package planIT;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
@@ -12,14 +10,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import planIT.Entity.Chats.Chat;
 import planIT.Entity.Messages.Message;
-import planIT.Entity.Teams.Team;
-import planIT.Entity.Users.User;
-import planIT.Login.LoginRequest;
-import planIT.Login.Password;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -44,7 +37,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void A_testCreateChat(){
+    public void chatTestA(){
         // Create a chat
         Chat chat1 = new Chat("chat1");
         Response response1 = RestAssured.given().
@@ -57,7 +50,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void B_testGetChats(){
+    public void chatTestB(){
         //get all chats
         Response response2 = RestAssured.given().
                 when().
@@ -74,7 +67,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void C_testUpdateChat(){
+    public void chatTestC(){
         Chat chat2 = new Chat("chat1-updated");
         Response response4 = RestAssured.given().
                 contentType("application/json").
@@ -86,7 +79,7 @@ public class ChatSystemTest {
     }
 
     @Test
-    public void D_messageToChat(){
+    public void chatTestD(){
         //create msg1
         Message msg1 = new Message("msg1", new Date(), new Date());
         Response response5 = RestAssured.given().

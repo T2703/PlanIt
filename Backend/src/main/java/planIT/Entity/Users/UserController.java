@@ -3,6 +3,8 @@ package planIT.Entity.Users;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,7 +88,7 @@ public class UserController {
         }
 
         if(userService.findUserByUsername(user.getUsername()) != null){
-            return "Username already taken";
+            return "Username already taken.";
         }
 
         // Hash the password
@@ -106,7 +108,7 @@ public class UserController {
      */
     @PutMapping(path = "/users/{id}")
     @Operation(summary = "Update an existing user", description = "Updates an existing user in the database")
-    public User updateUser(@PathVariable int id, @RequestBody User user) {
+    public String updateUser(@PathVariable int id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 
@@ -137,17 +139,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String authentication(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity authentication(@RequestBody LoginRequest loginRequest) {
+
+        System.out.println("user login: " + loginRequest.getUsername());
 
         User user = userService.findUserByUsername(loginRequest.getUsername());
 
         boolean check_password = BCrypt.checkpw(loginRequest.getPassword(), user.getPassword());
 
         if (user == null || !check_password) {
-            return "Incorrect Username or Password.";
+            return new ResponseEntity("Incorrect Username or Password.", HttpStatus.BAD_REQUEST);
         }
 
-        return success;
+        return new ResponseEntity(user, HttpStatus.OK);
     }
 }
 

@@ -27,14 +27,6 @@ public class NotificationService {
     private String failure = "{\"message\":\"failure\"}";
 
     /**
-     * Gets all notifications from the repository and returns them as a List object
-     * @return notification List
-     */
-    public List<Notification> getAllNotifications() {
-        return notificationRepository.findAll();
-    }
-
-    /**
      * Gets a notification from the repository by its id number
      * @param id id number of target notification
      * @return notification
@@ -52,42 +44,6 @@ public class NotificationService {
     public String createNotification(String username, Notification notification) {
         notification.setUser(userRepository.findByUsername(username));
         notificationRepository.save(notification);
-        return success;
-    }
-
-    /**
-     * Updates a notification in the database
-     * @param id id number of target notification
-     * @param request notification object with the updated details
-     * @return notification
-     */
-    public Notification updateNotification(int id, Notification request) {
-        Notification notification = notificationRepository.findById(id);
-        if (notification == null)
-            return null;
-
-        notification.setTitle(request.getTitle());
-        notification.setDescription(request.getDescription());
-
-        notificationRepository.save(notification);
-        return notificationRepository.findById(id);
-    }
-
-    /**
-     * Adds a preexisting user to a preexisting notification
-     * @param userId id number of target user
-     * @param notificationId id number of target notification
-     * @return success
-     */
-    public String addUserToNotification(int userId, int notificationId) {
-        User user = userRepository.findById(userId);
-        Notification notification = notificationRepository.findById(notificationId);
-
-        user.getNotifications().add(notification);
-        notification.setUser(user);
-
-        notificationRepository.save(notification);
-
         return success;
     }
 

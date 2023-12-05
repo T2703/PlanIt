@@ -40,6 +40,7 @@ import events.CreateEventPage;
 import events.Event;
 import homepage.HomePage;
 import profile.ProfilePage;
+import websockets.WebSocketManager;
 
 /**
  * The MemberViewer class represents the page for viewing group members.
@@ -87,7 +88,7 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
     /**
      * The URL for making the calls.
      */
-    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
+    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
 
     /**
      * Initializes the MemberViewer activity, setting up the UI components and handling user interactions.

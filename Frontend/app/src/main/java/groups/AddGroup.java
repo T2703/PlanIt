@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.myapplication.R;
 import api.VolleySingleton;
+import websockets.WebSocketManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class AddGroup extends AppCompatActivity {
     /**
      * URL for making calls.
      */
-    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
+    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
 
     /**
      * Initializes the activity and sets up UI components.
@@ -69,6 +70,7 @@ public class AddGroup extends AppCompatActivity {
         group_description = findViewById(R.id.group_description);
         back_button = findViewById(R.id.back_button);
         create_group_button.setEnabled(false); // Set the initial state to disabled
+        Log.d("URL", TEAMS_URL);
 
         // Sets the on click listener for the creating group button. So, we can
         // an epic group.

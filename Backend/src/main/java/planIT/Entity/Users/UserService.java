@@ -60,16 +60,16 @@ public class UserService {
      * @param request The updated User entity.
      * @return The updated User entity or null if the user with the provided ID is not found.
      */
-    public User updateUser(int id, User request) {
+    public String updateUser(int id, User request) {
         User user = userRepository.findById(id);
         if (user == null)
-            return null;
+            return failure;
 
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
 
         userRepository.save(user);
-        return userRepository.findById(id);
+        return success;
     }
 
     /**
