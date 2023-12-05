@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.R;
 
 import websockets.WebSocketListener;
+import websockets.WebSocketManager;
 import websockets.WebSocketManagerChat;
 
 import org.java_websocket.handshake.ServerHandshake;
@@ -29,7 +30,7 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
     /**
      * The url for the messaging.
      */
-    private String MESSAGE_URL = "ws://coms-309-024.class.las.iastate.edu:8080/chat/";
+    private String MESSAGE_URL = "ws://localhost:8080/chat/";
 
     /**
      * The button for sending message.
@@ -71,7 +72,7 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
         user_message = findViewById(R.id.user_message);
         message_appear_screen = findViewById(R.id.message_tv);
 
-        String username = WebSocketManagerChat.getInstance().getUsername();
+        String username = WebSocketManager.getInstance().getUsername();
         WebSocketManagerChat.getInstance().connectWebSocket(MESSAGE_URL + username);
         WebSocketManagerChat.getInstance().setWebSocketListener(MessageView.this);
 
