@@ -51,7 +51,7 @@ public class scheduleCompareController {
         return returnString;
     }
 
-    @GetMapping(path = "/compareBy30/{teamId}/dats")
+    @GetMapping(path = "/compareBy30/{teamId}/dates")
     @Operation(summary = "Compares team schedules by 30 mins, returns a String", description = "Compares the events of a team in 30 minute increments and returns the availability as a String")
     public String compareBy30(@PathVariable int teamId, @RequestBody Event event) {
 
