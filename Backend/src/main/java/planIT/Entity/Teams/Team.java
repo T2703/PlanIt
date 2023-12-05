@@ -49,9 +49,11 @@ public class Team {
     @JoinColumn(name = "user_id")
     private User admin = new User();
 
+
+    @JsonIgnoreProperties("chat")
     @OneToOne
     @JoinColumn(name = "chat_id")
-    private Chat chat = new Chat();
+    private Chat chat;
 
     /**
      * Constructs a new Team with the specified name and description.
