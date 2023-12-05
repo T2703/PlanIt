@@ -30,7 +30,7 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
     /**
      * The url for the messaging.
      */
-    private String MESSAGE_URL = "ws://localhost:8080/chat/";
+    private String MESSAGE_URL = "ws://10.0.2.2:8080/chat/";
 
     /**
      * The button for sending message.
