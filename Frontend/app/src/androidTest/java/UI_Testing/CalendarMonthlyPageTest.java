@@ -20,6 +20,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 
 import android.view.View;
 
@@ -42,6 +43,8 @@ public class CalendarMonthlyPageTest {
 
         // Click on the "Weekly View" option in the popup menu
         Espresso.onView(ViewMatchers.withText("Weekly")).perform(ViewActions.click());
+
+        Espresso.onView(withId(R.id.sunDate)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -57,6 +60,8 @@ public class CalendarMonthlyPageTest {
 
         // Click on the "Monthly View" option in the popup menu
         Espresso.onView(ViewMatchers.withText("Monthly")).perform(ViewActions.click());
+
+        Espresso.onView(withId(R.id.menu_calendar_button)).check(matches(isDisplayed()));
 
     }
 
@@ -85,5 +90,35 @@ public class CalendarMonthlyPageTest {
 
         // Click on the "Weekly View" option in the popup menu
         Espresso.onView(ViewMatchers.withText("Weekly")).perform(ViewActions.click());
+
+        Espresso.onView(withId(R.id.sunDate)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void navigateToEventView() {
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Weekly View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Events")).perform(ViewActions.click());
+
+        Espresso.onView(withId(R.id.filter_menu)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void navigateToDailyToEventView() {
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Daily View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Daily")).perform(ViewActions.click());
+
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Weekly View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Events")).perform(ViewActions.click());
+
+        Espresso.onView(withId(R.id.filter_menu)).check(matches(isDisplayed()));
     }
 }

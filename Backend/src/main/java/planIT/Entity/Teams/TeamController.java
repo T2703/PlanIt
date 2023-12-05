@@ -40,10 +40,10 @@ public class TeamController {
      *
      * @return List of Team entities.
      */
-    @GetMapping(path = "/teams")
-    @Operation(summary = "Get all Teams", description = "Returns all teams from the repository as a List object")
-    public List<Team> getAllTeams() {
-        return teamService.getAllTeams();
+    @GetMapping(path = "users/{username}/teams")
+    @Operation(summary = "Get all User Teams", description = "Returns all teams from the repository as a List object")
+    public List<Team> getAllTeams(@PathVariable String username) {
+        return userService.findUserByUsername(username).getTeams();
     }
 
     /**
@@ -77,7 +77,7 @@ public class TeamController {
      * @param username The username of the user to be added.
      * @return A success or failure message as a JSON string.
      */
-    @PutMapping(path = "teams/{id}/user/{username}")
+    @PutMapping(path = "teams/{id}/add-user/{username}")
     @Operation(summary = "Add a user to a Team", description = "Adds a user to a team in the repository")
     public String addUserToTeam(@PathVariable int id, @PathVariable String username){
         return teamService.addUserToTeam(id, username);
@@ -118,10 +118,10 @@ public class TeamController {
      * @param username The username of the user to be added.
      * @return A success or failure message as a JSON string.
      */
-    @DeleteMapping(path = "teams/{id}/user/{username}")
+    @PutMapping(path = "teams/{id}/remove-user/{username}")
     @Operation(summary = "Add a user to a Team", description = "Adds a user to a team in the repository")
     public String removeUserFromTeam(@PathVariable int id, @PathVariable String username){
-        return teamService.addUserToTeam(id, username);
+        return teamService.removeUserFromTeam(id, username);
     }
 }
 

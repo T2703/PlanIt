@@ -354,8 +354,6 @@ public class CalendarMonthlyPage extends AppCompatActivity implements NavBarView
                                 String startTime = outputFormat.format(startDate);
                                 String endTime = outputFormat.format(endDate);
 
-                                Log.d("StartDate", startDate.toString());
-
                                 if (startDateStr.startsWith(date_getter)) {
                                     event_list.add(new Event(id, name, description, eventType, startTime, endTime));
                                 }
