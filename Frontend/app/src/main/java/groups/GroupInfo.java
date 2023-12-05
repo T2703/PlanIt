@@ -160,9 +160,7 @@ public class GroupInfo extends AppCompatActivity {
 
                         else if (menuItem.getItemId() == R.id.delete_option) {
                             String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams" + "/" + getting_group_id;
-                            Log.d("URL", delete_url);
                             makeDeleteRequest(delete_url, getting_group_id);
-                            Log.d("GID", getting_group_id);
 
                             Intent intent = new Intent(GroupInfo.this, MemberViewer.class);
                             startActivity(intent);

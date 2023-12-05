@@ -65,10 +65,10 @@ public class AddGroup extends AppCompatActivity {
         setContentView(R.layout.activity_add_group);
 
         // Initialization
-        create_group_button = findViewById(R.id.create_button);
+        create_group_button = findViewById(R.id.create_group_button);
         group_name = findViewById(R.id.group_name);
         group_description = findViewById(R.id.group_description);
-        back_button = findViewById(R.id.back_button);
+        back_button = findViewById(R.id.add_group_back_button);
         create_group_button.setEnabled(false); // Set the initial state to disabled
         Log.d("URL", TEAMS_URL);
 
