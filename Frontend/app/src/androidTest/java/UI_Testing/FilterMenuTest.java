@@ -41,6 +41,44 @@ public class FilterMenuTest {
     }
 
     @Test
+    public void filterGroupEvents() {
+        Espresso.onView(withId(R.id.filter_menu)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_group)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_group)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filterPublicEvents() {
+        Espresso.onView(withId(R.id.filter_menu)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_public)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_public)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filterPrivateEventsUnFilter() {
+        Espresso.onView(withId(R.id.filter_menu)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_private)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_private)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_private)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filterGroupEventsUnFilter() {
+        Espresso.onView(withId(R.id.filter_menu)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_group)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_group)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_group)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filterPublicEventsUnFilter() {
+        Espresso.onView(withId(R.id.filter_menu)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_public)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_public)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_public)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void filterPrivateEventsPublicEvents() {
         Espresso.onView(withId(R.id.filter_menu)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.checkbox_private)).perform(ViewActions.click());
@@ -58,6 +96,15 @@ public class FilterMenuTest {
         Espresso.onView(withId(R.id.checkbox_public)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.checkbox_group)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.checkbox_group)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void filterAll() {
+        Espresso.onView(withId(R.id.filter_menu)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_private)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_public)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_group)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.checkbox_public)).check(matches(isDisplayed()));
     }
 
 
