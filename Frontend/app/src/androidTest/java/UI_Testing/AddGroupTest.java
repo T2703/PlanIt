@@ -75,7 +75,7 @@ public class AddGroupTest {
 
     @Test
     public void testBackButton() {
-        onView(withId(R.id.add_group_back_button)).check(matches(isCompletelyDisplayed()));
+        onView(withId(R.id.add_group_back_button)).check(matches(isCompletelyDisplayed())).perform(click());
 
         intended(hasComponent(MemberViewer.class.getName()));
     }
