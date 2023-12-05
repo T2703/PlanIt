@@ -1,5 +1,6 @@
 package events;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +24,10 @@ import com.example.myapplication.R;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.HashMap;
+
+import utilities.DateAndTimeHelper;
 
 /**
  * @author Joshua Gutierrez
@@ -33,7 +37,8 @@ import java.util.HashMap;
 public class EditEventPage extends AppCompatActivity {
     private Spinner event_type;
     private EditText event_name;
-    private EditText event_date;
+    private EditText event_start_date;
+    private EditText event_end_date;
     private EditText event_start_time;
     private EditText event_end_time;
     private EditText event_location;
@@ -42,6 +47,7 @@ public class EditEventPage extends AppCompatActivity {
     private Button edit_event_button;
 
     private ImageButton back_button;
+    private Context context = this;
 
     /**
      * Called when the activity is starting. This is where most initialization should go.
@@ -58,9 +64,10 @@ public class EditEventPage extends AppCompatActivity {
         // Instantiate
         event_type = findViewById(R.id.edit_event_type_dropdown);
         event_name = findViewById(R.id.edit_event_name_text);
-        event_date = findViewById(R.id.edit_event_date);
-        event_start_time = findViewById(R.id.edit_event_start_time);
-        event_end_time = findViewById(R.id.edit_event_end_time);
+        event_start_date = findViewById(R.id.edit_start_date_input);
+        event_end_date = findViewById(R.id.edit_end_date_input);
+        event_start_time = findViewById(R.id.edit_start_time_input);
+        event_end_time = findViewById(R.id.edit_end_time_input);
         event_location = findViewById(R.id.edit_event_location);
         event_description = findViewById(R.id.edit_event_description);
         edit_event_button = findViewById(R.id.edit_event_button);
@@ -70,9 +77,8 @@ public class EditEventPage extends AppCompatActivity {
 
         String type = intent.getStringExtra("type");
         String name = intent.getStringExtra("name");
-        String date = intent.getStringExtra("date");
-        String startTime = intent.getStringExtra("startTime");
-        String endTime = intent.getStringExtra("endTime");
+        String startDate = intent.getStringExtra("startDate");
+        String endDate = intent.getStringExtra("endDate");
         String location = intent.getStringExtra("location");
         String description = intent.getStringExtra("description");
         event_id = intent.getStringExtra("id");
@@ -81,26 +87,38 @@ public class EditEventPage extends AppCompatActivity {
         int positionToSelect = adapter.getPosition(type);
 
         event_type.setSelection(positionToSelect);
-
         event_name.setText(name);
-        event_date.setText(date);
-        event_start_time.setText(startTime);
-        event_end_time.setText(endTime);
+
+        try {
+            event_start_date.setText(DateAndTimeHelper.formatDate(startDate));
+            event_end_date.setText(DateAndTimeHelper.formatDate(endDate));
+            event_start_time.setText(DateAndTimeHelper.formatTime(startDate));
+            event_end_time.setText(DateAndTimeHelper.formatTime(endDate));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
         event_location.setText(location);
         event_description.setText(description);
 
         edit_event_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String event_name_text = event_name.getText().toString();
-                String event_description_text = event_description.getText().toString();
-                String event_location_text = event_location.getText().toString();
-                String event_type_selection = event_type.getSelectedItem().toString();
-                String event_date_text = event_date.getText().toString();
-                String event_start_time_text = event_start_time.getText().toString();
-                String event_end_time_text = event_end_time.getText().toString();
+                String eventType = event_type.getSelectedItem().toString();
+                String eventName = event_name.getText().toString();
 
-                sendPutRequest(event_name_text, event_description_text, event_location_text, event_type_selection, event_date_text, event_start_time_text, event_end_time_text);
+                String eventStartDate = event_start_date.getText().toString();
+                String eventEndDate = event_end_date.getText().toString();
+                String eventStartTime = event_start_time.getText().toString();
+                String eventEndTime = event_end_time.getText().toString();
+
+                String newStartDate = DateAndTimeHelper.combineDateAndTime(eventStartDate, eventStartTime);
+                String newEndDate = DateAndTimeHelper.combineDateAndTime(eventEndDate, eventEndTime);
+
+                String eventLocation = event_location.getText().toString();
+                String eventDescription = event_description.getText().toString();
+
+                sendPutRequest(eventType, eventName, newStartDate, newEndDate, eventLocation, eventDescription);
 
                 Intent intent = new Intent(EditEventPage.this, EventsListViewer.class);
                 startActivity(intent);
@@ -110,39 +128,54 @@ public class EditEventPage extends AppCompatActivity {
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(EditEventPage.this, EventsListViewer.class);
-                startActivity(intent);*/
-
-                // This makes the back button now return to a previous page.
                 finish();
             }
         });
 
+        event_start_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateAndTimeHelper helper = new DateAndTimeHelper(context);
+                helper.showDatePicker(event_start_date);
+            }
+        });
+
+        event_end_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateAndTimeHelper helper = new DateAndTimeHelper(context);
+                helper.showDatePicker(event_end_date);
+            }
+        });
+
+        event_start_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateAndTimeHelper helper = new DateAndTimeHelper(context);
+                helper.showTimePicker(event_start_time);
+            }
+        });
+
+        event_end_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateAndTimeHelper helper = new DateAndTimeHelper(context);
+                helper.showTimePicker(event_end_time);
+            }
+        });
     }
 
-    /**
-     * Sends a PUT request to the server with the updated event details.
-     *
-     * @param eventNameValue        The updated name of the event.
-     * @param eventDescriptionValue The updated description of the event.
-     * @param eventLocationValue    The updated location of the event.
-     * @param eventTypeValue        The updated type of the event.
-     * @param eventDateValue        The updated date of the event.
-     * @param eventStartTimeValue   The updated start time of the event.
-     * @param eventEndTimeValue     The updated end time of the event.
-     */
-    private void sendPutRequest(String eventNameValue, String eventDescriptionValue, String eventLocationValue, String eventTypeValue, String eventDateValue, String eventStartTimeValue, String eventEndTimeValue) {
+    private void sendPutRequest(String eventType, String eventName, String startDate, String endDate, String eventLocation, String eventDescription) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         HashMap<String, String> body = new HashMap<String, String>();
 
         body.put("id", event_id);
-        body.put("name", eventNameValue);
-        body.put("description", eventDescriptionValue);
-        body.put("location", eventLocationValue);
-        body.put("type", eventTypeValue);
-        body.put("date", eventDateValue);
-        body.put("startTime", eventStartTimeValue);
-        body.put("endTime", eventEndTimeValue);
+        body.put("name", eventName);
+        body.put("description", eventDescription);
+        body.put("location", eventLocation);
+        body.put("type", eventType);
+        body.put("startDate", startDate);
+        body.put("endDate", endDate);
 
         // Make the request
         String URL_PUT_REQUEST = "http://coms-309-024.class.las.iastate.edu:8080/events/";

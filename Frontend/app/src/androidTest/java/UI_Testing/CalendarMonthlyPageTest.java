@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -44,6 +45,7 @@ public class CalendarMonthlyPageTest {
         // Click on the "Weekly View" option in the popup menu
         Espresso.onView(ViewMatchers.withText("Weekly")).perform(ViewActions.click());
 
+        // Checks if the this is displayed.
         Espresso.onView(withId(R.id.sunDate)).check(matches(isDisplayed()));
     }
 
