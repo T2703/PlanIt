@@ -62,7 +62,7 @@ public class User {
 
     @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users")
-    private Set<Team> teams = new HashSet<>();
+    private List<Team> teams;
 
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
@@ -75,6 +75,10 @@ public class User {
     @JsonIgnoreProperties({"manager", "users"})
     @OneToMany(mappedBy = "manager")
     private List<Event> managed;
+
+    @JsonIgnoreProperties({"admin", "users"})
+    @OneToMany(mappedBy = "admin")
+    private List<Team> administrates;
 
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user")
@@ -197,48 +201,12 @@ public class User {
     }
 
     /**
-     * Sets the list of notifications associated with the user.
-     *
-     * @param notifications The new list of notifications to set.
-     */
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
-    /**
-     * Adds a notification to the user's list of notifications.
-     *
-     * @param notification The notification to add.
-     */
-    public void addNotification(Notification notification){
-        this.notifications.add(notification);
-    }
-
-    /**
      * Gets the list of assignments associated with the user.
      *
      * @return The list of assignments.
      */
     public List<Assignment> getAssignments() {
         return assignments;
-    }
-
-    /**
-     * Sets the list of assignments associated with the user.
-     *
-     * @param assignments The new list of assignments to set.
-     */
-    public void setAssignments(List<Assignment> assignments) {
-        this.assignments = assignments;
-    }
-
-    /**
-     * Adds an assignment to the user's list of assignments.
-     *
-     * @param assignment The assignment to add.
-     */
-    public void addAssignment(Assignment assignment){
-        this.assignments.add(assignment);
     }
 
     /**
@@ -261,15 +229,6 @@ public class User {
     }
 
     /**
-     * Adds a tag to the user's list of tags.
-     *
-     * @param tag The tag to add.
-     */
-    public void addTags(Tag tag){
-        this.tags.add(tag);
-    }
-
-    /**
      * Gets the list of To-Do items associated with the user.
      *
      * @return The list of To-Do items.
@@ -279,29 +238,11 @@ public class User {
     }
 
     /**
-     * Sets the list of To-Do items associated with the user.
-     *
-     * @param toDos The new list of To-Do items to set.
-     */
-    public void setToDos(List<ToDo> toDos) {
-        this.toDos = toDos;
-    }
-
-    /**
-     * Adds a To-Do item to the user's list of To-Do items.
-     *
-     * @param toDo The To-Do item to add.
-     */
-    public void addToDos(ToDo toDo){
-        this.toDos.add(toDo);
-    }
-
-    /**
      * Gets the set of teams associated with the user.
      *
      * @return The set of teams.
      */
-    public Set<Team> getTeams(){
+    public List<Team> getTeams(){
         return teams;
     }
 
@@ -315,12 +256,12 @@ public class User {
     }
 
     /**
-     * Adds an event to the list of events that the user manages.
+     * Gets the list of teams that the user administrates.
      *
-     * @param event The event to add.
+     * @return The list of admin teamed.
      */
-    public void addManaged(Event event){
-        this.managed.add(event);
+    public List<Team> getAdministrates() {
+        return administrates;
     }
 
 }

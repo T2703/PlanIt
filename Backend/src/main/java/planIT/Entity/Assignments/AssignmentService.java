@@ -84,6 +84,6 @@ import planIT.Entity.Users.UserRepository;
      * @return assignment List
      */
     public List<Assignment> getAssignmentByUser(String username) {
-            return userRepository.findByUsername(username).getAssignments();
-        }
+        return userRepository.findByUsername(username).getAssignments();
+    }
 }

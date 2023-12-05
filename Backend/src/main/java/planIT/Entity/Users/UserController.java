@@ -3,6 +3,8 @@ package planIT.Entity.Users;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Login.LoginRequest;
+import planIT.Login.Password;
+
 /**
  * RESTful controller for managing user-related operations.
  * This controller handles HTTP requests related to user entities, such as retrieval, creation, update, and deletion.
@@ -82,6 +87,10 @@ public class UserController {
             return "Please complete all fields.";
         }
 
+        if(userService.findUserByUsername(user.getUsername()) != null){
+            return "Username already taken.";
+        }
+
         // Hash the password
         String hashed_password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 
@@ -99,7 +108,7 @@ public class UserController {
      */
     @PutMapping(path = "/users/{id}")
     @Operation(summary = "Update an existing user", description = "Updates an existing user in the database")
-    public User updateUser(@PathVariable int id, @RequestBody User user) {
+    public String updateUser(@PathVariable int id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 
@@ -113,6 +122,36 @@ public class UserController {
     @Operation(summary = "Delete a user by Id", description = "Deletes a user from the database based on the provided ID")
     public String deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
+    }
+
+    @PutMapping("/change-password/{username}")
+    public String changePassword(@PathVariable String username, @RequestBody Password password) {
+
+        User user = userService.findUserByUsername(username);
+
+        String hashed_password = BCrypt.hashpw(password.getPassword(), BCrypt.gensalt());
+
+        user.setPassword(hashed_password);
+
+        userService.updateUser(user.getId(), user);
+
+        return success;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity authentication(@RequestBody LoginRequest loginRequest) {
+
+        System.out.println("user login: " + loginRequest.getUsername());
+
+        User user = userService.findUserByUsername(loginRequest.getUsername());
+
+        boolean check_password = BCrypt.checkpw(loginRequest.getPassword(), user.getPassword());
+
+        if (user == null || !check_password) {
+            return new ResponseEntity("Incorrect Username or Password.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(user, HttpStatus.OK);
     }
 }
 

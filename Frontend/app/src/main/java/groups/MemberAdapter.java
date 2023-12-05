@@ -138,36 +138,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
             }
         });
-
-        // How this button functions as a delete. So, basically this button should delete
-        // the group.
-        holder.delete_button.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Called when the specified view is clicked. Retrieves the position of the clicked item
-             * in the RecyclerView, extracts the group ID from the corresponding Member, constructs a delete URL,
-             * and makes a delete request to the server to remove the associated group.
-             *
-             * @param view The view that was clicked.
-             *             It can be used to identify which view triggered the click event.
-             */
-            @Override
-            public void onClick(View view) {
-                int position = holder.getAdapterPosition();
-
-                if (position != RecyclerView.NO_POSITION) {
-                    Member clickedEvent = member_list.get(position);
-
-                    String group_id = clickedEvent.getGroupId();
-
-                    String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + group_id;
-
-                    //Log.d("TAG", delete_url);
-
-                    makeDeleteRequest(delete_url, group_id);
-
-                }
-            }
-        });
     }
 
     /**
@@ -291,7 +261,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
             //username = item_view.findViewById(R.id.username);
             group_name = item_view.findViewById(R.id.group_name);
             //description = item_view.findViewById(R.id.description);
-            delete_button = item_view.findViewById(R.id.delete_group_button);
+            //delete_button = item_view.findViewById(R.id.delete_group_button);
             drag_handle = item_view.findViewById(R.id.drag_handle);
         }
     }

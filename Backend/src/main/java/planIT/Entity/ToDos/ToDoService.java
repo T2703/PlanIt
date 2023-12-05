@@ -67,10 +67,10 @@ public class ToDoService {
      * @param request The updated ToDo entity.
      * @return The updated ToDo entity or null if the To-Do with the provided ID is not found.
      */
-    public ToDo updateToDo(int id, ToDo request) {
+    public String updateToDo(int id, ToDo request) {
         ToDo toDo = toDoRepository.findById(id);
         if (toDo == null)
-            return null;
+            return failure;
 
         toDo.setName(request.getName());
         toDo.setDescription(request.getDescription());
@@ -78,7 +78,7 @@ public class ToDoService {
         toDo.setDueDate(request.getDueDate());
 
         toDoRepository.save(toDo);
-        return toDoRepository.findById(id);
+        return success;
     }
 
     /**
