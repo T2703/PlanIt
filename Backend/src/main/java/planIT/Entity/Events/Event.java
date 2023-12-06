@@ -195,12 +195,4 @@ public class Event {
         return users;
     }
 
-    /**
-     * Adds a user the event
-     * @param user user to add
-     */
-    public void addUser(User user) {
-        this.users.add(user);
-    }
-
 }
