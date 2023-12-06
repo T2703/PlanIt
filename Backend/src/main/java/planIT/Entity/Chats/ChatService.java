@@ -187,6 +187,8 @@ public class ChatService {
             chat.getUsers().add(user);
         }
         chatRepository.save(chat);
+        team.setChat(chat);
+        teamRepository.save(team);
 
         return success;
     }
