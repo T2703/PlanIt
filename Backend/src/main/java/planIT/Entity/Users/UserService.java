@@ -76,6 +76,10 @@ public class UserService {
         User user = userRepository.findByUsername(name1);
         User follower = userRepository.findByUsername(name2);
 
+        List<User> following = user.getFollowing();
+
+        if (following.contains(follower)) return "You already follow " + follower.getUsername() + ".";
+
         user.getFollowing().add(follower);
         userRepository.save(user);
 
@@ -85,17 +89,23 @@ public class UserService {
         return success;
     }
 
-    public String removeFollower(String userUsername, String followerUsername) {
-        User user = userRepository.findByUsername(userUsername);
-        User follower = userRepository.findByUsername(followerUsername);
+    public String removeFollower(String name1, String name2) {
+        User user = userRepository.findByUsername(name1);
+        User follower = userRepository.findByUsername(name2);
 
-        user.getFollowing().remove(follower);
-        follower.getFollowers().remove(user);
+        List<User> following = user.getFollowing();
 
-        userRepository.save(user);
-        userRepository.save(follower);
+        if (following.contains(follower)) {
+            user.getFollowing().remove(follower);
+            follower.getFollowers().remove(user);
 
-        return success;
+            userRepository.save(user);
+            userRepository.save(follower);
+
+            return success;
+        }
+
+        return "You do not follow " + name2 + ".";
     }
 
     /**
