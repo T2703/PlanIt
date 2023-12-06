@@ -7,5 +7,9 @@
             android:id="@+id/menu_logout"
             android:icon="@drawable/logout_icon"
             android:title="Logout" />
+        <item
+            android:id="@+id/list_of_users"
+            android:icon="@drawable/logout_icon"
+            android:title="List of users" />
     </group>
 </menu>
