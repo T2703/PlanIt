@@ -151,7 +151,6 @@ public class ScheduleCompareSystemTest {
         assertEquals(200, statusCode3);
 
 
-
         JsonPath path1 = response3.jsonPath();
         // Delete the User From the ID
         Response response4 = RestAssured.given().
