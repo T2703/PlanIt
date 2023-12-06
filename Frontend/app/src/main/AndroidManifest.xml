@@ -14,7 +14,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name="groups.TeamAvailability"
+            android:name="followers.FollowersPage"
+            android:exported="false" />
+        <activity
+            android:name="followers.FollowingPage"
             android:exported="false" />
         <activity
             android:name="followers.ListOfUsers"

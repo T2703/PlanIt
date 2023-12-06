@@ -14,6 +14,11 @@ public class UserFollower {
      */
     private String username;
 
+    /**
+     * Is followed?
+     */
+    private boolean isFollowed;
+
     public UserFollower(String id, String username) {
         this.id = id;
         this.username = username;
