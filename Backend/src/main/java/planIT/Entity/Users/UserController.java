@@ -138,6 +138,26 @@ public class UserController {
         return success;
     }
 
+    @PutMapping("users/{username1}/add-follower/{username2}")
+    public String addFollower(@PathVariable String username1, @PathVariable String username2) {
+        return userService.addFollower(username1, username2);
+    }
+
+    @PutMapping("users/{username1}/remove-follower/{username2}")
+    public String removeFollower(@PathVariable String username1, @PathVariable String username2) {
+        return userService.removeFollower(username1, username2);
+    }
+
+    @GetMapping("users/{username}/followers")
+    public List<User> getFollowers(@PathVariable String username) {
+        return userService.findUserByUsername(username).getFollowers();
+    }
+
+    @GetMapping("users/{username}/following")
+    public List<User> getFollowing(@PathVariable String username) {
+        return userService.findUserByUsername(username).getFollowing();
+    }
+
     @PostMapping("/login")
     public ResponseEntity authentication(@RequestBody LoginRequest loginRequest) {
 
