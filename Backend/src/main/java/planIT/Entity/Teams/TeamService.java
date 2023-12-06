@@ -97,6 +97,9 @@ public class TeamService {
      * @return A success or failure message as a JSON string.
      */
     public String deleteTeam(int id) {
+        if(teamRepository.findById(id).getChat() != null) {
+            chatService.deleteChat(teamRepository.findById(id).getChat().getId()); //?
+        }
         teamRepository.deleteById(id);
         return success;
     }

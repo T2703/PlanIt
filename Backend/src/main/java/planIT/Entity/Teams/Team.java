@@ -3,6 +3,7 @@ package planIT.Entity.Teams;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,9 +51,9 @@ public class Team {
     private User admin = new User();
 
 
-    @JsonIgnoreProperties("team")
+    @JsonIgnore //{"team", "chat", "messages"}
     @OneToOne
-    @JoinColumn(name = "chat_id")
+    @JoinColumn(name = "chat_id")  //chat_id
     private Chat chat;
 
     /**

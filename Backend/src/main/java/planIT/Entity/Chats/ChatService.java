@@ -118,6 +118,9 @@ public class ChatService {
      * @return success
      */
     public String deleteChat(int id) {
+        for(User user: chatRepository.findById(id).getUsers()){
+            removeUserFromChat(user.getUsername(), id);
+        }
         chatRepository.deleteById(id);
         return success;
     }

@@ -17,6 +17,7 @@ import planIT.Entity.Messages.Message;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.test.web.server.LocalServerPort;	// SBv3
+import planIT.Entity.Teams.Team;
 
 import java.util.Date;
 
@@ -113,11 +114,11 @@ public class ChatSystemTest {
         int statusCode8 = response8.getStatusCode();
         assertEquals(200, statusCode8);
 
-//    }
-//
+    }
+
 //    @Test
-//    public void createDeleteTeamChat(){
-        //CREATE/DELETE TEAM CHAT
+//    public void chatTestE(){
+//        //CREATE/DELETE TEAM CHAT
 //        Team team1 = new Team();
 //        Response response9 = RestAssured.given().
 //                contentType("application/json").
@@ -132,5 +133,5 @@ public class ChatSystemTest {
 //                post("/chats/1/chat");
 //        int statusCode10 = response10.getStatusCode();
 //        assertEquals(200, statusCode10);
-    }
+//    }
 }

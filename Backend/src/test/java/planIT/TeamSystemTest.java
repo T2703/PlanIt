@@ -147,6 +147,12 @@ public class TeamSystemTest {
                 post("/chats/2/chat");
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
+
+        Response response2 = RestAssured.given().
+                when().
+                get("/teams/2");
+        int statusCode2 = response2.getStatusCode();
+        assertEquals(200, statusCode2);
     }
 
     @Test
@@ -231,7 +237,7 @@ public class TeamSystemTest {
     @Test
     public void teamTestF() {
 
-        // Deletes ToDos From Database
+        // Deletes Team From Database  ...also deletes the attached chat
         Response response = RestAssured.given().
                 when().
                 delete("users/test/teams/2");
@@ -258,12 +264,21 @@ public class TeamSystemTest {
             e.printStackTrace();
         }
 
+//        // Delete team chat
+//        Response response4 = RestAssured.given().
+//                when().
+//                delete("chats/2");
+//        int statusCode4 = response4.getStatusCode();
+//        assertEquals(200, statusCode4);
+
+
         // Get the "test" User ID
         Response response2 = RestAssured.given().
                 when().
                 get("/username/test");
 
         JsonPath path = response2.jsonPath();
+        System.out.println("HERE>>>" +response2.getBody().asString()); //DEBUG
 
         // Delete the User From the ID
         RestAssured.given().
