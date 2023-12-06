@@ -139,12 +139,10 @@ public class TeamSystemTest {
     @Test
     public void teamTestC(){
         //Create team chat
-        Chat r = new Chat("teamChat");
         Response response1 = RestAssured.given().
                 contentType("application/json").
-                body(r).
                 when().
-                post("/chats/2/chat");
+                post("/createTeamChat/2");
         int statusCode1 = response1.getStatusCode();
         assertEquals(200, statusCode1);
 

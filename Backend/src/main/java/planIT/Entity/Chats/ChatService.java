@@ -121,6 +121,7 @@ public class ChatService {
         for(User user: chatRepository.findById(id).getUsers()){
             removeUserFromChat(user.getUsername(), id);
         }
+
         chatRepository.deleteById(id);
         return success;
     }
@@ -181,11 +182,11 @@ public class ChatService {
     /**
      * Creates a new chat entity and adds all members of a team to the chat
      * @param teamId id number of target team
-     * @param chat chat entity supplied by request body
      * @return success
      */
-    public String createTeamChat(int teamId, Chat chat){
+    public String createTeamChat(int teamId){
         Team team = teamRepository.findById(teamId);
+        Chat chat = new Chat(team.getName());
         for(User user: team.getUsers()){
             chat.getUsers().add(user);
         }
