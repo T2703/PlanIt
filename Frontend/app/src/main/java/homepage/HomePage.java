@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
+import followers.ListOfUsers;
 import groups.MemberViewer;
 import notifications.NotificationPage;
 import profile.LoginFormPage;
@@ -121,6 +122,13 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                     WebSocketManager.getInstance().disconnectWebSocket();
 
                     Intent intent = new Intent(HomePage.this, LoginFormPage.class);
+                    startActivity(intent);
+                }
+
+                else if (itemId == R.id.list_of_users) {
+                    WebSocketManager.getInstance().disconnectWebSocket();
+
+                    Intent intent = new Intent(HomePage.this, ListOfUsers.class);
                     startActivity(intent);
                 }
                 return true;
