@@ -17,13 +17,16 @@ import org.json.JSONObject;
 
 import api.VolleySingleton;
 import events.Event;
+import profile.UserManager;
+import websockets.WebSocketManager;
 
 
 public class AnalyzeSchedule extends AppCompatActivity {
 
-    private TextView textView;
+    private static UserManager userManager;
 
-    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/scheduleAnalysis/"+1;  //userId
+    private TextView textView;
+    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/scheduleAnalysis/"+ userManager.getUserID();  //userId
 
     private String result ="";
 

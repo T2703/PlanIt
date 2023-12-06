@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -108,6 +109,8 @@ public class GroupInfo extends AppCompatActivity {
      */
     private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
 
+    private Button team_Availability_Button;
+
     /**
      * Initializes the activity and sets up UI components.
      *
@@ -129,6 +132,7 @@ public class GroupInfo extends AppCompatActivity {
         getting_group_name = getIntent().getStringExtra("group_name");
         getting_group_desc = getIntent().getStringExtra("group_description");
         getting_group_id = getIntent().getStringExtra("group_id");
+        team_Availability_Button = findViewById(R.id.button_tav);
 
         group_name.setText(getting_group_name);
         group_description.setText(getting_group_desc);
@@ -188,6 +192,14 @@ public class GroupInfo extends AppCompatActivity {
         });
 
 
+        team_Availability_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(GroupInfo.this, TeamAvailability.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
