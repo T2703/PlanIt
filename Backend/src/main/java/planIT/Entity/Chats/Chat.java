@@ -1,5 +1,6 @@
 package planIT.Entity.Chats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class Chat {
     @JoinTable(name = "chat_messages", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
     private Set<Message> messages = new HashSet<>();
 
-    @JsonIgnoreProperties("team")
+    @JsonIgnore   //{"team", "chat", "messages"}
     @OneToOne(mappedBy = "chat", cascade = CascadeType.ALL)
     private Team team;
 
