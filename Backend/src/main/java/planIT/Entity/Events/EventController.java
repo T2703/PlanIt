@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserService;
 
 /**
  * Controller class for event entity
@@ -27,6 +29,9 @@ public class EventController {
     // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private UserService userService;
 
     // GET method - retreives all events from the database.
     /**
@@ -111,6 +116,10 @@ public class EventController {
     @DeleteMapping(path = "users/{username}/events/{id}")
     @Operation(summary = "Delete an Event by Id", description = "Deletes an event from the repository")
     public String deleteEvent(@PathVariable String username, @PathVariable int id) {
+        eventService.getEventById(id).getUsers().clear();
+        User user = userService.findUserByUsername(username);
+        user.getEvents().remove(eventService.getEventById(id));
+        user.getManaged().remove(eventService.getEventById(id));
         return eventService.deleteEvent(username, id);
     }
 }

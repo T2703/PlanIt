@@ -72,6 +72,32 @@ public class UserService {
         return success;
     }
 
+    public String addFollower(String name1, String name2) {
+        User user = userRepository.findByUsername(name1);
+        User follower = userRepository.findByUsername(name2);
+
+        user.getFollowing().add(follower);
+        userRepository.save(user);
+
+        follower.getFollowers().add(user);
+        userRepository.save(follower);
+
+        return success;
+    }
+
+    public String removeFollower(String userUsername, String followerUsername) {
+        User user = userRepository.findByUsername(userUsername);
+        User follower = userRepository.findByUsername(followerUsername);
+
+        user.getFollowing().remove(follower);
+        follower.getFollowers().remove(user);
+
+        userRepository.save(user);
+        userRepository.save(follower);
+
+        return success;
+    }
+
     /**
      * Deletes a user from the repository based on the provided ID.
      *
