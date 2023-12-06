@@ -50,7 +50,7 @@ public class Team {
     private User admin = new User();
 
 
-    @JsonIgnoreProperties("chat")
+    @JsonIgnoreProperties("team")
     @OneToOne
     @JoinColumn(name = "chat_id")
     private Chat chat;
