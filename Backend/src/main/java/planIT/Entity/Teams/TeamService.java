@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import planIT.Entity.Chats.ChatRepository;
+import planIT.Entity.Chats.ChatService;
 import planIT.Entity.Users.User;
 import planIT.Entity.Users.UserRepository;
 
@@ -26,6 +28,9 @@ public class TeamService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ChatService chatService;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -92,6 +97,9 @@ public class TeamService {
      * @return A success or failure message as a JSON string.
      */
     public String deleteTeam(int id) {
+        if(teamRepository.findById(id).getChat() != null) {
+            chatService.deleteChat(teamRepository.findById(id).getChat().getId()); //?
+        }
         teamRepository.deleteById(id);
         return success;
     }
@@ -109,6 +117,11 @@ public class TeamService {
         Team team = teamRepository.findById(id);
         team.getUsers().add(user);
         user.getTeams().add(team);
+
+        if(team.getChat() != null){
+            chatService.addUserToChat(username, team.getChat().getId());
+        }
+
         teamRepository.save(team);
         userRepository.save(user);
 
@@ -128,6 +141,11 @@ public class TeamService {
         Team team = teamRepository.findById(id);
         team.getUsers().remove(user);
         user.getTeams().remove(team);
+
+        if(team.getChat() != null){
+            chatService.removeUserFromChat(username, team.getChat().getId());
+        }
+
         teamRepository.save(team);
         userRepository.save(user);
 
