@@ -52,6 +52,21 @@ public class User {
     @Schema(description = "Email of user")
     private String email;
 
+    @Schema(description = "List of User's Followers")
+    @ManyToMany
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    @JsonIgnoreProperties({"followers", "following", "events", "chats", "teams", "notifications", "assignments", "managed", "administrates", "tags", "toDos"})
+    private List<User> followers = new ArrayList<>();
+
+    @Schema(description = "List of User's Following")
+    @ManyToMany(mappedBy = "followers")
+    @JsonIgnoreProperties({"followers", "following", "events", "chats", "teams", "notifications", "assignments", "managed", "administrates", "tags", "toDos"})
+    private List<User> following = new ArrayList<>();
+
     @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users")
     private Set<Event> events = new HashSet<>();
@@ -100,7 +115,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        notifications = new ArrayList<>();
     }
 
     /**
@@ -172,6 +186,11 @@ public class User {
      * @param email The new email address to set.
      */
     public void setEmail(String email) { this.email = email; }
+
+    public List<User> getFollowers() { return followers;}
+
+    public List<User> getFollowing() { return following;}
+
 
     /**
      * Gets the set of events associated with the user.
