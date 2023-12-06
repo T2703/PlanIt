@@ -7,7 +7,7 @@ public class UserManager {
     private static UserManager instance;
     private String userID;
 
-    private UserManager() {
+    public UserManager() {
 
     }
 

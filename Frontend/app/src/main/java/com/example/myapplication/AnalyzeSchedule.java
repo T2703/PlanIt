@@ -17,20 +17,23 @@ import org.json.JSONObject;
 
 import api.VolleySingleton;
 import events.Event;
+import profile.UserManager;
 
 
 public class AnalyzeSchedule extends AppCompatActivity {
 
     private TextView textView;
 
-    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/scheduleAnalysis/"+1;  //userId
-
     private String result ="";
+
+    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/scheduleAnalysis/";  //userId
+
+    UserManager userManager = UserManager.getInstance();
 
     private void getRequest(){
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                URL,
+                URL + userManager.getUserID(),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
