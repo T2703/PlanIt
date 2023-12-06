@@ -186,8 +186,9 @@ public class ChatService {
         for(User user: team.getUsers()){
             chat.getUsers().add(user);
         }
-        chatRepository.save(chat);
+        chat.setTeam(team);
         team.setChat(chat);
+        chatRepository.save(chat);
         teamRepository.save(team);
 
         return success;
