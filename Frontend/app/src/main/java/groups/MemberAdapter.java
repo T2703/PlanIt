@@ -18,8 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +48,10 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
      * The context variable.
      */
     private Context context;
+
+    private String CHAT_URL = "http://coms-309-024.class.las.iastate.edu:8080/createTeamChat/";
+
+    private String teamUrl;
 
     /**
      * Constructor for the MemberAdapter class.
@@ -107,6 +115,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         holder.group_name.setText(member.getGroupName());
         //holder.description.setText(member.getDescription());
 
+
         // Makes the list function as button (plus null checker).
         // Set a click listener for the entire item view (in a nutshell each item acts like button)
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +129,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                 if (position != RecyclerView.NO_POSITION) {
                     Member clicked_group = member_list.get(position);
                     String group_id = clicked_group.getGroupId();
-                    String put_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + group_id;
+                    createChat(CHAT_URL + group_id, member.getGroupName());
 
                     Log.d("TAG", group_id);
 
@@ -223,6 +232,44 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         }
     }
 
+    private void createChat(String URL_CHAT, String name) {
+        // Find the values of each field
+
+        // Create JSON object
+        JSONObject requestBody = new JSONObject();
+
+        // Puts in the values of these variables.
+        try {
+            requestBody.put("name", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Making the request
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+                Request.Method.POST,
+                URL_CHAT,
+                requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Server response", response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Uh oh not good", "Error: " + error.getMessage());
+                        Log.d("URL", URL_CHAT);
+                    }
+                }
+        ) {
+
+        };
+
+        // Add to volley request queue
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonObjectReq);
+    }
 
     /**
      * This class is for holding the variables in place for the group members.

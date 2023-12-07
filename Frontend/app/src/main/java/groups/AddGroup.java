@@ -15,10 +15,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 import api.VolleySingleton;
 import websockets.WebSocketManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,6 +55,11 @@ public class AddGroup extends AppCompatActivity {
      * URL for making calls.
      */
     private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
+
+    private String CHAT_URL = "http://coms-309-024.class.las.iastate.edu:8080/createTeamChat/";
+
+    private String teamID;
+
 
     /**
      * Initializes the activity and sets up UI components.
@@ -192,4 +199,6 @@ public class AddGroup extends AppCompatActivity {
         // Add to volley request queue
         VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);
     }
+
+
 }

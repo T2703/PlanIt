@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.NavBar;
 import com.example.myapplication.R;
@@ -107,6 +109,7 @@ public class GroupInfo extends AppCompatActivity {
      * The teams url for making the request.
      */
     private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
+
 
     /**
      * Initializes the activity and sets up UI components.
@@ -242,6 +245,7 @@ public class GroupInfo extends AppCompatActivity {
                                 String description = jsonObject.getString("description");
                                 String id = jsonObject.getString("id");
 
+
                                 member_list.add(new Member(name, description, id));
                                 Log.d("List", id);
                             } catch (JSONException e) {
@@ -316,6 +320,8 @@ public class GroupInfo extends AppCompatActivity {
             VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
         }
     }
+
+
 
     /**
      * Updates the UI with the received group data.
