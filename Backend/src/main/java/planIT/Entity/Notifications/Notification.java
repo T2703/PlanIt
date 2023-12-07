@@ -2,6 +2,8 @@ package planIT.Entity.Notifications;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +38,14 @@ public class Notification {
     @Schema(description = "Description of notification")
     private String description;
 
+    // SentTo for each Notification
+    @Schema(description = "SentTo of notification")
+    private List<String> sentTo;
+
+    // type of Notification
+    @Schema(description = "Type of notification")
+    private String type;
+
     @JsonIgnoreProperties("notifications")
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,9 +56,11 @@ public class Notification {
      * @param title notification title
      * @param description notification description
      */
-    public Notification(String title, String description) {
+    public Notification(String title, String description, List<String> sentTo, String type) {
         this.title = title;
         this.description = description;
+        this.sentTo = sentTo;
+        this.type = type;
     }
 
     // Notification constructor (without parameters)
@@ -111,5 +123,11 @@ public class Notification {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public List<String> getSentTo() { return sentTo; }
+    public void setSentTo(List<String> sentTo) { this.sentTo = sentTo; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
 }

@@ -13,6 +13,9 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Component;
 
 import planIT.Entity.Notifications.Notification;
 import planIT.Entity.Notifications.NotificationRepository;
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserRepository;
 
 /**
  * WebSocket endpoint for handling user notifications.
@@ -37,6 +42,8 @@ public class NotificationServer {
     // method
     private static NotificationRepository notificationRepository;
 
+    private static UserRepository userRepository;
+
     /**
      * Sets the {@link NotificationRepository} for the NotificationServer.
      *
@@ -50,6 +57,11 @@ public class NotificationServer {
     @Autowired
     public void setNotificationRepository(NotificationRepository repo) {
         notificationRepository = repo;  // we are setting the static variable
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository repo) {
+        userRepository = repo;  // we are setting the static variable
     }
 
     // Store all socket session and their corresponding username.
@@ -69,7 +81,7 @@ public class NotificationServer {
     public void onOpen(Session session, @PathParam("username") String username)
             throws IOException {
 
-        logger.info("[onOpen]", username);
+        logger.info("[onOpen:Notification]", username);
 
         // store connecting user information
         sessionUsernameMap.put(session, username);
@@ -81,51 +93,17 @@ public class NotificationServer {
      *
      * @param session      The WebSocket session.
      * @param notification The received notification.
-     * @throws IOException If an I/O error occurs.
      */
     @OnMessage
-    public void onMessage(Session session, String notification) throws IOException {
+    public void onMessage(Session session, String notification) throws JSONException {
+        JSONObject json = new JSONObject(notification);
 
-        // Handle new messages
-        logger.info("Entered into Notification: Got Notification:" + notification);
-        String username = sessionUsernameMap.get(session);
-        String[] words = notification.split(" ");
+        JSONArray sendTo = json.getJSONArray("sendTo");
 
-        if (notification.startsWith("@")) {
-            for (String word : words) {
-                if (word.startsWith("@")) {
-                    word.split("@");
-                    sendNotification(word, notification);
-                }
-            }
+        for(int i = 0; i < sendTo.length(); i++) {
+            sendNotification(sendTo.getString(i), notification);
         }
 
-        // Sending Invite Notifications
-        if (notification.startsWith("INVITE")) {
-            for (String word : words) {
-                if (word.startsWith("@")) {
-                    word.split("@");
-                    sendNotification(word, "Here is your notification.");
-                }
-            }
-        }
-
-        else if (notification.startsWith("WELCOME")) {
-            sendNotification(username, "Welcome to PlanIT, " + username + "!");
-            broadcast(username + ": " + "Welcome to the application.");
-        }
-
-        else if (notification.startsWith("MESSAGE")) {
-            for (String word : words) {
-                if (word.startsWith("@")) {
-                    word.split("@");
-                    sendNotification(word, "Here is your message.");
-                }
-            }
-        }
-
-        // Saving chat history to repository
-        notificationRepository.save(new Notification("title", "description"));
     }
 
     /**
@@ -138,7 +116,7 @@ public class NotificationServer {
     public void onClose(Session session) throws IOException {
         String username = sessionUsernameMap.get(session);
 
-        logger.info("[onClose]", username);
+        logger.info("[onClose:Notification]", username);
 
         // remove the user connection information
         sessionUsernameMap.remove(session);
@@ -154,7 +132,7 @@ public class NotificationServer {
     @OnError
     public void onError(Session session, Throwable throwable) {
         // Do error handling here
-        logger.info("[onError]");
+        logger.info("[onError:Notification]");
         throwable.printStackTrace();
     }
 
@@ -168,46 +146,8 @@ public class NotificationServer {
         try {
             usernameSessionMap.get(username).getBasicRemote().sendText(message);
         } catch (IOException e) {
-            logger.info("[DM Exception] " + e.getMessage());
+            logger.info("[DM Exception:Notification] " + e.getMessage());
         }
     }
 
-
-    /**
-     * Broadcasts a message to all connected users.
-     *
-     * @param message The message to broadcast.
-     */
-    private void broadcast(String message) {
-        sessionUsernameMap.forEach((session, username) -> {
-            try {
-                session.getBasicRemote().sendText(message);
-            }
-            catch (IOException e) {
-                logger.info("Exception: " + e.getMessage().toString());
-                e.printStackTrace();
-            }
-
-        });
-
-    }
-
-
-    /**
-     * Gets the notification history from the repository.
-     *
-     * @return A string representing the notification history.
-     */
-    private String getNotificationHistory() {
-        List<Notification> notifications = notificationRepository.findAll();
-
-        // convert the list to a string
-        StringBuilder sb = new StringBuilder();
-        if(notifications != null && notifications.size() != 0) {
-            for (Notification notification : notifications) {
-                sb.append(notification.getTitle() + ": " + notification.getDescription() + "\n");
-            }
-        }
-        return sb.toString();
-    }
 }
