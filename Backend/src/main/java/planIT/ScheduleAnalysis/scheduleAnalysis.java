@@ -69,19 +69,19 @@ public class scheduleAnalysis {
         }
 
         String week =
-                "Sunday:    " +dayNum[0] +" Events, Total of " +dayLength[0]/60/dayCount[0] +" Hours " +dayLength[0]%60 +" Minutes\n"
+                "Sunday" + dayCount[0]+":    " +dayNum[0] +" Events, Total of " +dayLength[0]/60/dayCount[0] +" Hours " +dayLength[0]%60 +" Minutes\n"
                         +toLine(dayLength[0])
-                        +"Monday:    " +dayNum[1] +" Events, Total of " +dayLength[1]/60/dayCount[0] +" Hours " +dayLength[1]%60 +" Minutes\n"
+                        +"Monday" + dayCount[1]+":    " +dayNum[1] +" Events, Total of " +dayLength[1]/60/dayCount[0] +" Hours " +dayLength[1]%60 +" Minutes\n"
                         +toLine(dayLength[1])
-                        +"Tuesday:   " +dayNum[2] +" Events, Total of " +dayLength[2]/60/dayCount[0] +" Hours " +dayLength[2]%60 +" Minutes\n"
+                        +"Tuesday" + dayCount[2]+":   " +dayNum[2] +" Events, Total of " +dayLength[2]/60/dayCount[0] +" Hours " +dayLength[2]%60 +" Minutes\n"
                         +toLine(dayLength[2])
-                        +"Wednesday: " +dayNum[3] +" Events, Total of " +dayLength[3]/60/dayCount[0] +" Hours " +dayLength[3]%60 +" Minutes\n"
+                        +"Wednesday" + dayCount[3]+": " +dayNum[3] +" Events, Total of " +dayLength[3]/60/dayCount[0] +" Hours " +dayLength[3]%60 +" Minutes\n"
                         +toLine(dayLength[3])
-                        +"Thursday:  " +dayNum[4] +" Events, Total of " +dayLength[4]/60/dayCount[0] +" Hours " +dayLength[4]%60 +" Minutes\n"
+                        +"Thursday" + dayCount[4]+":  " +dayNum[4] +" Events, Total of " +dayLength[4]/60/dayCount[0] +" Hours " +dayLength[4]%60 +" Minutes\n"
                         +toLine(dayLength[4])
-                        +"Friday:    " +dayNum[5] +" Events, Total of " +dayLength[5]/60/dayCount[0] +" Hours " +dayLength[5]%60 +" Minutes\n"
+                        +"Friday" + dayCount[5]+":    " +dayNum[5] +" Events, Total of " +dayLength[5]/60/dayCount[0] +" Hours " +dayLength[5]%60 +" Minutes\n"
                         +toLine(dayLength[5])
-                        +"Saturday:  " +dayNum[6] +" Events, Total of " +dayLength[6]/60/dayCount[0] +" Hours " +dayLength[6]%60 +" Minutes\n"
+                        +"Saturday" + dayCount[6]+":  " +dayNum[6] +" Events, Total of " +dayLength[6]/60/dayCount[0] +" Hours " +dayLength[6]%60 +" Minutes\n"
                         +toLine(dayLength[6])
                 ;
 
