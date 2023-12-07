@@ -51,7 +51,7 @@ public class Team {
     private User admin = new User();
 
 
-    @JsonIgnore //{"team", "chat", "messages"}
+    @JsonIgnoreProperties() //{"team", "chat", "messages"}
     @OneToOne
     @JoinColumn(name = "chat_id")  //chat_id
     private Chat chat;
