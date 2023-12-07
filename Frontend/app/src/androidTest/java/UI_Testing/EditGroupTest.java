@@ -20,6 +20,9 @@ import org.junit.runner.RunWith;
 
 import groups.EditGroup;
 
+/**
+ * @author Joshua Gutierrez
+ */
 @RunWith(AndroidJUnit4.class)
 public class EditGroupTest {
     @Rule

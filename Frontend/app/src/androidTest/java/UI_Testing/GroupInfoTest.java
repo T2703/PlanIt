@@ -1,6 +1,8 @@
 package UI_Testing;
 
+import static android.app.Activity.RESULT_OK;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.registerIdlingResources;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -8,6 +10,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.junit.Assert.assertFalse;
+import static groups.GroupInfo.EDIT_GROUP_REQUEST_CODE;
+
+import android.content.Intent;
+
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -22,10 +30,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import groups.EditGroup;
 import groups.GroupInfo;
+import groups.Member;
 import groups.MemberViewer;
 import messages.MessageView;
+
 
 /**
  * @author Joshua Gutierrez
@@ -88,6 +101,25 @@ public class GroupInfoTest {
         onView(withText("Delete Group")).perform(click());
 
         Intents.intended(IntentMatchers.hasComponent(MemberViewer.class.getName()));
+    }
+
+    @Test
+    public void testEditGroupActivityResult() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("group_name", "Updated Group Name");
+        resultIntent.putExtra("group_description", "Updated Group Description");
+
+        ActivityScenario<GroupInfo> activityScenario = activityRule.getScenario();
+
+        activityScenario.onActivity(new ActivityScenario.ActivityAction<GroupInfo>() {
+            @Override
+            public void perform(GroupInfo activity) {
+                activity.onActivityResult(EDIT_GROUP_REQUEST_CODE, RESULT_OK, resultIntent);
+            }
+        });
+
+        onView(withId(R.id.group_name_two)).check(matches(withText("Updated Group Name")));
+        onView(withId(R.id.group_desc)).check(matches(withText("Updated Group Description")));
     }
 
     @After
