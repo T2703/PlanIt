@@ -133,7 +133,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                 if (position != RecyclerView.NO_POSITION) {
                     Member clicked_group = member_list.get(position);
                     String group_id = clicked_group.getGroupId();
-                    createChat(CHAT_URL + group_id, member.getGroupName());
+                    //createChat(CHAT_URL + group_id, member.getGroupName());
 
                     Log.d("TAG", group_id);
 
@@ -236,7 +236,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         }
     }
 
-    private void createChat(String URL_CHAT, String name) {
+    /*private void createChat(String URL_CHAT, String name) {
         // Find the values of each field
 
         // Create JSON object
@@ -258,6 +258,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Server response", response.toString());
+                        Toast.makeText(context.getApplicationContext(), "Chat created!", Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -273,7 +274,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
         // Add to volley request queue
         VolleySingleton.getInstance(context).addToRequestQueue(jsonObjectReq);
-    }
+    } */
 
     /**
      * This class is for holding the variables in place for the group members.
