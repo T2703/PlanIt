@@ -48,7 +48,7 @@ public class Chat {
     @JoinTable(name = "chat_messages", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
     private Set<Message> messages = new HashSet<>();
 
-    @JsonIgnore   //{"team", "chat", "messages"}
+    @JsonIgnoreProperties({"users", "admin", "chat"})   //{"team", "chat", "messages"}
     @OneToOne(mappedBy = "chat", cascade = CascadeType.ALL)
     private Team team;
 
