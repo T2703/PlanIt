@@ -15,4 +15,8 @@
         android:id="@+id/all_events"
         android:title="Events"
         />
+    <item
+        android:id="@+id/schedule_analyze"
+        android:title="Analyze Schedule"
+        />
 </menu>
