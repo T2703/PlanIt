@@ -83,7 +83,7 @@ public class EditGroup extends AppCompatActivity {
         edit_group_button = findViewById(R.id.edit_button);
         group_name = findViewById(R.id.group_name);
         group_description = findViewById(R.id.group_description);
-        back_button = findViewById(R.id.back_button);
+        back_button = findViewById(R.id.edit_group_back_button);
         edit_group_button.setEnabled(false); // Set the initial state to disabled
 
         getting_group_name = getIntent().getStringExtra("group_name");
