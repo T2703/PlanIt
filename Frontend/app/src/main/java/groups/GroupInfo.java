@@ -187,7 +187,7 @@ public class GroupInfo extends AppCompatActivity {
             }
         });
 
-        
+
         team_Availability_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

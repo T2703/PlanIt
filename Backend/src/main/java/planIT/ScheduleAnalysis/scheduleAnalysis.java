@@ -63,7 +63,7 @@ public class scheduleAnalysis {
         }
 
         for(int day: dayCount){ //no div by 0
-            if(day<=1){
+            if(day<1){
                 day=1;
             }
         }
@@ -94,7 +94,7 @@ public class scheduleAnalysis {
      * @param event The event for which to calculate the duration.
      * @return The duration of the event in minutes.
      */
-    static private int eventLength(Event event){
+    static private int eventLength(Event event){ //TODO account for multi-day and/or past midnight
         int start=0;
         int end=0;
         start = event.getStartDate().getHours()*60 + event.getStartDate().getMinutes();
@@ -109,7 +109,7 @@ public class scheduleAnalysis {
      * @param length The length of the line.
      * @return A string representing the line of dashes.
      */
-    static private String toLine(int length){
+    static private String toLine(int length){  //TODO change to scale off highest value?
         String line ="[";
         for(int i=0; i<length/10; ++i){
             line += "-";
