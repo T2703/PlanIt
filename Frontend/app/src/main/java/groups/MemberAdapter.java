@@ -240,7 +240,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
         // Puts in the values of these variables.
         try {
-            requestBody.put("name", name);
+            requestBody.put("chat", name);
         } catch (JSONException e) {
             e.printStackTrace();
         }
