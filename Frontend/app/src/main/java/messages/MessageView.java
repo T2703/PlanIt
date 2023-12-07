@@ -9,13 +9,22 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 
+import api.VolleySingleton;
+import events.Event;
 import websockets.WebSocketListener;
 import websockets.WebSocketManager;
 import websockets.WebSocketManagerChat;
 
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * The MessageView class represents the message view for the messaging feature of the app,
@@ -30,7 +39,7 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
     /**
      * The url for the messaging.
      */
-    private String MESSAGE_URL = "ws://10.0.2.2:8080/chatSocket/" + WebSocketManager.getInstance().getUsername();
+    private String MESSAGE_URL = "ws://10.0.2.2:8080/chatSocket/" + WebSocketManager.getInstance().getUsername(); // must also get the chatID
     //private String MESSAGE_URL = "ws://10.0.2.2:8080/chat/"; // DEFAULT
 
     /**
@@ -107,6 +116,10 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
         }); */
     }
 
+
+
+
+
     /**
      * Callback method invoked when the WebSocket connection is opened.
      *
@@ -155,4 +168,50 @@ public class MessageView extends AppCompatActivity implements WebSocketListener 
     public void onWebSocketError(Exception ex) {
 
     }
+
+    /*private void getChatsRequest() {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                MESSAGE_URL + username + "/events",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+                            responseArray = new JSONArray(response);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        // Iterate
+                        for (int i = 0; i < responseArray.length(); i++) {
+                            try {
+                                JSONObject jsonObject = responseArray.getJSONObject(i);
+                                String id = jsonObject.getString("id");
+                                String name = jsonObject.getString("name");
+                                String description = jsonObject.getString("description");
+                                String eventType = jsonObject.getString("type");
+                                String start_date = jsonObject.getString("startDate");
+                                String end_date = jsonObject.getString("endDate");
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e("A server error has occurred", error.toString());
+                    }
+                }
+        );
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }*/
+
 }

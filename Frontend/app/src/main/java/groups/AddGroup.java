@@ -188,26 +188,19 @@ public class AddGroup extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         // Log the entire response for debugging
                         Log.d("Server response", response.toString());
+                        // Extract the "message" field from the JSON object
+                        String message = response.optString("message", "");
 
-                        // Extract team information
-                        try {
-                            if (response.has("id")) {
-                                String teamID = response.getString("id");
-                                String teamName = response.getString("name");
+                        // Use regular expressions to extract the number from the "message" string
+                        String numberString = message.replaceAll("[^0-9]", "");
 
-                                // Log team information for debugging
-                                Log.d("Team ID", teamID);
-                                Log.d("Team Name", teamName);
+                        // Convert the extracted string to an integer
+                        int idNumber = Integer.parseInt(numberString);
 
-                                // Proceed to create chat
-                                createChat(teamID, teamName);
-                            } else {
-                                Log.e("JSON Parsing Error", "Response is missing 'id' field");
-                            }
-                        } catch (JSONException e) {
-                            // Handle JSONException more gracefully
-                            Log.e("JSON Parsing Error", "Error parsing JSON response: " + e.getMessage());
-                        }
+                        // Now, idNumber contains the extracted integer value (44 in this case)
+                        Log.d("ID Number", String.valueOf(idNumber));
+
+                        createChat(String.valueOf(idNumber), input_group_value);
                     }
                 },
                 new Response.ErrorListener() {
