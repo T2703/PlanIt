@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -64,7 +66,7 @@ public class NotificationSystemTest {
         }
 
         // Post Notification To Database
-        Notification t = new Notification("test", "description");
+        Notification t = new Notification("test", "description", new ArrayList<>(), "event-invite");
         Response response2 = RestAssured.given().
                 contentType("application/json").
                 body(t).
