@@ -7,9 +7,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import android.util.Log;
-
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -40,8 +37,6 @@ public class HomePageTest {
 
     @Test
     public void navigateToNotificationsPage() {
-        // Check that elements are correctly displayed on the screen
-
         onView(withId(R.id.menuButton)).check(matches(isDisplayed()));
         onView(withId(R.id.title)).check(matches(withText("Home")));
         onView(withId(R.id.notificationIcon)).check(matches(isDisplayed()));
