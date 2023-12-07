@@ -56,6 +56,10 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         this.context = context;
     }
 
+    public List<Member> getMemberList() {
+        return this.member_list;
+    }
+
     /**
      * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
      *
