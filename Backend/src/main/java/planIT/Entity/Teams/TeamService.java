@@ -68,7 +68,9 @@ public class TeamService {
 
         teamRepository.save(team);
         userRepository.save(user);
-        return success;
+
+        return "{\"message\":\"success_" +team.getId()  +"\"}";
+        //return success;
     }
 
     /**
