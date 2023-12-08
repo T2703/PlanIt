@@ -62,6 +62,8 @@ public class TeamAvailability extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_availability);
 
+        // Initialize
+        context = this;
         event_start_date2 = findViewById(R.id.start_date_input2);
         event_end_date2 = findViewById(R.id.end_date_input2);
         event_start_time2 = findViewById(R.id.start_time_input2);
