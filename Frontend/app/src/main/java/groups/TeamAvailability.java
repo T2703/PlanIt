@@ -38,6 +38,7 @@ import java.util.TimeZone;
 import api.VolleySingleton;
 import events.CreateEventPage;
 import events.EventsListViewer;
+import utilities.DateAndTimeHelper;
 
 public class TeamAvailability extends AppCompatActivity {
 
@@ -74,92 +75,32 @@ public class TeamAvailability extends AppCompatActivity {
             event_start_date2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
-                    int year = c.get(Calendar.YEAR);
-                    int month = c.get(Calendar.MONTH);
-                    int day = c.get(Calendar.DAY_OF_MONTH);
-
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(teamAvailabilityPageContext, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            Date date = new Date();
-
-                            String pattern = year + "-" + ((month < 9) ? "0" + (month + 1) : (month + 1)) + "-" + ((dayOfMonth < 10) ? "0" + dayOfMonth : dayOfMonth);
-                            SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.US);
-                            String formattedDate = sdf.format(date);
-
-                            event_start_date2.setText(formattedDate);
-                        }
-                    }, year, month, day);
-
-                    datePickerDialog.show();
+                    DateAndTimeHelper helper = new DateAndTimeHelper(teamAvailabilityPageContext);
+                    helper.showDatePicker(event_start_date2);
                 }
             });
 
             event_end_date2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
-                    int year = c.get(Calendar.YEAR);
-                    int month = c.get(Calendar.MONTH);
-                    int day = c.get(Calendar.DAY_OF_MONTH);
-
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(teamAvailabilityPageContext, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            Date date = new Date();
-
-                            String pattern = year + "-" + ((month < 9) ? "0" + (month + 1) : (month + 1)) + "-" + ((dayOfMonth < 10) ? "0" + dayOfMonth : dayOfMonth);
-                            SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.US);
-                            String formattedDate = sdf.format(date);
-
-                            event_end_date2.setText(formattedDate);
-                        }
-                    }, year, month, day);
-
-                    datePickerDialog.show();
+                    DateAndTimeHelper helper = new DateAndTimeHelper(teamAvailabilityPageContext);
+                    helper.showDatePicker(event_end_date2);
                 }
             });
 
             event_start_time2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
-                    int mHour = c.get(Calendar.HOUR_OF_DAY);
-                    int mMinute = c.get(Calendar.MINUTE);
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(teamAvailabilityPageContext, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            String eventHour = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
-                            String eventMinute = minute < 10 ? "0" + minute : String.valueOf(minute);
-                            String formattedTime = eventHour + ":" + eventMinute;
-
-                            event_start_time2.setText(formattedTime);
-                        }
-                    }, mHour, mMinute, false);
-
-                    timePickerDialog.show();
+                    DateAndTimeHelper helper = new DateAndTimeHelper(teamAvailabilityPageContext);
+                    helper.showTimePicker(event_start_time2);
                 }
             });
 
             event_end_time2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
-                    int mHour = c.get(Calendar.HOUR_OF_DAY);
-                    int mMinute = c.get(Calendar.MINUTE);
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(teamAvailabilityPageContext, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            String eventHour = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
-                            String eventMinute = minute < 10 ? "0" + minute : String.valueOf(minute);
-                            String formattedTime = eventHour + ":" + eventMinute;
-
-                            event_end_time2.setText(formattedTime);
-                        }
-                    }, mHour, mMinute, false);
-
-                    timePickerDialog.show();
+                    DateAndTimeHelper helper = new DateAndTimeHelper(teamAvailabilityPageContext);
+                    helper.showTimePicker(event_end_time2);
                 }
             });
 
@@ -169,12 +110,18 @@ public class TeamAvailability extends AppCompatActivity {
                 String[] dates = stripDateAndTime();
                 String event_type_value2 = "private";
                 String event_name_value2 = "dateRange";
-                String event_start_date2 = dates[0];
-                String event_end_date2 = dates[1];
-                String event_location_value2 = "N/A";
-                String event_description_value2 = "N/A";
+                String event_location_value2 = "NA";
+                String event_description_value2 = "NA";
 
-                getRequest(event_name_value2, event_description_value2, event_location_value2, event_type_value2, event_start_date2, event_end_date2);
+                String event_start_date_value = event_start_date2.getText().toString();
+                String event_end_date_value = event_end_date2.getText().toString();
+                String event_start_time_value = event_start_time2.getText().toString();
+                String event_end_time_value = event_end_time2.getText().toString();
+
+                String event_start_Combinded = DateAndTimeHelper.combineDateAndTime(event_start_date_value, event_start_time_value);
+                String event_end_Combinded = DateAndTimeHelper.combineDateAndTime(event_end_date_value, event_end_time_value);
+
+                getRequest(event_name_value2, event_description_value2, event_location_value2, event_type_value2, event_start_Combinded, event_end_Combinded);
             }
         });
     }
@@ -188,22 +135,17 @@ public class TeamAvailability extends AppCompatActivity {
             body.put("description", eventDescriptionValue);
             body.put("location", eventLocationValue);
             body.put("type", eventTypeValue);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            body.put("startDate", eventStartDateValue);
+            body.put("endDate", eventEndDateValue);
 
-            Date startDate = sdf.parse(eventStartDateValue);
-            Date endDate = sdf.parse(eventEndDateValue);
-            body.put("startDate", sdf.format(startDate));
-            body.put("endDate", sdf.format(endDate));
+            System.out.println(body);
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
+                Request.Method.POST,
                 URL+ group_id + "/dates",
                 body,
                 new Response.Listener<JSONObject>() {
