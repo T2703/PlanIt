@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -200,8 +201,11 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
                         isSave = true;
                         String enteredPassword = passwordEditText.getText().toString();
                         sendPostRequest(username, enteredPassword);
-                        String input_pass_value = editPass.getText().toString();
-                        updatePassword(input_pass_value);
+
+                        // Check if a new password is entered before updating the password
+                        if (!TextUtils.isEmpty(editPass.getText())) {
+                            updatePassword(editPass.getText().toString());
+                        }
                     }
                 });
             }
@@ -389,43 +393,47 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
      * This is the request for updating a user's info after editing.
      * This PUTs the group on to the server.
      */
-    private void updatePassword(String pass) {
-        // Find the values of each field
+    private void updatePassword(String newPass) {
+        if (!TextUtils.isEmpty(newPass)) {
+            // Create JSON object
+            JSONObject requestBody = new JSONObject();
 
-        // Create JSON object
-        JSONObject requestBody = new JSONObject();
+            // Puts in the values of these variables.
+            try {
+                requestBody.put("password", newPass);
+                Log.d("TAG", requestBody.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-        // Puts in the values of these variables.
-        try {
-            requestBody.put("password", pass);
-            Log.d("TAG",requestBody.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+            // Making the request
+            JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+                    Request.Method.PUT,
+                    URL_USERS_PASS_CHANGE + WebSocketManager.getInstance().getUsername(),
+                    requestBody,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("Server response", response.toString());
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("Password no work :(", "Error: " + error.getMessage());
+                        }
+                    }
+            ) {
+
+            };
+
+            // Add the request to the RequestQueue
+            Volley.newRequestQueue(this).add(jsonObjectReq);
         }
 
-        // Making the request
-        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
-                Request.Method.PUT,  // Use PUT method instead of POST
-                URL_USERS_PASS_CHANGE + WebSocketManager.getInstance().getUsername(),  // Specify the specific group ID in the URL
-                requestBody,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("Server response", response.toString());
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Password no work :(", "Error: " + error.getMessage());
-                    }
-                }
-        ) {
-
-        };
-
-        // Add the request to the RequestQueue
-        Volley.newRequestQueue(this).add(jsonObjectReq);
+        else {
+            Log.d("EMPTY", "NOTHING");
+        }
     }
 
     /**
