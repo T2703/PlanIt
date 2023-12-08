@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import utilities.DateAndTimeHelper;
 import websockets.NotificationWebSocketManager;
 import websockets.WebSocketManager;
 
@@ -94,92 +95,32 @@ public class CreateEventPage extends AppCompatActivity {
         event_start_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(createEventPageContext, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Date date = new Date();
-
-                        String pattern = year + "-" + ((month < 9) ? "0" + (month + 1) : (month + 1)) + "-" + ((dayOfMonth < 10) ? "0" + dayOfMonth : dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.US);
-                        String formattedDate = sdf.format(date);
-
-                        event_start_date.setText(formattedDate);
-                    }
-                }, year, month, day);
-
-                datePickerDialog.show();
+                DateAndTimeHelper helper = new DateAndTimeHelper(createEventPageContext);
+                helper.showDatePicker(event_start_date);
             }
         });
 
         event_end_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(createEventPageContext, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Date date = new Date();
-
-                        String pattern = year + "-" + ((month < 9) ? "0" + (month + 1) : (month + 1)) + "-" + ((dayOfMonth < 10) ? "0" + dayOfMonth : dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.US);
-                        String formattedDate = sdf.format(date);
-
-                        event_end_date.setText(formattedDate);
-                    }
-                }, year, month, day);
-
-                datePickerDialog.show();
+                DateAndTimeHelper helper = new DateAndTimeHelper(createEventPageContext);
+                helper.showDatePicker(event_end_date);
             }
         });
 
         event_start_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int mHour = c.get(Calendar.HOUR_OF_DAY);
-                int mMinute = c.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(createEventPageContext, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String eventHour = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
-                        String eventMinute = minute < 10 ? "0" + minute : String.valueOf(minute);
-                        String formattedTime = eventHour + ":" + eventMinute;
-
-                        event_start_time.setText(formattedTime);
-                    }
-                }, mHour, mMinute, false);
-
-                timePickerDialog.show();
+                DateAndTimeHelper helper = new DateAndTimeHelper(createEventPageContext);
+                helper.showTimePicker(event_start_time);
             }
         });
 
         event_end_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int mHour = c.get(Calendar.HOUR_OF_DAY);
-                int mMinute = c.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(createEventPageContext, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String eventHour = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
-                        String eventMinute = minute < 10 ? "0" + minute : String.valueOf(minute);
-                        String formattedTime = eventHour + ":" + eventMinute;
-
-                        event_end_time.setText(formattedTime);
-                    }
-                }, mHour, mMinute, false);
-
-                timePickerDialog.show();
+                DateAndTimeHelper helper = new DateAndTimeHelper(createEventPageContext);
+                helper.showTimePicker(event_end_time);
             }
         });
 
@@ -188,44 +129,39 @@ public class CreateEventPage extends AppCompatActivity {
         create_event_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] dates = stripDateAndTime();
                 String event_type_value = event_type.getSelectedItem().toString();
                 String event_name_value = event_name.getText().toString();
-                String event_start_date = dates[0];
-                String event_end_date = dates[1];
+
+                String event_start_date_value = event_start_date.getText().toString();
+                String event_end_date_value = event_end_date.getText().toString();
+                String event_start_time_value = event_start_time.getText().toString();
+                String event_end_time_value = event_end_time.getText().toString();
+
                 String event_location_value = event_location.getText().toString();
                 String event_description_value = event_description.getText().toString();
                 String event_add_people_value = event_add_people.getText().toString();
 
-                sendPostRequest(event_name_value, event_description_value, event_location_value, event_type_value, event_start_date, event_end_date, event_add_people_value);
+                String event_start_date_final = DateAndTimeHelper.combineDateAndTime(event_start_date_value, event_start_time_value);
+                String event_end_date_final = DateAndTimeHelper.combineDateAndTime(event_end_date_value, event_end_time_value);
+
+                sendPostRequest(event_type_value, event_name_value, event_start_date_final, event_end_date_final, event_location_value, event_description_value, event_add_people_value);
             }
         });
     }
 
-    private void sendPostRequest(String eventNameValue, String eventDescriptionValue, String eventLocationValue, String eventTypeValue, String eventStartDateValue, String eventEndDateValue, String eventAddPeopleValue) {
+    private void sendPostRequest(String eventTypeValue, String eventNameValue, String eventStartDateValue, String eventEndDateValue, String eventDescriptionValue, String eventLocationValue, String eventAddPeopleValue) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject body = new JSONObject();
 
         try {
+            body.put("type", eventTypeValue);
             body.put("name", eventNameValue);
+            body.put("startDate", eventStartDateValue);
+            body.put("endDate", eventEndDateValue);
             body.put("description", eventDescriptionValue);
             body.put("location", eventLocationValue);
-            body.put("type", eventTypeValue);
-            //body.put("startDate", eventStartDateValue);
-            //body.put("endDate", eventEndDateValue);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            Date startDate = sdf.parse(eventStartDateValue);
-            Date endDate = sdf.parse(eventEndDateValue);
-
-            body.put("startDate", sdf.format(startDate));
-            body.put("endDate", sdf.format(endDate));
-
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
 
         String username = WebSocketManager.getInstance().getUsername();
@@ -264,17 +200,5 @@ public class CreateEventPage extends AppCompatActivity {
         );
 
         requestQueue.add(jsonObjectRequest);
-    }
-
-    private String[] stripDateAndTime() {
-        String start_date = event_start_date.getText().toString();
-        String end_date = event_end_date.getText().toString();
-        String start_time = event_start_time.getText().toString();
-        String end_time = event_end_time.getText().toString();
-
-        String startDate = start_date + "T" + start_time + ":00.000+00:00";
-        String endDate = end_date + "T" + end_time + ":00.000+00:00";
-
-        return new String[]{startDate, endDate};
     }
 }
