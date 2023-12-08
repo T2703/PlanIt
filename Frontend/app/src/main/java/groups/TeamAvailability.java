@@ -188,17 +188,13 @@ public class TeamAvailability extends AppCompatActivity {
             body.put("description", eventDescriptionValue);
             body.put("location", eventLocationValue);
             body.put("type", eventTypeValue);
-            //body.put("startDate", eventStartDateValue);
-            //body.put("endDate", eventEndDateValue);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
             Date startDate = sdf.parse(eventStartDateValue);
             Date endDate = sdf.parse(eventEndDateValue);
-
             body.put("startDate", sdf.format(startDate));
             body.put("endDate", sdf.format(endDate));
-
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -212,6 +208,7 @@ public class TeamAvailability extends AppCompatActivity {
                 body,
                 new Response.Listener<JSONObject>() {
 
+
                     @Override
                     public void onResponse(JSONObject response) {
 
@@ -221,7 +218,7 @@ public class TeamAvailability extends AppCompatActivity {
 
                         try {
                             textView = findViewById(R.id.response);
-                            textView.setText(response.toString());
+                            textView.setText(response.get("message").toString());
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
