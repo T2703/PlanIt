@@ -163,7 +163,7 @@ public class TeamAvailability extends AppCompatActivity {
                 }
             });
 
-        see_Availability.setOnClickListener(new View.OnClickListener() {
+        see_Availability.setOnClickListener(new View.OnClickListener() {       // SEE AVAILABILITY
             @Override
             public void onClick(View view) {
                 String[] dates = stripDateAndTime();
