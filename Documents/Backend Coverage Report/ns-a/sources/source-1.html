@@ -1,0 +1,420 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > User</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Users</a>
+</div>
+
+<h1>Coverage Summary for Class: User (planIT.Entity.Users)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">User</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (24/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (31/31)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">User$HibernateInstantiator$j8HrTAV1</td>
+  </tr>
+  <tr>
+    <td class="name">User$HibernateInstantiator$jVICO780</td>
+  </tr>
+  <tr>
+    <td class="name">User$HibernateProxy$8aH5QeYD</td>
+  </tr>
+  <tr>
+    <td class="name">User$HibernateProxy$OfslREaG</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (24/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (31/31)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Users;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.HashSet;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;
+&nbsp;import planIT.Entity.Assignments.Assignment;
+&nbsp;import planIT.Entity.Chats.Chat;
+&nbsp;import planIT.Entity.Events.Event;
+&nbsp;import planIT.Entity.Notifications.Notification;
+&nbsp;import planIT.Entity.Tags.Tag;
+&nbsp;import planIT.Entity.Teams.Team;
+&nbsp;import planIT.Entity.ToDos.ToDo;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a user in the PlanIT application.
+&nbsp; * Each user has a unique identifier, username, password, and email.
+&nbsp; * Additionally, a user can be associated with various events, chats, teams, notifications,
+&nbsp; * assignments, tags, to-dos, and events they manage.
+&nbsp; *
+&nbsp; * This class is annotated as an Entity to be managed by JPA (Java Persistence API) and
+&nbsp; * includes relationships with other entities like Event, Chat, Team, Notification,
+&nbsp; * Assignment, Tag, and ToDos.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; *
+&nbsp; */
+&nbsp;@Entity
+&nbsp;public class User {
+&nbsp;
+&nbsp;    // Generated ID for each User
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    @Schema(description = &quot;ID of user&quot;)
+&nbsp;    private int id;
+&nbsp;
+&nbsp;    // Username for each User
+&nbsp;    @Schema(description = &quot;Username of user&quot;)
+&nbsp;    private String username;
+&nbsp;
+&nbsp;    // Password for each User
+&nbsp;    @Schema(description = &quot;Password of user&quot;)
+&nbsp;    private String password;
+&nbsp;
+&nbsp;    // Email for each User
+&nbsp;    @Schema(description = &quot;Email of user&quot;)
+&nbsp;    private String email;
+&nbsp;
+&nbsp;    // Email for each User
+&nbsp;    @Schema(description = &quot;Canvas token of user&quot;)
+&nbsp;    private String canvasToken;
+&nbsp;
+<b class="fc">&nbsp;    @Schema(description = &quot;List of User&#39;s Followers&quot;)</b>
+&nbsp;    @ManyToMany
+&nbsp;    @JoinTable(
+&nbsp;            name = &quot;user_followers&quot;,
+&nbsp;            joinColumns = @JoinColumn(name = &quot;user_id&quot;),
+&nbsp;            inverseJoinColumns = @JoinColumn(name = &quot;follower_id&quot;)
+&nbsp;    )
+&nbsp;    @JsonIgnoreProperties({&quot;followers&quot;, &quot;following&quot;, &quot;events&quot;, &quot;chats&quot;, &quot;teams&quot;, &quot;notifications&quot;, &quot;assignments&quot;, &quot;managed&quot;, &quot;administrates&quot;, &quot;tags&quot;, &quot;toDos&quot;})
+&nbsp;    private List&lt;User&gt; followers = new ArrayList&lt;&gt;();
+&nbsp;
+<b class="fc">&nbsp;    @Schema(description = &quot;List of User&#39;s Following&quot;)</b>
+&nbsp;    @ManyToMany(mappedBy = &quot;followers&quot;)
+&nbsp;    @JsonIgnoreProperties({&quot;followers&quot;, &quot;following&quot;, &quot;events&quot;, &quot;chats&quot;, &quot;teams&quot;, &quot;notifications&quot;, &quot;assignments&quot;, &quot;managed&quot;, &quot;administrates&quot;, &quot;tags&quot;, &quot;toDos&quot;})
+&nbsp;    private List&lt;User&gt; following = new ArrayList&lt;&gt;();
+&nbsp;
+<b class="fc">&nbsp;    @JsonIgnoreProperties(&quot;users&quot;)</b>
+&nbsp;    @ManyToMany(mappedBy = &quot;users&quot;)
+&nbsp;    private Set&lt;Event&gt; events = new HashSet&lt;&gt;();
+&nbsp;
+<b class="fc">&nbsp;    @JsonIgnoreProperties(&quot;users&quot;)</b>
+&nbsp;    @ManyToMany(mappedBy = &quot;users&quot;)
+&nbsp;    private Set&lt;Chat&gt; chats = new HashSet&lt;&gt;();
+&nbsp;
+&nbsp;    @JsonIgnoreProperties(&quot;users&quot;)
+&nbsp;    @ManyToMany(mappedBy = &quot;users&quot;)
+&nbsp;    private List&lt;Team&gt; teams;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties(&quot;user&quot;)
+&nbsp;    @OneToMany(mappedBy = &quot;user&quot;)
+&nbsp;    private List&lt;Notification&gt; notifications;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties(&quot;user&quot;)
+&nbsp;    @OneToMany(mappedBy = &quot;user&quot;)
+&nbsp;    private List&lt;Assignment&gt; assignments;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties({&quot;manager&quot;, &quot;users&quot;})
+&nbsp;    @OneToMany(mappedBy = &quot;manager&quot;)
+&nbsp;    private List&lt;Event&gt; managed;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties({&quot;admin&quot;, &quot;users&quot;})
+&nbsp;    @OneToMany(mappedBy = &quot;admin&quot;)
+&nbsp;    private List&lt;Team&gt; administrates;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties(&quot;user&quot;)
+&nbsp;    @OneToMany(mappedBy = &quot;user&quot;)
+&nbsp;    private List&lt;Tag&gt; tags;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties(&quot;user&quot;)
+&nbsp;    @OneToMany
+&nbsp;    private List&lt;ToDo&gt; toDos;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructs a new User with the specified username, password, and email.
+&nbsp;     * Initializes the notifications with an empty ArrayList.
+&nbsp;     *
+&nbsp;     * @param username The username of the user.
+&nbsp;     * @param password The password of the user.
+&nbsp;     * @param email    The email address of the user.
+&nbsp;     */
+<b class="fc">&nbsp;    public User(String username, String password, String email) {</b>
+<b class="fc">&nbsp;        this.username = username;</b>
+<b class="fc">&nbsp;        this.password = password;</b>
+<b class="fc">&nbsp;        this.email = email;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Default constructor for User.
+&nbsp;     * Initializes the notifications with an empty ArrayList.
+&nbsp;     */
+<b class="fc">&nbsp;    public User() { notifications = new ArrayList&lt;&gt;(); }</b>
+&nbsp;
+&nbsp;    /* =============== GETTER &amp; SETTER FUNCTIONS =============== */
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the unique identifier of the user.
+&nbsp;     *
+&nbsp;     * @return The user&#39;s id.
+&nbsp;     */
+<b class="fc">&nbsp;    public int getId() { return id; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the unique identifier of the user.
+&nbsp;     *
+&nbsp;     * @param id The new id to set.
+&nbsp;     */
+&nbsp;    public void setId(int id){
+<b class="fc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the username of the user.
+&nbsp;     *
+&nbsp;     * @return The username of the user.
+&nbsp;     */
+&nbsp;    public String getUsername(){
+<b class="fc">&nbsp;        return username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the username of the user.
+&nbsp;     *
+&nbsp;     * @param username The new username to set.
+&nbsp;     */
+&nbsp;    public void setUsername(String username){
+<b class="fc">&nbsp;        this.username = username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the password of the user.
+&nbsp;     *
+&nbsp;     * @return The password of the user.
+&nbsp;     */
+<b class="fc">&nbsp;    public String getPassword() { return password; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the password of the user.
+&nbsp;     *
+&nbsp;     * @param password The new password to set.
+&nbsp;     */
+<b class="fc">&nbsp;    public void setPassword(String password) { this.password = password; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the email address of the user.
+&nbsp;     *
+&nbsp;     * @return The email address of the user.
+&nbsp;     */
+<b class="fc">&nbsp;    public String getEmail() { return email; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the email address of the user.
+&nbsp;     *
+&nbsp;     * @param email The new email address to set.
+&nbsp;     */
+<b class="fc">&nbsp;    public void setEmail(String email) { this.email = email; }</b>
+&nbsp;
+<b class="fc">&nbsp;    public List&lt;User&gt; getFollowers() { return followers;}</b>
+&nbsp;
+<b class="fc">&nbsp;    public List&lt;User&gt; getFollowing() { return following;}</b>
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the set of events associated with the user.
+&nbsp;     *
+&nbsp;     * @return The set of events associated with the user.
+&nbsp;     */
+&nbsp;    public Set&lt;Event&gt; getEvents() {
+<b class="fc">&nbsp;        return events;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the set of chats associated with the user.
+&nbsp;     *
+&nbsp;     * @return The set of chats associated with the user.
+&nbsp;     */
+&nbsp;    public Set&lt;Chat&gt; getChats() {
+<b class="fc">&nbsp;        return chats;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the list of notifications associated with the user.
+&nbsp;     *
+&nbsp;     * @return The list of notifications.
+&nbsp;     */
+&nbsp;    public List&lt;Notification&gt; getNotifications() {
+<b class="fc">&nbsp;        return notifications;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the list of assignments associated with the user.
+&nbsp;     *
+&nbsp;     * @return The list of assignments.
+&nbsp;     */
+&nbsp;    public List&lt;Assignment&gt; getAssignments() {
+<b class="fc">&nbsp;        return assignments;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the list of tags associated with the user.
+&nbsp;     *
+&nbsp;     * @return The list of tags.
+&nbsp;     */
+&nbsp;    public List&lt;Tag&gt; getTags() {
+<b class="fc">&nbsp;        return tags;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the list of tags associated with the user.
+&nbsp;     *
+&nbsp;     * @param tags The new list of tags to set.
+&nbsp;     */
+&nbsp;    public void setTags(List&lt;Tag&gt; tags) {
+<b class="fc">&nbsp;        this.tags = tags;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the list of To-Do items associated with the user.
+&nbsp;     *
+&nbsp;     * @return The list of To-Do items.
+&nbsp;     */
+&nbsp;    public List&lt;ToDo&gt; getToDos() {
+<b class="fc">&nbsp;        return toDos;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the set of teams associated with the user.
+&nbsp;     *
+&nbsp;     * @return The set of teams.
+&nbsp;     */
+&nbsp;    public List&lt;Team&gt; getTeams(){
+<b class="fc">&nbsp;        return teams;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the list of events that the user manages.
+&nbsp;     *
+&nbsp;     * @return The list of managed events.
+&nbsp;     */
+&nbsp;    public List&lt;Event&gt; getManaged() {
+<b class="fc">&nbsp;        return managed;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the list of teams that the user administrates.
+&nbsp;     *
+&nbsp;     * @return The list of admin teamed.
+&nbsp;     */
+&nbsp;    public List&lt;Team&gt; getAdministrates() {
+<b class="fc">&nbsp;        return administrates;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getCanvasToken() {
+<b class="fc">&nbsp;        return canvasToken;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCanvasToken(String canvasToken) {
+<b class="fc">&nbsp;        this.canvasToken = canvasToken;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
