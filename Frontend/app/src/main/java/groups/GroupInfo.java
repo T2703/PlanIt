@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.AnalyzeSchedule;
 import com.example.myapplication.NavBar;
 import com.example.myapplication.R;
 
@@ -203,9 +204,8 @@ public class GroupInfo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
-
-                Intent intent = new Intent(GroupInfo.this, TeamAvailability.class);
+                Intent intent = new Intent(GroupInfo.this, TeamAvailability.class);   //AnalyzeSchedule.class
+                //Intent intent = new Intent(GroupInfo.this, AnalyzeSchedule.class);
                 intent.putExtra("groupId", getting_group_id);
                 startActivity(intent);
             }

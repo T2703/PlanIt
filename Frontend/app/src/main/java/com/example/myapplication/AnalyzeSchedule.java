@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import api.VolleySingleton;
+import calendar.CalendarMonthlyPage;
 import calendar.CalendarWeeklyPage;
 import events.Event;
 import groups.GroupInfo;
@@ -83,7 +84,7 @@ public class AnalyzeSchedule extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(AnalyzeSchedule.this, CalendarWeeklyPage.class);
+                Intent intent = new Intent(AnalyzeSchedule.this, CalendarMonthlyPage.class);
                 startActivity(intent);
             }
         });
