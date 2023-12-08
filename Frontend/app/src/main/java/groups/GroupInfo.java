@@ -113,6 +113,8 @@ public class GroupInfo extends AppCompatActivity {
 
     private Button team_Availability_Button;
 
+    private Boolean isAdmin;
+
     /**
      * Initializes the activity and sets up UI components.
      *
@@ -129,6 +131,7 @@ public class GroupInfo extends AppCompatActivity {
         menu_button = findViewById(R.id.menu_button_two);
         group_name = findViewById(R.id.group_name_two);
         group_description = findViewById(R.id.group_desc);
+        isAdmin = false;
         member_list = new ArrayList<>();
         adapter = new MemberAdapter(member_list, this);
         getting_group_name = getIntent().getStringExtra("group_name");
@@ -147,6 +150,8 @@ public class GroupInfo extends AppCompatActivity {
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(GroupInfo.this, view);
                 popup_menu.getMenuInflater().inflate(R.menu.options_menu_two, popup_menu.getMenu());
+                popup_menu.getMenu().findItem(R.id.edit_option).setVisible(isAdmin);
+                popup_menu.getMenu().findItem(R.id.delete_option).setVisible(isAdmin);
                 popup_menu.show();
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -264,8 +269,16 @@ public class GroupInfo extends AppCompatActivity {
                                 String description = jsonObject.getString("description");
                                 String id = jsonObject.getString("id");
 
+                                // Extract admin information
+                                JSONObject adminObject = jsonObject.getJSONObject("admin");
+                                String adminUsername = adminObject.getString("username");
+
+                                // Check if the logged-in user is the admin
+                                isAdmin = adminUsername.equals(WebSocketManager.getInstance().getUsername());
+
                                 member_list.add(new Member(name, description, id));
                                 Log.d("List", id);
+                                Log.d("ADMIN", String.valueOf(isAdmin));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
