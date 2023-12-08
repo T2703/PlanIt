@@ -55,12 +55,11 @@ public class EventService {
      * @param event newly created event
      * @return success
      */
-    public String createEvent(String username, Event event) {
+    public Event createEvent(String username, Event event) {
         event.setManager(userRepository.findByUsername(username));
         event.getUsers().add(userRepository.findByUsername(username));
-        eventRepository.save(event);
 
-        return success;
+        return eventRepository.save(event);
     }
 
     /**

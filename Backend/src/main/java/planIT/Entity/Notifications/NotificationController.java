@@ -69,6 +69,12 @@ public class NotificationController {
         return notificationService.getNotificationByUser(username);
     }
 
+    @GetMapping(path = "/users/{username}/notifications-unread")
+    @Operation(summary = "Get Notifications for a specific user", description = "Gets all of a user's notifications and returns them as a List")
+    public int getUserUnreadNotifications(@PathVariable String username) {
+        return notificationService.getUnreadNotificationByUser(username);
+    }
+
     // DELETE method - deletes a notification from the database.
     /**
      * Deletes a notification from the repository

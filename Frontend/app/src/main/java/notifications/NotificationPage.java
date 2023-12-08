@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 
+import org.java_websocket.handshake.ServerHandshake;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import homepage.HomePage;
+import websockets.WebSocketListener;
 
 /**
  * The {@code NotificationPage} class represents the activity for displaying a list of notifications.
@@ -34,7 +37,7 @@ import homepage.HomePage;
  * @see NotificationAdapter
  * @see Notification
  */
-public class NotificationPage extends AppCompatActivity {
+public class NotificationPage extends AppCompatActivity implements WebSocketListener {
     private ImageButton backButton;
     private RecyclerView notificationItemRecycler;
     private NotificationAdapter adapter;
@@ -103,5 +106,25 @@ public class NotificationPage extends AppCompatActivity {
 
 
         return notifications;
+    }
+
+    @Override
+    public void onWebSocketOpen(ServerHandshake handshakedata) {
+
+    }
+
+    @Override
+    public void onWebSocketMessage(String message) {
+
+    }
+
+    @Override
+    public void onWebSocketClose(int code, String reason, boolean remote) {
+
+    }
+
+    @Override
+    public void onWebSocketError(Exception ex) {
+
     }
 }

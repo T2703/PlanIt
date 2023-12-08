@@ -11,15 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -50,8 +46,6 @@ import events.Event;
 import events.EventsListViewer;
 import groups.MemberViewer;
 import homepage.HomePage;
-import profile.CreateAccountPage;
-import profile.LoginFormPage;
 import profile.ProfilePage;
 import websockets.WebSocketManager;
 

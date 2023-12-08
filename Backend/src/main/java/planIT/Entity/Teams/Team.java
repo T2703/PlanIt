@@ -51,8 +51,8 @@ public class Team {
     private User admin = new User();
 
 
-    @JsonIgnore //{"team", "chat", "messages"}
-    @OneToOne
+    @JsonIgnoreProperties({"team", "users", "messages"}) //{"team", "chat", "messages"}
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_id")  //chat_id
     private Chat chat;
 
