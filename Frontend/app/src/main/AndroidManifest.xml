@@ -110,10 +110,14 @@
             android:name="notifications.NotificationPage"
             android:exported="true" />
         <activity
+            android:name="groups.TeamAvailability"
+            android:exported="true" />
+        <activity
             android:name="assignments.AssignmentsPage"
             android:exported="true" />
         <activity
             android:name="assignments.AssignmentsListPage"
+
             android:exported="true" />
     </application>
 

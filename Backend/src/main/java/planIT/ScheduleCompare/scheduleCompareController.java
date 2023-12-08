@@ -48,7 +48,11 @@ public class scheduleCompareController {
         Team target = teamRepository.findById(teamId);
         String returnString = scheduleCompare.compareStandard(target, start, end);
 
-        return returnString;
+        System.out.println(returnString);
+
+        String success = "{\"message\":\"" +returnString +"\"}";
+
+        return success;
     }
 
     @GetMapping(path = "/compareBy30/{teamId}/dates")
