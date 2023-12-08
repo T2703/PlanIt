@@ -42,7 +42,7 @@ public class ChatWebSocket {
     // server side logger
     private final Logger logger = LoggerFactory.getLogger(ChatWebSocket.class);
 
-    public Chat chat = new Chat();
+    public Chat chat = new Chat(); // = chatService.findUserByUsername(username);
 
     public ChatService chatService;
 

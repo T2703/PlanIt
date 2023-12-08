@@ -48,6 +48,7 @@ import events.EventsListViewer;
 import groups.MemberViewer;
 import homepage.HomePage;
 import profile.ProfilePage;
+import profile.ProfilePageViewer;
 import websockets.WebSocketManager;
 
 /**
@@ -541,7 +542,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
      */
     @Override
     public void onProfileButtonClick() {
-        Intent intent = new Intent(CalendarWeeklyPage.this, ProfilePage.class);
+        Intent intent = new Intent(CalendarWeeklyPage.this, ProfilePageViewer.class);
         ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }
