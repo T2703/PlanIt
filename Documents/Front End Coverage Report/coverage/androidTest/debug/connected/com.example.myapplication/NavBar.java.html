@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NavBar.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.myapplication</a> &gt; <span class="el_source">NavBar.java</span></div><h1>NavBar.java</h1><pre class="source lang-java linenums">// Author: Tristan Nono
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
+import events.EventsListViewer;
+import groups.MemberViewer;
+import profile.ProfilePage;
+
+/*
+The main navbar for directing the user to certain locations on the app such as home, calendar, messages/chats, &amp; profile.
+There is also a center button used for creating the events.
+ */
+<span class="nc" id="L22">public class NavBar extends AppCompatActivity {</span>
+
+    /*
+    The button for the calendar.
+     */
+    private ImageButton calendar_button;
+
+    /*
+    The button for the messages.
+     */
+    private ImageButton messages_button;
+
+    /*
+    The button for the home.
+     */
+    private ImageButton home_button;
+
+    /*
+    The button for the profile.
+     */
+    private ImageButton profile_button;
+
+    /*
+    The button for creating events (yep this guy right here).
+     */
+    private ImageButton create_event_button;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L51">        super.onCreate(savedInstanceState);</span>
+<span class="nc" id="L52">        setContentView(R.layout.activity_navbar);</span>
+
+        // Initialize
+<span class="nc" id="L55">        calendar_button = findViewById(R.id.calendar_button_nav);</span>
+<span class="nc" id="L56">        messages_button = findViewById(R.id.message_button);</span>
+<span class="nc" id="L57">        create_event_button = findViewById(R.id.create_events_button);</span>
+<span class="nc" id="L58">        home_button = findViewById(R.id.home_button);</span>
+<span class="nc" id="L59">        profile_button = findViewById(R.id.profile_button);</span>
+<span class="nc" id="L60">        create_event_button = findViewById(R.id.create_events_button);</span>
+
+        // Set a click listeners for the corresponding buttons.
+<span class="nc" id="L63">        calendar_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L66">                Log.d(&quot;TAG&quot;, &quot;Calendar&quot;);</span>
+<span class="nc" id="L67">                setSelectedButton(calendar_button);</span>
+
+<span class="nc" id="L69">                Intent intent = new Intent(NavBar.this, CalendarMonthlyPage.class);</span>
+<span class="nc" id="L70">                startActivity(intent);</span>
+
+<span class="nc" id="L72">            }</span>
+        });
+
+<span class="nc" id="L75">        home_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L78">                Log.d(&quot;TAG&quot;, &quot;Home&quot;);</span>
+<span class="nc" id="L79">                setSelectedButton(home_button);</span>
+
+<span class="nc" id="L81">                Intent intent = new Intent(NavBar.this, EventsListViewer.class);</span>
+<span class="nc" id="L82">                startActivity(intent);</span>
+
+<span class="nc" id="L84">            }</span>
+        });
+
+<span class="nc" id="L87">        messages_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L90">                Log.d(&quot;TAG&quot;, &quot;Messages&quot;);</span>
+<span class="nc" id="L91">                setSelectedButton(messages_button);</span>
+
+                // For testing purposes only
+<span class="nc" id="L94">                Intent intent = new Intent(NavBar.this, EventsListViewer.class);</span>
+<span class="nc" id="L95">                startActivity(intent);</span>
+
+<span class="nc" id="L97">            }</span>
+        });
+
+<span class="nc" id="L100">        profile_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L103">                setSelectedButton(profile_button);</span>
+
+                // Create an intent to navigate to another activity
+<span class="nc" id="L106">                Intent intent = new Intent(NavBar.this, ProfilePage.class);</span>
+<span class="nc" id="L107">                startActivity(intent);</span>
+
+<span class="nc" id="L109">            }</span>
+        });
+
+<span class="nc" id="L112">        create_event_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+                // Navigate to Create Events page
+<span class="nc" id="L116">                Intent intent = new Intent(NavBar.this, CreateEventPage.class);</span>
+<span class="nc" id="L117">                startActivity(intent);</span>
+<span class="nc" id="L118">            }</span>
+        });
+<span class="nc" id="L120">    }</span>
+
+    /*
+    This method here sets the color of the selected button on the navbar depending on what is clicked.
+    Example: if calendar button is clicked then the calendar button is lit up.
+     */
+    private void setSelectedButton(ImageButton button) {
+        // Deselect all buttons
+<span class="nc" id="L128">        calendar_button.setSelected(false);</span>
+<span class="nc" id="L129">        messages_button.setSelected(false);</span>
+<span class="nc" id="L130">        home_button.setSelected(false);</span>
+<span class="nc" id="L131">        profile_button.setSelected(false);</span>
+
+        // Select the clicked button
+<span class="nc" id="L134">        button.setSelected(true);</span>
+
+        // Set tints based on the selected state
+<span class="nc" id="L137">        calendar_button.setColorFilter(getResources().getColor(</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                calendar_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+
+<span class="nc" id="L140">        messages_button.setColorFilter(getResources().getColor(</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                messages_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+
+<span class="nc" id="L143">        home_button.setColorFilter(getResources().getColor(</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                home_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+
+<span class="nc" id="L146">        profile_button.setColorFilter(getResources().getColor(</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                profile_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+<span class="nc" id="L148">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

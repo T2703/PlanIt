@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FollowersPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">followers</a> &gt; <span class="el_source">FollowersPage.java</span></div><h1>FollowersPage.java</h1><pre class="source lang-java linenums">package followers;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import api.VolleySingleton;
+import homepage.HomePage;
+import websockets.WebSocketManager;
+
+<span class="fc" id="L36">public class FollowersPage extends AppCompatActivity {</span>
+
+    private ImageButton back_button;
+    private RecyclerView recycler_view;
+    private LinearLayoutManager layout_manager;
+    private List&lt;UserFollower&gt; user_list;
+    private SearchView search_bar;
+<span class="fc" id="L43">    private static final String URL_STRING_REQ = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot; + WebSocketManager.getInstance().getUsername() + &quot;/followers&quot;;</span>
+    private UserFollowerAdapter adapter;
+    private Toolbar toolbar;
+    private ImageButton menu_button;
+    private SharedPreferences sharedPreferences;
+<span class="fc" id="L48">    private Set&lt;String&gt; eventTextTypes = new HashSet&lt;&gt;();</span>
+    private SearchView search_view;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L53">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L54">        setContentView(R.layout.activity_followers_page);</span>
+
+        // Initialize
+<span class="fc" id="L57">        back_button = findViewById(R.id.back_button);</span>
+<span class="fc" id="L58">        recycler_view = findViewById(R.id.recyclerView);</span>
+<span class="fc" id="L59">        user_list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L60">        adapter = new UserFollowerAdapter(this, user_list);</span>
+<span class="fc" id="L61">        layout_manager = new LinearLayoutManager(this);</span>
+<span class="fc" id="L62">        toolbar = findViewById(R.id.toolbar);</span>
+<span class="fc" id="L63">        sharedPreferences = getSharedPreferences(&quot;FilterPreferences&quot;, MODE_PRIVATE);</span>
+<span class="fc" id="L64">        setSupportActionBar(toolbar);</span>
+
+<span class="fc" id="L66">        recycler_view.setLayoutManager(layout_manager);</span>
+<span class="fc" id="L67">        recycler_view.setAdapter(adapter);</span>
+<span class="fc" id="L68">        getSupportActionBar().setTitle(&quot;&quot;);</span>
+<span class="fc" id="L69">        getUsersRequest();</span>
+
+        // Set a click listeners for the corresponding buttons.
+<span class="fc" id="L72">        back_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+                // Create an intent to navigate to go back to another page.
+<span class="nc" id="L76">                Intent intent = new Intent(FollowersPage.this, HomePage.class);</span>
+<span class="nc" id="L77">                ActivityOptions options = ActivityOptions.makeCustomAnimation(FollowersPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L78">                startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L79">            }</span>
+        });
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Performs a request to the server to get the list of events for the current user.
+     */
+    private void getUsersRequest() {
+<span class="fc" id="L87">        String username = WebSocketManager.getInstance().getUsername();</span>
+<span class="fc" id="L88">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                URL_STRING_REQ,
+<span class="fc" id="L91">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+<span class="nc" id="L97">                            responseArray = new JSONArray(response);</span>
+<span class="nc" id="L98">                        } catch (JSONException e) {</span>
+<span class="nc" id="L99">                            throw new RuntimeException(e);</span>
+<span class="nc" id="L100">                        }</span>
+
+                        // Iterate
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                        for (int i = 0; i &lt; responseArray.length(); i++) {</span>
+                            try {
+<span class="nc" id="L105">                                JSONObject jsonObject = responseArray.getJSONObject(i);</span>
+<span class="nc" id="L106">                                String id = jsonObject.getString(&quot;id&quot;);</span>
+<span class="nc" id="L107">                                String name = jsonObject.getString(&quot;username&quot;);</span>
+
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                                if (name.equals(WebSocketManager.getInstance().getUsername())) {</span>
+<span class="nc" id="L110">                                    continue;</span>
+                                }
+
+<span class="nc" id="L113">                                user_list.add(new UserFollower(id, name));</span>
+
+<span class="nc" id="L115">                            } catch (JSONException e) {</span>
+<span class="nc" id="L116">                                e.printStackTrace();</span>
+<span class="nc" id="L117">                            }</span>
+                        }
+
+<span class="nc" id="L120">                        adapter.notifyDataSetChanged();</span>
+<span class="nc" id="L121">                    }</span>
+                },
+<span class="fc" id="L123">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+<span class="fc" id="L127">                        Log.e(&quot;Fuc&quot;, error.toString());</span>
+<span class="fc" id="L128">                    }</span>
+                }
+        );
+<span class="fc" id="L131">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="fc" id="L132">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

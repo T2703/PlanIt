@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EditEventPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">events</a> &gt; <span class="el_source">EditEventPage.java</span></div><h1>EditEventPage.java</h1><pre class="source lang-java linenums">package events;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.myapplication.R;
+
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.util.HashMap;
+
+import utilities.DateAndTimeHelper;
+
+/**
+ * @author Joshua Gutierrez
+ * The EditEventPage class is an AppCompatActivity responsible for editing an existing event
+ * and sending the updated event details to the server via a PUT request.
+ */
+<span class="nc" id="L37">public class EditEventPage extends AppCompatActivity {</span>
+    private Spinner event_type;
+    private EditText event_name;
+    private EditText event_start_date;
+    private EditText event_end_date;
+    private EditText event_start_time;
+    private EditText event_end_time;
+    private EditText event_location;
+    private EditText event_description;
+    private String event_id;
+    private Button edit_event_button;
+
+    private ImageButton back_button;
+<span class="nc" id="L50">    private Context context = this;</span>
+
+    /**
+     * Called when the activity is starting. This is where most initialization should go.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     *                           Otherwise, it is null.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="nc" id="L61">        super.onCreate(savedInstanceState);</span>
+<span class="nc" id="L62">        setContentView(R.layout.activity_edit_event);</span>
+
+        // Instantiate
+<span class="nc" id="L65">        event_type = findViewById(R.id.edit_event_type_dropdown);</span>
+<span class="nc" id="L66">        event_name = findViewById(R.id.edit_event_name_text);</span>
+<span class="nc" id="L67">        event_start_date = findViewById(R.id.edit_start_date_input);</span>
+<span class="nc" id="L68">        event_end_date = findViewById(R.id.edit_end_date_input);</span>
+<span class="nc" id="L69">        event_start_time = findViewById(R.id.edit_start_time_input);</span>
+<span class="nc" id="L70">        event_end_time = findViewById(R.id.edit_end_time_input);</span>
+<span class="nc" id="L71">        event_location = findViewById(R.id.edit_event_location);</span>
+<span class="nc" id="L72">        event_description = findViewById(R.id.edit_event_description);</span>
+<span class="nc" id="L73">        edit_event_button = findViewById(R.id.edit_event_button);</span>
+<span class="nc" id="L74">        back_button = findViewById(R.id.back_button);</span>
+        // Auto fill fields
+<span class="nc" id="L76">        Intent intent = getIntent();</span>
+
+<span class="nc" id="L78">        String type = intent.getStringExtra(&quot;type&quot;);</span>
+<span class="nc" id="L79">        String name = intent.getStringExtra(&quot;name&quot;);</span>
+<span class="nc" id="L80">        String startDate = intent.getStringExtra(&quot;startDate&quot;);</span>
+<span class="nc" id="L81">        String endDate = intent.getStringExtra(&quot;endDate&quot;);</span>
+<span class="nc" id="L82">        String location = intent.getStringExtra(&quot;location&quot;);</span>
+<span class="nc" id="L83">        String description = intent.getStringExtra(&quot;description&quot;);</span>
+<span class="nc" id="L84">        event_id = intent.getStringExtra(&quot;id&quot;);</span>
+
+<span class="nc" id="L86">        ArrayAdapter&lt;String&gt; adapter = (ArrayAdapter&lt;String&gt;) event_type.getAdapter();</span>
+<span class="nc" id="L87">        int positionToSelect = adapter.getPosition(type);</span>
+
+<span class="nc" id="L89">        event_type.setSelection(positionToSelect);</span>
+<span class="nc" id="L90">        event_name.setText(name);</span>
+
+        try {
+<span class="nc" id="L93">            event_start_date.setText(DateAndTimeHelper.formatDate(startDate));</span>
+<span class="nc" id="L94">            event_end_date.setText(DateAndTimeHelper.formatDate(endDate));</span>
+<span class="nc" id="L95">            event_start_time.setText(DateAndTimeHelper.formatTime(startDate));</span>
+<span class="nc" id="L96">            event_end_time.setText(DateAndTimeHelper.formatTime(endDate));</span>
+<span class="nc" id="L97">        } catch (ParseException e) {</span>
+<span class="nc" id="L98">            throw new RuntimeException(e);</span>
+<span class="nc" id="L99">        }</span>
+
+<span class="nc" id="L101">        event_location.setText(location);</span>
+<span class="nc" id="L102">        event_description.setText(description);</span>
+
+<span class="nc" id="L104">        edit_event_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L107">                String eventType = event_type.getSelectedItem().toString();</span>
+<span class="nc" id="L108">                String eventName = event_name.getText().toString();</span>
+
+<span class="nc" id="L110">                String eventStartDate = event_start_date.getText().toString();</span>
+<span class="nc" id="L111">                String eventEndDate = event_end_date.getText().toString();</span>
+<span class="nc" id="L112">                String eventStartTime = event_start_time.getText().toString();</span>
+<span class="nc" id="L113">                String eventEndTime = event_end_time.getText().toString();</span>
+
+<span class="nc" id="L115">                String newStartDate = DateAndTimeHelper.combineDateAndTime(eventStartDate, eventStartTime);</span>
+<span class="nc" id="L116">                String newEndDate = DateAndTimeHelper.combineDateAndTime(eventEndDate, eventEndTime);</span>
+
+<span class="nc" id="L118">                String eventLocation = event_location.getText().toString();</span>
+<span class="nc" id="L119">                String eventDescription = event_description.getText().toString();</span>
+
+<span class="nc" id="L121">                sendPutRequest(eventType, eventName, newStartDate, newEndDate, eventLocation, eventDescription);</span>
+
+<span class="nc" id="L123">                Intent intent = new Intent(EditEventPage.this, EventsListViewer.class);</span>
+<span class="nc" id="L124">                startActivity(intent);</span>
+<span class="nc" id="L125">            }</span>
+        });
+
+<span class="nc" id="L128">        back_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L131">                finish();</span>
+<span class="nc" id="L132">            }</span>
+        });
+
+<span class="nc" id="L135">        event_start_date.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L138">                DateAndTimeHelper helper = new DateAndTimeHelper(context);</span>
+<span class="nc" id="L139">                helper.showDatePicker(event_start_date);</span>
+<span class="nc" id="L140">            }</span>
+        });
+
+<span class="nc" id="L143">        event_end_date.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L146">                DateAndTimeHelper helper = new DateAndTimeHelper(context);</span>
+<span class="nc" id="L147">                helper.showDatePicker(event_end_date);</span>
+<span class="nc" id="L148">            }</span>
+        });
+
+<span class="nc" id="L151">        event_start_time.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L154">                DateAndTimeHelper helper = new DateAndTimeHelper(context);</span>
+<span class="nc" id="L155">                helper.showTimePicker(event_start_time);</span>
+<span class="nc" id="L156">            }</span>
+        });
+
+<span class="nc" id="L159">        event_end_time.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L162">                DateAndTimeHelper helper = new DateAndTimeHelper(context);</span>
+<span class="nc" id="L163">                helper.showTimePicker(event_end_time);</span>
+<span class="nc" id="L164">            }</span>
+        });
+<span class="nc" id="L166">    }</span>
+
+    private void sendPutRequest(String eventType, String eventName, String startDate, String endDate, String eventLocation, String eventDescription) {
+<span class="nc" id="L169">        RequestQueue requestQueue = Volley.newRequestQueue(this);</span>
+<span class="nc" id="L170">        HashMap&lt;String, String&gt; body = new HashMap&lt;String, String&gt;();</span>
+
+<span class="nc" id="L172">        body.put(&quot;id&quot;, event_id);</span>
+<span class="nc" id="L173">        body.put(&quot;name&quot;, eventName);</span>
+<span class="nc" id="L174">        body.put(&quot;description&quot;, eventDescription);</span>
+<span class="nc" id="L175">        body.put(&quot;location&quot;, eventLocation);</span>
+<span class="nc" id="L176">        body.put(&quot;type&quot;, eventType);</span>
+<span class="nc" id="L177">        body.put(&quot;startDate&quot;, startDate);</span>
+<span class="nc" id="L178">        body.put(&quot;endDate&quot;, endDate);</span>
+
+        // Make the request
+<span class="nc" id="L181">        String URL_PUT_REQUEST = &quot;http://coms-309-024.class.las.iastate.edu:8080/events/&quot;;</span>
+<span class="nc" id="L182">        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(</span>
+                Request.Method.PUT,
+                URL_PUT_REQUEST + event_id,
+                new JSONObject(body),
+<span class="nc" id="L186">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L189">                        Toast.makeText(getApplicationContext(), &quot;Event updated&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L190">                        Log.d(&quot;response&quot;, response.toString());</span>
+<span class="nc" id="L191">                    }</span>
+                },
+<span class="nc" id="L193">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L196">                        Toast.makeText(getApplicationContext(), &quot;PUT request failed&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L197">                    }</span>
+                }
+        );
+
+<span class="nc" id="L201">        requestQueue.add(jsonObjectRequest);</span>
+<span class="nc" id="L202">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>
