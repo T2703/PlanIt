@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssignmentsHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">utilities</a> &gt; <span class="el_source">AssignmentsHelper.java</span></div><h1>AssignmentsHelper.java</h1><pre class="source lang-java linenums">package utilities;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+
+import api.VolleySingleton;
+import assignments.Course;
+import homepage.Assignment;
+import websockets.WebSocketManager;
+
+<span class="nc" id="L30">public class AssignmentsHelper {</span>
+
+    public static final String URL_STRING_REQ = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot;;
+<span class="nc" id="L33">    public static List&lt;Course&gt; courses = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L35">    public static List&lt;Assignment&gt; assignments = new ArrayList&lt;&gt;();</span>
+
+    public static String getCourseById(String id) {
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        for (int i = 0; i &lt; courses.size(); i++) {</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            if (Objects.equals(courses.get(i).getId(), id)) {</span>
+<span class="nc" id="L40">                return courses.get(i).getName();</span>
+            }
+        }
+<span class="nc" id="L43">        return null;</span>
+    }
+
+    public static void getCoursesIds(Context context) {
+<span class="nc" id="L47">        String token = WebSocketManager.getInstance().getAccessToken();</span>
+<span class="nc" id="L48">        String GET_COURSES_ID_URL = &quot;https://canvas.iastate.edu/api/v1/courses?per_page=50&amp;access_token=&quot; + token;</span>
+
+<span class="nc" id="L50">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                GET_COURSES_ID_URL,
+<span class="nc" id="L53">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+<span class="nc" id="L57">                            JSONArray responseArray = new JSONArray(response);</span>
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                            for (int i = 0; i &lt; responseArray.length(); i++) {</span>
+<span class="nc" id="L60">                                JSONObject object = responseArray.getJSONObject(i);</span>
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                                if (object.has(&quot;name&quot;)) {</span>
+<span class="nc" id="L63">                                    Course course = new Course(object.getString(&quot;id&quot;),object.getString(&quot;name&quot;));</span>
+<span class="nc" id="L64">                                    courses.add(course);</span>
+                                }
+                            }
+<span class="nc" id="L67">                        } catch (JSONException e) {</span>
+<span class="nc" id="L68">                            throw new RuntimeException(e);</span>
+<span class="nc" id="L69">                        }</span>
+<span class="nc" id="L70">                    }</span>
+                },
+<span class="nc" id="L72">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L75">                        Log.e(&quot;A server error has occurred while trying to get you token&quot;, error.toString());</span>
+<span class="nc" id="L76">                    }</span>
+                }
+        );
+
+<span class="nc" id="L80">        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="nc" id="L81">    }</span>
+
+    public static void populateAssignments(Context context) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        for (int i = 0; i &lt; courses.size(); i++) {</span>
+<span class="nc" id="L85">            getAssignments(courses.get(i).getId(), context);</span>
+        }
+<span class="nc" id="L87">    }</span>
+
+    public static void getAssignments(String courseId, Context context) {
+<span class="nc" id="L90">        String token = WebSocketManager.getInstance().getAccessToken();</span>
+<span class="nc" id="L91">        String GET_COURSES_ID_URL = &quot;https://canvas.iastate.edu/api/v1/courses/&quot; + courseId + &quot;/assignments?per_page=50&amp;access_token=&quot; + token;</span>
+
+<span class="nc" id="L93">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                GET_COURSES_ID_URL,
+<span class="nc" id="L96">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+<span class="nc" id="L100">                            JSONArray responseArray = new JSONArray(response);</span>
+
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                            if (responseArray.length() != 0) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                                for (int i = 0; i &lt; responseArray.length(); i++) {</span>
+<span class="nc" id="L104">                                    JSONObject assignmentObj = responseArray.getJSONObject(i);</span>
+
+<span class="nc" id="L106">                                    SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss'Z'&quot;);</span>
+
+<span class="nc" id="L108">                                    String name = AssignmentsHelper.getCourseById(courseId);</span>
+<span class="nc" id="L109">                                    String title = assignmentObj.getString(&quot;name&quot;);</span>
+<span class="nc" id="L110">                                    String dueDate = DateAndTimeHelper.formatDateForAssignments(assignmentObj.getString(&quot;due_at&quot;));</span>
+
+                                    try {
+<span class="nc" id="L113">                                        Date date = dateFormat.parse(assignmentObj.getString(&quot;due_at&quot;));</span>
+<span class="nc" id="L114">                                        long millis = date.getTime();</span>
+
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                                        if (millis &gt;= System.currentTimeMillis()) {</span>
+<span class="nc" id="L117">                                            assignments.add(new Assignment(name, title, &quot;Due: &quot; + dueDate));</span>
+                                        }
+<span class="nc" id="L119">                                    } catch (ParseException e) {</span>
+<span class="nc" id="L120">                                        e.printStackTrace();</span>
+<span class="nc" id="L121">                                    }</span>
+                                }
+                            }
+<span class="nc" id="L124">                        } catch (JSONException e) {</span>
+<span class="nc" id="L125">                            throw new RuntimeException(e);</span>
+<span class="nc" id="L126">                        }</span>
+<span class="nc" id="L127">                    }</span>
+                },
+<span class="nc" id="L129">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L132">                        Log.e(&quot;A server error has occurred while trying to get you token&quot;, error.toString());</span>
+<span class="nc" id="L133">                    }</span>
+                }
+        );
+
+<span class="nc" id="L137">        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="nc" id="L138">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">notifications</a> &gt; <span class="el_source">NotificationPage.java</span></div><h1>NotificationPage.java</h1><pre class="source lang-java linenums">package notifications;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.R;
+
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import homepage.HomePage;
+import websockets.WebSocketListener;
+
+/**
+ * The {@code NotificationPage} class represents the activity for displaying a list of notifications.
+ * It extends the AppCompatActivity and provides functionality for handling notifications,
+ * including selecting all notifications and navigating back to the home page.
+ * &lt;p&gt;
+ * The activity uses a RecyclerView to display a list of notifications, and it utilizes the
+ * {@code NotificationAdapter} class to manage the adapter for the RecyclerView.
+ * &lt;/p&gt;
+ *
+ * @author Joshua Gutierrez
+ * @version 1.0
+ * @see AppCompatActivity
+ * @see NotificationAdapter
+ * @see Notification
+ */
+<span class="fc" id="L40">public class NotificationPage extends AppCompatActivity implements WebSocketListener {</span>
+    private ImageButton backButton;
+    private RecyclerView notificationItemRecycler;
+    private NotificationAdapter adapter;
+
+    /**
+     * Called when the activity is starting. This is where most initialization should go:
+     * calling {@code setContentView(int)} to inflate the activity's UI, using
+     * {@code findViewById(int)} to programmatically interact with widgets in the UI,
+     * and configuring the activity's behavior as needed.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being
+     *                           shut down, then this Bundle contains the data it most recently
+     *                           supplied in {@link #onSaveInstanceState}. Note: Otherwise, it is
+     *                           null.
+     */
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L57">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L58">        setContentView(R.layout.activity_notification_page);</span>
+
+<span class="fc" id="L60">        backButton = findViewById(R.id.back_button);</span>
+
+<span class="fc" id="L62">        notificationItemRecycler = findViewById(R.id.notificationsRecyclerView);</span>
+<span class="fc" id="L63">        LinearLayoutManager layoutManager = new LinearLayoutManager(this);</span>
+<span class="fc" id="L64">        notificationItemRecycler.setLayoutManager(layoutManager);</span>
+
+<span class="fc" id="L66">        List&lt;Notification&gt; notificationsList = createNotificationList();</span>
+<span class="fc" id="L67">        adapter = new NotificationAdapter(notificationsList);</span>
+<span class="fc" id="L68">        notificationItemRecycler.setAdapter(adapter);</span>
+
+        // Select all
+<span class="fc" id="L71">        CheckBox selectAllCheckbox = findViewById(R.id.selectAllCheckbox);</span>
+
+<span class="fc" id="L73">        selectAllCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {</span>
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                for (int i = 0; i &lt; notificationItemRecycler.getAdapter().getItemCount(); i++) {</span>
+<span class="nc" id="L77">                    Notification notification = notificationsList.get(i);</span>
+
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                    notification.setIsSelected(!notification.getIsSelected());</span>
+                }
+
+<span class="nc" id="L82">                notificationItemRecycler.getAdapter().notifyDataSetChanged();</span>
+<span class="nc" id="L83">            }</span>
+        });
+
+<span class="fc" id="L86">        backButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L89">                Intent intent = new Intent(NotificationPage.this, HomePage.class);</span>
+<span class="nc" id="L90">                startActivity(intent);</span>
+<span class="nc" id="L91">            }</span>
+        });
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Creates a list of sample notifications for testing purposes.
+     *
+     * @return A list of {@code Notification} objects.
+     */
+    private List&lt;Notification&gt; createNotificationList() {
+<span class="fc" id="L101">        List&lt;Notification&gt; notifications = new ArrayList&lt;&gt;();</span>
+
+
+<span class="fc" id="L104">        notifications.add(new Notification(&quot;Demo 4&quot;, &quot;You have been invited to a private event&quot;, true));</span>
+<span class="fc" id="L105">        notifications.add(new Notification(&quot;Demo 5&quot;, &quot;You have been invited to a private event&quot;, true));</span>
+
+
+<span class="fc" id="L108">        return notifications;</span>
+    }
+
+    @Override
+    public void onWebSocketOpen(ServerHandshake handshakedata) {
+
+<span class="nc" id="L114">    }</span>
+
+    @Override
+    public void onWebSocketMessage(String message) {
+
+<span class="nc" id="L119">    }</span>
+
+    @Override
+    public void onWebSocketClose(int code, String reason, boolean remote) {
+
+<span class="nc" id="L124">    }</span>
+
+    @Override
+    public void onWebSocketError(Exception ex) {
+
+<span class="nc" id="L129">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

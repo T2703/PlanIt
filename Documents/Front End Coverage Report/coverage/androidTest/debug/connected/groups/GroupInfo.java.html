@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GroupInfo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">groups</a> &gt; <span class="el_source">GroupInfo.java</span></div><h1>GroupInfo.java</h1><pre class="source lang-java linenums">package groups;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import api.VolleySingleton;
+import messages.MessageView;
+import websockets.WebSocketManager;
+
+/**
+ * Activity class for displaying group information including the group's profile picture and general details.
+ * This class also allows users, especially group administrators, to perform various actions such as editing,
+ * deleting, and navigating to the group's chat.
+ *
+ * &lt;p&gt;
+ * Intent Extras required to launch this activity:
+ * - &quot;group_name&quot;: The name of the group.
+ * - &quot;group_description&quot;: The description of the group.
+ * - &quot;group_id&quot;: The unique identifier for the group.
+ * &lt;/p&gt;
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L50">public class GroupInfo extends AppCompatActivity {</span>
+    /**
+     * The request code for editing the group.
+     */
+    public static final int EDIT_GROUP_REQUEST_CODE = 1;
+
+    /**
+     * Back button.
+     */
+    private ImageButton back_button;
+
+    /**
+     * Name of the group.
+     */
+    private TextView group_name;
+
+    /**
+     * Description of the group.
+     */
+    private TextView group_description;
+
+    /**
+     * The button that brings up the popup menu displaying:
+     * Going to the chat or if you're admin deleting the group or editing the info.
+     */
+    private ImageButton menu_button;
+
+    /**
+     * The list of groups.
+     */
+    public List&lt;Member&gt; member_list;
+
+    /**
+     * Context: context
+     */
+    private Context context;
+
+    /**
+     * Gets the group name.
+     */
+    private String getting_group_name;
+
+    /**
+     * Gets the group description.
+     */
+    private String getting_group_desc;
+
+    /**
+     * Gets the group ID.
+     */
+    private String getting_group_id;
+
+    /**
+     * Group adapter for the groups (I have forgotten to rename this).
+     */
+    private MemberAdapter adapter;
+
+    /**
+     * The teams url for making the request.
+     */
+<span class="fc" id="L110">    private String TEAMS_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot; + WebSocketManager.getInstance().getUsername() + &quot;/teams&quot;;</span>
+
+    /**
+     * Initializes the activity and sets up UI components.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L119">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L120">        setContentView(R.layout.activity_group_info);</span>
+
+        // Initialize
+<span class="fc" id="L123">        context = this;</span>
+<span class="fc" id="L124">        back_button = findViewById(R.id.back_button_two);</span>
+<span class="fc" id="L125">        menu_button = findViewById(R.id.menu_button_two);</span>
+<span class="fc" id="L126">        group_name = findViewById(R.id.group_name_two);</span>
+<span class="fc" id="L127">        group_description = findViewById(R.id.group_desc);</span>
+<span class="fc" id="L128">        member_list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L129">        adapter = new MemberAdapter(member_list, this);</span>
+<span class="fc" id="L130">        getting_group_name = getIntent().getStringExtra(&quot;group_name&quot;);</span>
+<span class="fc" id="L131">        getting_group_desc = getIntent().getStringExtra(&quot;group_description&quot;);</span>
+<span class="fc" id="L132">        getting_group_id = getIntent().getStringExtra(&quot;group_id&quot;);</span>
+
+<span class="fc" id="L134">        group_name.setText(getting_group_name);</span>
+<span class="fc" id="L135">        group_description.setText(getting_group_desc);</span>
+
+<span class="fc" id="L137">        getGroupsRequest();</span>
+
+
+<span class="fc" id="L140">        menu_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L143">                PopupMenu popup_menu = new PopupMenu(GroupInfo.this, view);</span>
+<span class="fc" id="L144">                popup_menu.getMenuInflater().inflate(R.menu.options_menu_two, popup_menu.getMenu());</span>
+<span class="fc" id="L145">                popup_menu.show();</span>
+<span class="fc" id="L146">                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {</span>
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">                        if (menuItem.getItemId() == R.id.to_chat_option) {</span>
+<span class="fc" id="L150">                            Intent intent = new Intent(GroupInfo.this, MessageView.class);</span>
+<span class="fc" id="L151">                            intent.putExtra(&quot;group_id&quot;, getting_group_id);</span>
+<span class="fc" id="L152">                            startActivity(intent);</span>
+<span class="fc" id="L153">                        }</span>
+
+<span class="fc bfc" id="L155" title="All 2 branches covered.">                        else if (menuItem.getItemId() == R.id.edit_option) {</span>
+<span class="fc" id="L156">                            Intent editIntent = new Intent(GroupInfo.this, EditGroup.class);</span>
+<span class="fc" id="L157">                            editIntent.putExtra(&quot;group_id&quot;, getting_group_id);</span>
+<span class="fc" id="L158">                            editIntent.putExtra(&quot;group_name&quot;, getting_group_name);</span>
+<span class="fc" id="L159">                            editIntent.putExtra(&quot;group_description&quot;, getting_group_desc);</span>
+<span class="fc" id="L160">                            startActivity(editIntent);</span>
+
+<span class="fc" id="L162">                        }</span>
+
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">                        else if (menuItem.getItemId() == R.id.add_users_option) {</span>
+<span class="nc" id="L165">                            Intent intent = new Intent(GroupInfo.this, AddFollowersToTeamPage.class);</span>
+<span class="nc" id="L166">                            intent.putExtra(&quot;group_id&quot;, getting_group_id);</span>
+<span class="nc" id="L167">                            startActivity(intent);</span>
+<span class="nc" id="L168">                        }</span>
+
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">                        else if (menuItem.getItemId() == R.id.delete_option) {</span>
+<span class="fc" id="L171">                            String delete_url = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot; + WebSocketManager.getInstance().getUsername() + &quot;/teams&quot; + &quot;/&quot; + getting_group_id;</span>
+<span class="fc" id="L172">                            makeDeleteRequest(delete_url, getting_group_id);</span>
+
+<span class="fc" id="L174">                            Intent intent = new Intent(GroupInfo.this, MemberViewer.class);</span>
+<span class="fc" id="L175">                            startActivity(intent);</span>
+
+                        }
+<span class="fc" id="L178">                        return true;</span>
+                    }
+
+                });
+
+<span class="fc" id="L183">                popup_menu.show();</span>
+
+<span class="fc" id="L185">            }</span>
+        });
+
+<span class="fc" id="L188">        back_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+
+<span class="fc" id="L192">                Intent intent = new Intent(GroupInfo.this, MemberViewer.class);</span>
+<span class="fc" id="L193">                startActivity(intent);</span>
+<span class="fc" id="L194">            }</span>
+        });
+
+
+<span class="fc" id="L198">    }</span>
+
+    /**
+     * Handles the result of the activity started for editing the group.
+     *
+     * @param requestCode The request code passed to startActivityForResult().
+     * @param resultCode  The result code returned by the child activity.
+     * @param data        An Intent, which can return result data to the caller.
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+<span class="fc" id="L209">        super.onActivityResult(requestCode, resultCode, data);</span>
+
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (requestCode == EDIT_GROUP_REQUEST_CODE) {</span>
+<span class="pc bpc" id="L212" title="2 of 4 branches missed.">            if (resultCode == RESULT_OK &amp;&amp; data != null) {</span>
+                // Update the UI with the edited group information
+<span class="fc" id="L214">                String updatedGroupName = data.getStringExtra(&quot;group_name&quot;);</span>
+<span class="fc" id="L215">                String updatedGroupDescription = data.getStringExtra(&quot;group_description&quot;);</span>
+
+                // Update your UI elements with the new data
+<span class="fc" id="L218">                group_name.setText(updatedGroupName);</span>
+<span class="fc" id="L219">                group_description.setText(updatedGroupDescription);</span>
+            }
+        }
+<span class="fc" id="L222">    }</span>
+
+    /**
+     * This is the request for getting the data for groups.
+     * This GETs the groups from the server.
+     */
+    private void getGroupsRequest() {
+<span class="fc" id="L229">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                TEAMS_URL,
+<span class="fc" id="L232">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+<span class="nc" id="L238">                            responseArray = new JSONArray(response);</span>
+<span class="nc" id="L239">                        } catch (JSONException e) {</span>
+<span class="nc" id="L240">                            throw new RuntimeException(e);</span>
+<span class="nc" id="L241">                        }</span>
+
+                        // Iterate
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                        for (int i = 0; i &lt; responseArray.length(); i++) {</span>
+                            try {
+<span class="nc" id="L246">                                JSONObject jsonObject = responseArray.getJSONObject(i);</span>
+<span class="nc" id="L247">                                String name = jsonObject.getString(&quot;name&quot;);</span>
+<span class="nc" id="L248">                                String description = jsonObject.getString(&quot;description&quot;);</span>
+<span class="nc" id="L249">                                String id = jsonObject.getString(&quot;id&quot;);</span>
+
+<span class="nc" id="L251">                                member_list.add(new Member(name, description, id));</span>
+<span class="nc" id="L252">                                Log.d(&quot;List&quot;, id);</span>
+<span class="nc" id="L253">                            } catch (JSONException e) {</span>
+<span class="nc" id="L254">                                e.printStackTrace();</span>
+<span class="nc" id="L255">                            }</span>
+                        }
+
+<span class="nc" id="L258">                        adapter.notifyDataSetChanged();</span>
+<span class="nc" id="L259">                    }</span>
+                },
+<span class="fc" id="L261">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+<span class="fc" id="L265">                        Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="fc" id="L266">                    }</span>
+                }
+        );
+
+        // Adding request to request queue
+<span class="fc" id="L271">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Initiates a delete request for the group with the specified group ID.
+     * Removes the deleted group from the list and updates the UI accordingly.
+     *
+     * @param deleteUrl The URL for the delete request.
+     * @param group_id  The unique identifier of the group to be deleted.
+     */
+    public void makeDeleteRequest(String deleteUrl, String group_id) {
+        // Find the position of the item with the given group_id
+<span class="fc" id="L283">        Log.d(&quot;TAG&quot;, String.valueOf(member_list.size()));</span>
+<span class="fc" id="L284">        int positionToDelete = -1;</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">        for (int i = 0; i &lt; member_list.size(); i++) {</span>
+<span class="nc" id="L286">            Log.d(&quot;ID&quot;, &quot;Jp&quot;);</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">            if (member_list.get(i).getGroupId().equals(group_id)) {</span>
+<span class="nc" id="L288">                positionToDelete = i;</span>
+<span class="nc" id="L289">                break; // Stop searching once found</span>
+            }
+        }
+
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">        if (positionToDelete != -1) {</span>
+<span class="nc" id="L294">            int finalPositionToDelete = positionToDelete;</span>
+<span class="nc" id="L295">            StringRequest stringRequest = new StringRequest(</span>
+                    Request.Method.DELETE,
+                    deleteUrl,
+<span class="nc" id="L298">                    new Response.Listener&lt;String&gt;() {</span>
+                        @Override
+                        public void onResponse(String response) {
+<span class="nc" id="L301">                            Log.d(&quot;response&quot;, response);</span>
+
+                            // Remove the item from the list based on its position
+<span class="nc" id="L304">                            member_list.remove(finalPositionToDelete);</span>
+
+                            // Notify the adapter that the item has been removed
+<span class="nc" id="L307">                            adapter.notifyItemRemoved(finalPositionToDelete);</span>
+
+<span class="nc" id="L309">                            Toast.makeText(getApplicationContext(), &quot;Group Deleted&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L310">                        }</span>
+                    },
+<span class="nc" id="L312">                    new Response.ErrorListener() {</span>
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle any errors that occur during the request
+<span class="nc" id="L316">                            Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="nc" id="L317">                            Toast.makeText(getApplicationContext(), &quot;Uh-oh something went wrong&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L318">                        }</span>
+                    }
+            );
+
+<span class="nc" id="L322">            VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);</span>
+        }
+<span class="fc" id="L324">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

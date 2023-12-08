@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DateAndTimeHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">utilities</a> &gt; <span class="el_source">DateAndTimeHelper.java</span></div><h1>DateAndTimeHelper.java</h1><pre class="source lang-java linenums">package utilities;
+
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.text.format.DateFormat;
+import android.util.Log;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+public class DateAndTimeHelper {
+    Context context;
+
+<span class="fc" id="L22">    public DateAndTimeHelper(Context context) {</span>
+<span class="fc" id="L23">        this.context = context;</span>
+<span class="fc" id="L24">    }</span>
+
+    public static String formatDate(String date) throws ParseException {
+<span class="fc" id="L27">        SimpleDateFormat inputFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, Locale.ENGLISH);</span>
+
+<span class="fc" id="L29">        Date fDate = inputFormat.parse(date);</span>
+<span class="fc" id="L30">        SimpleDateFormat outputFormat = new SimpleDateFormat(&quot;EEEE, MMM dd, yyyy&quot;, Locale.ENGLISH);</span>
+
+<span class="fc" id="L32">        return outputFormat.format(fDate);</span>
+    }
+
+    public static String formatDateForAssignments(String date) {
+<span class="nc" id="L36">        SimpleDateFormat inputDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss'Z'&quot;, Locale.US);</span>
+<span class="nc" id="L37">        SimpleDateFormat outputDateFormat = new SimpleDateFormat(&quot;MMM dd, yyyy&quot;, Locale.US);</span>
+
+        try {
+<span class="nc" id="L40">            Date myDate = inputDateFormat.parse(date);</span>
+
+<span class="nc" id="L42">            return outputDateFormat.format(myDate);</span>
+
+<span class="nc" id="L44">        } catch (ParseException e) {</span>
+<span class="nc" id="L45">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L47">        return null;</span>
+    }
+
+    public static String formatTime(String date) throws ParseException {
+<span class="nc" id="L51">        SimpleDateFormat inputDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, Locale.getDefault());</span>
+<span class="nc" id="L52">        inputDateFormat.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));</span>
+
+<span class="nc" id="L54">        Date formattedDate = inputDateFormat.parse(date);</span>
+
+<span class="nc" id="L56">        SimpleDateFormat outputFormat = new SimpleDateFormat(&quot;h:mm a&quot;, Locale.getDefault());</span>
+<span class="nc" id="L57">        outputFormat.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));</span>
+
+<span class="nc" id="L59">        return outputFormat.format(formattedDate);</span>
+    }
+
+    public void showDatePicker(EditText input) {
+<span class="fc" id="L63">        Calendar calendar = Calendar.getInstance();</span>
+
+<span class="fc" id="L65">        DatePickerDialog datePickerDialog = new DatePickerDialog(</span>
+                context,
+                (DatePicker view, int year, int month, int dayOfMonth) -&gt; {
+<span class="fc" id="L68">                    String formattedDate = handleSelectedDate(year, month, dayOfMonth);</span>
+                    try {
+<span class="fc" id="L70">                        input.setText(formatDate(formattedDate));</span>
+<span class="nc" id="L71">                    } catch (ParseException e) {</span>
+<span class="nc" id="L72">                        throw new RuntimeException(e);</span>
+<span class="fc" id="L73">                    }</span>
+<span class="fc" id="L74">                },</span>
+<span class="fc" id="L75">                calendar.get(Calendar.YEAR),</span>
+<span class="fc" id="L76">                calendar.get(Calendar.MONTH),</span>
+<span class="fc" id="L77">                calendar.get(Calendar.DAY_OF_MONTH));</span>
+
+<span class="fc" id="L79">        datePickerDialog.show();</span>
+<span class="fc" id="L80">    }</span>
+
+    public void showTimePicker(EditText input) {
+<span class="fc" id="L83">        Calendar calendar = Calendar.getInstance();</span>
+
+        // Create a TimePickerDialog
+<span class="fc" id="L86">        TimePickerDialog timePickerDialog = new TimePickerDialog(context,</span>
+                (TimePicker view, int hourOfDay, int minute) -&gt; {
+<span class="fc" id="L88">                    String formattedTime = handleSelectedTime(hourOfDay, minute);</span>
+<span class="fc" id="L89">                    input.setText(formattedTime);</span>
+<span class="fc" id="L90">                },</span>
+<span class="fc" id="L91">                calendar.get(Calendar.HOUR_OF_DAY),</span>
+<span class="fc" id="L92">                calendar.get(Calendar.MINUTE),</span>
+<span class="fc" id="L93">                DateFormat.is24HourFormat(context));</span>
+
+<span class="fc" id="L95">        timePickerDialog.show();</span>
+<span class="fc" id="L96">    }</span>
+
+    private String handleSelectedDate(int year, int month, int dayOfMonth) {
+<span class="fc" id="L99">        Calendar selectedCalendar = Calendar.getInstance();</span>
+<span class="fc" id="L100">        selectedCalendar.set(year, month, dayOfMonth);</span>
+<span class="fc" id="L101">        Date selectedDate = selectedCalendar.getTime();</span>
+
+<span class="fc" id="L103">        SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, Locale.ENGLISH);</span>
+
+<span class="fc" id="L105">        return dateFormat.format(selectedDate);</span>
+    }
+
+    private String handleSelectedTime(int hourOfDay, int minute) {
+<span class="fc" id="L109">        Calendar selectedCalendar = Calendar.getInstance();</span>
+<span class="fc" id="L110">        selectedCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);</span>
+<span class="fc" id="L111">        selectedCalendar.set(Calendar.MINUTE, minute);</span>
+
+<span class="fc" id="L113">        Date selectedTime = selectedCalendar.getTime();</span>
+<span class="fc" id="L114">        String outputTime = &quot;&quot;;</span>
+
+<span class="fc" id="L116">        SimpleDateFormat inputFormat = new SimpleDateFormat(&quot;EEE MMM dd HH:mm:ss zzz yyyy&quot;);</span>
+
+        try {
+<span class="fc" id="L119">            Date date = inputFormat.parse(selectedTime.toString());</span>
+
+<span class="fc" id="L121">            SimpleDateFormat outputFormat = new SimpleDateFormat(&quot;h:mm a&quot;);</span>
+
+<span class="fc" id="L123">            outputFormat.setTimeZone(TimeZone.getDefault());</span>
+
+<span class="fc" id="L125">            outputTime = outputFormat.format(date);</span>
+
+<span class="nc" id="L127">        } catch (ParseException e) {</span>
+<span class="nc" id="L128">            e.printStackTrace();</span>
+<span class="fc" id="L129">        }</span>
+
+<span class="fc" id="L131">        return outputTime;</span>
+    }
+
+    public static String combineDateAndTime(String newDate, String newTime) {
+<span class="fc" id="L135">        String finalOutput = &quot;&quot;;</span>
+
+        try {
+<span class="fc" id="L138">            SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;EEEE, MMM dd, yyyy&quot;, Locale.ENGLISH);</span>
+<span class="fc" id="L139">            Date date = dateFormat.parse(newDate);</span>
+
+<span class="fc" id="L141">            SimpleDateFormat outputFormatterDate = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;, Locale.ENGLISH);</span>
+
+<span class="fc" id="L143">            SimpleDateFormat timeFormat = new SimpleDateFormat(&quot;h:mm a&quot;, Locale.ENGLISH);</span>
+<span class="fc" id="L144">            Date time = timeFormat.parse(newTime);</span>
+
+<span class="fc" id="L146">            SimpleDateFormat outputFormatterTime = new SimpleDateFormat(&quot;HH:mm&quot;, Locale.ENGLISH);</span>
+
+<span class="fc" id="L148">            String outputDate = outputFormatterDate.format(date);</span>
+<span class="fc" id="L149">            String outputTime = outputFormatterTime.format(time);</span>
+
+<span class="fc" id="L151">            finalOutput = outputDate + &quot;T&quot; + outputTime + &quot;:00.000+00:00&quot;;</span>
+
+<span class="fc" id="L153">            return finalOutput;</span>
+<span class="nc" id="L154">        } catch (ParseException e) {</span>
+<span class="nc" id="L155">            e.printStackTrace();</span>
+<span class="nc" id="L156">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

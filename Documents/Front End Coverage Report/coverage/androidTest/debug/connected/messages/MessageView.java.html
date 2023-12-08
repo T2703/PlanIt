@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessageView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">messages</a> &gt; <span class="el_source">MessageView.java</span></div><h1>MessageView.java</h1><pre class="source lang-java linenums">package messages;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.R;
+
+import api.VolleySingleton;
+import events.Event;
+import websockets.WebSocketListener;
+import websockets.WebSocketManager;
+import websockets.WebSocketManagerChat;
+
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * The MessageView class represents the message view for the messaging feature of the app,
+ * including direct messages (DMs) and group chats (GCs). It provides a user interface for sending
+ * and receiving messages through a WebSocket connection.
+ *
+ * This class implements the WebSocketListener interface to handle WebSocket events.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L38">public class MessageView extends AppCompatActivity implements WebSocketListener {</span>
+    /**
+     * The url for the messaging.
+     */
+<span class="fc" id="L42">    private String MESSAGE_URL = &quot;ws://coms-309-024.class.las.iastate.edu:8080/chatSocket/&quot;; // must also get the chatID</span>
+
+<span class="fc" id="L44">    private String TEAMS_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/teams/&quot;;</span>
+    //private String MESSAGE_URL = &quot;ws://10.0.2.2:8080/chat/&quot;; // DEFAULT
+
+    /**
+     * The button for sending message.
+     */
+    private ImageButton send_button;
+
+    /**
+     * The button for sending message.
+     */
+    private Button connect;
+
+    /**
+     * Where the user can send your message.
+     */
+    private EditText user_message;
+
+    /**
+     * This is just a place holder.
+     */
+    private EditText username_placeholder;
+
+    /**
+     * This is where the messages appear on this little box.
+     */
+    private TextView message_appear_screen;
+
+    /**
+     * Team ID.
+     */
+    private String group_id;
+
+    /**
+     * Chat id.
+     */
+    private String chat_id;
+
+    /**
+     * Initializes the MessageView activity, setting up the UI components, and handling user interactions.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, if available.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L89">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L90">        setContentView(R.layout.activity_message_view);</span>
+
+        // Initialize! (Music reference)
+<span class="fc" id="L93">        send_button = findViewById(R.id.send_button);</span>
+<span class="fc" id="L94">        user_message = findViewById(R.id.user_message);</span>
+<span class="fc" id="L95">        message_appear_screen = findViewById(R.id.message_tv);</span>
+<span class="fc" id="L96">        group_id = getIntent().getStringExtra(&quot;group_id&quot;);</span>
+
+<span class="fc" id="L98">        String username = WebSocketManager.getInstance().getUsername();</span>
+<span class="fc" id="L99">        getTeamsRequest();</span>
+<span class="fc" id="L100">        WebSocketManagerChat.getInstance().connectWebSocket(MESSAGE_URL + chat_id + &quot;/&quot; + username);</span>
+<span class="fc" id="L101">        WebSocketManagerChat.getInstance().setWebSocketListener(MessageView.this);</span>
+
+<span class="fc" id="L103">        send_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+                try {
+                    // How the message is sent.
+<span class="nc" id="L108">                    Log.d(&quot;URLMESSAGE&quot;, MESSAGE_URL + chat_id + &quot;/&quot; + username);</span>
+<span class="nc" id="L109">                    WebSocketManagerChat.getInstance().sendMessage(user_message.getText().toString());</span>
+                }
+<span class="nc" id="L111">                catch (Exception e) {</span>
+<span class="nc" id="L112">                    Log.d(&quot;ExceptionSendMessage:&quot;, e.getMessage().toString());</span>
+<span class="nc" id="L113">                }</span>
+<span class="nc" id="L114">            }</span>
+        });
+
+       /* connect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String serverUrl = MESSAGE_URL + username_placeholder.getText().toString();
+
+                    // Establish WebSocket connection and set listener
+                    WebSocketManagerChat.getInstance().connectWebSocket(serverUrl);
+                    WebSocketManagerChat.getInstance().setWebSocketListener(MessageView.this);
+                }
+                catch (Exception e) {
+                    Log.d(&quot;ExceptionSendMessage:&quot;, e.getMessage().toString());
+                }
+            }
+        }); */
+<span class="fc" id="L132">    }</span>
+
+    private void getTeamsRequest() {
+<span class="fc" id="L135">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                TEAMS_URL + group_id,
+<span class="fc" id="L138">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+<span class="nc" id="L142">                            JSONObject teamJson = new JSONObject(response);</span>
+<span class="nc" id="L143">                            JSONArray administratesArray = teamJson.getJSONObject(&quot;admin&quot;).getJSONArray(&quot;administrates&quot;);</span>
+
+                            // Iterate over the administratesArray
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                            for (int i = 0; i &lt; administratesArray.length(); i++) {</span>
+<span class="nc" id="L147">                                JSONObject administratesObject = administratesArray.getJSONObject(i);</span>
+<span class="nc" id="L148">                                String teamId = administratesObject.getString(&quot;id&quot;);</span>
+
+                                // Check if this is the team you're interested in (ID 8 in this case)
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                                if (teamId.equals(group_id)) {</span>
+<span class="nc" id="L152">                                    JSONObject chatObject = administratesObject.getJSONObject(&quot;chat&quot;);</span>
+<span class="nc" id="L153">                                    String chatId = chatObject.getString(&quot;id&quot;);</span>
+<span class="nc" id="L154">                                    chat_id = chatId;</span>
+
+                                    // Now you have the chat ID
+<span class="nc" id="L157">                                    Log.d(&quot;Chat ID&quot;, &quot;Chat ID: &quot; + chatId);</span>
+
+                                    // Perform further actions with the chat ID as needed
+                                    // For example, connect to the chat WebSocket
+
+                                    // connectToChatWebSocket(chatId);
+                                }
+                            }
+
+<span class="nc" id="L166">                        } catch (JSONException e) {</span>
+<span class="nc" id="L167">                            e.printStackTrace();</span>
+<span class="nc" id="L168">                        }</span>
+<span class="nc" id="L169">                    }</span>
+                },
+<span class="fc" id="L171">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+<span class="fc" id="L175">                        Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="fc" id="L176">                    }</span>
+                }
+        );
+<span class="fc" id="L179">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="fc" id="L180">    }</span>
+
+
+
+    /**
+     * Callback method invoked when the WebSocket connection is opened.
+     *
+     * @param handshakedata Information about the WebSocket handshake.
+     */
+    @Override
+    public void onWebSocketOpen(ServerHandshake handshakedata) {
+
+<span class="fc" id="L192">    }</span>
+
+    /**
+     * Callback method invoked when a message is received through the WebSocket connection.
+     *
+     * @param message The received message.
+     */
+    @Override
+    public void onWebSocketMessage(String message) {
+<span class="fc" id="L201">        runOnUiThread(() -&gt; {</span>
+<span class="fc" id="L202">            String m = message_appear_screen.getText().toString();</span>
+<span class="fc" id="L203">            message_appear_screen.setText(m + &quot;\n&quot; + message);</span>
+<span class="fc" id="L204">        });</span>
+<span class="fc" id="L205">    }</span>
+
+    /**
+     * Callback method invoked when the WebSocket connection is closed.
+     *
+     * @param code   The status code of the closure.
+     * @param reason A description of the reason for the closure.
+     * @param remote Indicates whether the connection was closed remotely.
+     */
+    @Override
+    public void onWebSocketClose(int code, String reason, boolean remote) {
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">        String closed_by = remote ? &quot;server&quot; : &quot;local&quot;;</span>
+<span class="fc" id="L217">        runOnUiThread(() -&gt; {</span>
+<span class="fc" id="L218">            String s = message_appear_screen.getText().toString();</span>
+<span class="fc" id="L219">            message_appear_screen.setText(s + &quot;---\nconnection closed by &quot; + closed_by + &quot;\nreason: &quot; + reason);</span>
+<span class="fc" id="L220">        });</span>
+<span class="fc" id="L221">    }</span>
+
+    /**
+     * Callback method invoked when an error occurs in the WebSocket connection.
+     *
+     * @param ex The exception representing the error.
+     */
+    @Override
+    public void onWebSocketError(Exception ex) {
+
+<span class="nc" id="L231">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>
