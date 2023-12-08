@@ -1,0 +1,297 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Users</a>
+</div>
+
+<h1>Coverage Summary for Class: UserController (planIT.Entity.Users)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (36/36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Users;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCrypt;
+&nbsp;import org.springframework.web.bind.annotation.DeleteMapping;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.PutMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import planIT.Login.CanvasToken;
+&nbsp;import planIT.Login.LoginRequest;
+&nbsp;import planIT.Login.Password;
+&nbsp;
+&nbsp;/**
+&nbsp; * RESTful controller for managing user-related operations.
+&nbsp; * This controller handles HTTP requests related to user entities, such as retrieval, creation, update, and deletion.
+&nbsp; * Requests are processed using the corresponding methods provided by the UserService.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@Tag(name = &quot;User Management System&quot;, description = &quot;Operations pertaining to user management&quot;)
+<b class="fc">&nbsp;public class UserController {</b>
+&nbsp;
+&nbsp;    // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
+&nbsp;    @Autowired
+&nbsp;    private UserService userService;
+&nbsp;
+<b class="fc">&nbsp;    private String success = &quot;{\&quot;message\&quot;:\&quot;success\&quot;}&quot;;</b>
+<b class="fc">&nbsp;    private String failure = &quot;{\&quot;message\&quot;:\&quot;failure\&quot;}&quot;;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all users from the database.
+&nbsp;     *
+&nbsp;     * @return List of User entities.
+&nbsp;     */
+&nbsp;    @GetMapping(path = &quot;/users&quot;)
+&nbsp;    @Operation(summary = &quot;View a list of all users&quot;, description = &quot;Retrieves all users from the database&quot;)
+&nbsp;    public List&lt;User&gt; getAllUsers() {
+<b class="fc">&nbsp;        return userService.getAllUsers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a specific user from the database based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the user.
+&nbsp;     * @return The User entity corresponding to the provided ID.
+&nbsp;     */
+&nbsp;    @GetMapping(path = &quot;/users/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Get a user by Id&quot;, description = &quot;Retrieves a specific user from the database based on the provided ID&quot;)
+&nbsp;    public User getUserById(@PathVariable int id) {
+<b class="fc">&nbsp;        return userService.getUserById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a specific user from the database based on the provided username.
+&nbsp;     *
+&nbsp;     * @param username The username of the user.
+&nbsp;     * @return The User entity corresponding to the provided username.
+&nbsp;     */
+&nbsp;    @GetMapping(path = &quot;/username/{username}&quot;)
+&nbsp;    @Operation(summary = &quot;Get a user by username&quot;, description = &quot;Retrieves a specific user from the database based on the provided username&quot;)
+&nbsp;    public User getUserByUsername(@PathVariable String username) {
+<b class="fc">&nbsp;        return userService.findUserByUsername(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a new user to the database.
+&nbsp;     *
+&nbsp;     * @param user The User entity to be added.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @PostMapping(path = &quot;/users&quot;)
+&nbsp;    @Operation(summary = &quot;Add a new user&quot;, description = &quot;Adds a new user to the database&quot;)
+&nbsp;    public String createUser(@RequestBody User user) {
+&nbsp;
+&nbsp;        // Check if all the fields are filled out
+<b class="fc">&nbsp;        if (user.getUsername().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {</b>
+<b class="fc">&nbsp;            return &quot;Please complete all fields.&quot;;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        if(userService.findUserByUsername(user.getUsername()) != null){</b>
+<b class="fc">&nbsp;            return &quot;Username already taken.&quot;;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Hash the password
+<b class="fc">&nbsp;        String hashed_password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());</b>
+&nbsp;
+<b class="fc">&nbsp;        User hashed_user = new User(user.getUsername(), hashed_password, user.getEmail());</b>
+&nbsp;
+<b class="fc">&nbsp;        return userService.createUser(hashed_user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates an existing user in the database.
+&nbsp;     *
+&nbsp;     * @param id   The unique identifier of the user to be updated.
+&nbsp;     * @param user The updated User entity.
+&nbsp;     * @return The updated User entity.
+&nbsp;     */
+&nbsp;    @PutMapping(path = &quot;/users/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Update an existing user&quot;, description = &quot;Updates an existing user in the database&quot;)
+&nbsp;    public String updateUser(@PathVariable int id, @RequestBody User user) {
+<b class="fc">&nbsp;        return userService.updateUser(id, user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a user from the database based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the user to be deleted.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @DeleteMapping(path = &quot;/users/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Delete a user by Id&quot;, description = &quot;Deletes a user from the database based on the provided ID&quot;)
+&nbsp;    public String deleteUser(@PathVariable int id) {
+<b class="fc">&nbsp;        return userService.deleteUser(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/change-password/{username}&quot;)
+&nbsp;    public String changePassword(@PathVariable String username, @RequestBody Password password) {
+&nbsp;
+<b class="fc">&nbsp;        User user = userService.findUserByUsername(username);</b>
+&nbsp;
+<b class="fc">&nbsp;        String hashed_password = BCrypt.hashpw(password.getPassword(), BCrypt.gensalt());</b>
+&nbsp;
+<b class="fc">&nbsp;        user.setPassword(hashed_password);</b>
+&nbsp;
+<b class="fc">&nbsp;        userService.updateUser(user.getId(), user);</b>
+&nbsp;
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;users/{username1}/add-follower/{username2}&quot;)
+&nbsp;    public String addFollower(@PathVariable String username1, @PathVariable String username2) {
+<b class="fc">&nbsp;        return userService.addFollower(username1, username2);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;users/{username1}/remove-follower/{username2}&quot;)
+&nbsp;    public String removeFollower(@PathVariable String username1, @PathVariable String username2) {
+<b class="fc">&nbsp;        return userService.removeFollower(username1, username2);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;users/{username}/followers&quot;)
+&nbsp;    public List&lt;User&gt; getFollowers(@PathVariable String username) {
+<b class="fc">&nbsp;        return userService.findUserByUsername(username).getFollowers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;users/{username}/following&quot;)
+&nbsp;    public List&lt;User&gt; getFollowing(@PathVariable String username) {
+<b class="fc">&nbsp;        return userService.findUserByUsername(username).getFollowing();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/login&quot;)
+&nbsp;    public ResponseEntity authentication(@RequestBody LoginRequest loginRequest) {
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(&quot;user login: &quot; + loginRequest.getUsername());</b>
+&nbsp;
+<b class="fc">&nbsp;        User user = userService.findUserByUsername(loginRequest.getUsername());</b>
+&nbsp;
+<b class="fc">&nbsp;        boolean check_password = BCrypt.checkpw(loginRequest.getPassword(), user.getPassword());</b>
+&nbsp;
+<b class="fc">&nbsp;        if (user == null || !check_password) {</b>
+<b class="fc">&nbsp;            return new ResponseEntity(&quot;Incorrect Username or Password.&quot;, HttpStatus.BAD_REQUEST);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return new ResponseEntity(user, HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;users/{username}/set-canvas-token&quot;)
+&nbsp;    public String setCanvasToken(@PathVariable String username, @RequestBody CanvasToken token) {
+<b class="fc">&nbsp;        User user = userService.findUserByUsername(username);</b>
+&nbsp;
+<b class="fc">&nbsp;        user.setCanvasToken(token.getCanvasToken());</b>
+&nbsp;
+<b class="fc">&nbsp;        userService.saveUser(user);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;users/{username}/canvas-token&quot;)
+&nbsp;    public String getCanvasToken(@PathVariable String username) {
+<b class="fc">&nbsp;        User user = userService.findUserByUsername(username);</b>
+<b class="fc">&nbsp;        return user.getCanvasToken();</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
