@@ -43,7 +43,7 @@ public class TeamAvailability extends AppCompatActivity {
 
     private TextView textView;
 
-    private int group_id;
+    private String group_id;
     private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/compareStandard/"; //+ group_id + "/dates"
 
     private String result ="";
@@ -62,7 +62,7 @@ public class TeamAvailability extends AppCompatActivity {
 
         // Initialize
         //context = this;
-        group_id = getIntent().getIntExtra("groupId", 0);
+        group_id = getIntent().getStringExtra("groupId");
         event_start_date2 = findViewById(R.id.start_date_input2);
         event_end_date2 = findViewById(R.id.end_date_input2);
         event_start_time2 = findViewById(R.id.start_time_input2);
@@ -167,14 +167,14 @@ public class TeamAvailability extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String[] dates = stripDateAndTime();
-                String event_type_value = "";
-                String event_name_value = "";
-                String event_start_date = dates[0];
-                String event_end_date = dates[1];
-                String event_location_value = "";
-                String event_description_value = "";
+                String event_type_value2 = "private";
+                String event_name_value2 = "dateRange";
+                String event_start_date2 = dates[0];
+                String event_end_date2 = dates[1];
+                String event_location_value2 = "N/A";
+                String event_description_value2 = "N/A";
 
-                getRequest(event_name_value, event_description_value, event_location_value, event_type_value, event_start_date, event_end_date);
+                getRequest(event_name_value2, event_description_value2, event_location_value2, event_type_value2, event_start_date2, event_end_date2);
             }
         });
     }
@@ -236,7 +236,8 @@ public class TeamAvailability extends AppCompatActivity {
         );
 
         // Adding request to request queue
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+        //VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+        requestQueue.add(jsonObjectRequest);
     }
 
     private String[] stripDateAndTime() {
