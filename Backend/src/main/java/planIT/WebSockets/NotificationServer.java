@@ -13,7 +13,6 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -109,7 +108,7 @@ public class NotificationServer {
             logger.info("[onMessage:Notification]" + parts[1]);
             User user = userRepository.findByUsername(username);
             JSONObject json = new JSONObject(parts[1]);
-            Notification notification = new Notification(json.getString("title"), json.getString("description"), json.getString("type"), Integer.parseInt(json.getString("typeId")));
+            Notification notification = new Notification(json.getString("title"), json.getString("description"), "/users/" + username + "/events/" + json.getString("typeId"), Integer.parseInt(json.getString("typeId")));
             notification.setUser(user);
             notificationRepository.save(notification);
         }

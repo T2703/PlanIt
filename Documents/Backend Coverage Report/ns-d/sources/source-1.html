@@ -1,0 +1,381 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > scheduleCompare</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.ScheduleCompare</a>
+</div>
+
+<h1>Coverage Summary for Class: scheduleCompare (planIT.ScheduleCompare)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">scheduleCompare</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.7%
+  </span>
+  <span class="absValue">
+    (76/93)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">scheduleCompare$startDateComparator</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (1/8)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (6/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76.2%
+  </span>
+  <span class="absValue">
+    (77/101)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.ScheduleCompare;
+&nbsp;
+&nbsp;import planIT.Entity.Events.Event;
+&nbsp;import planIT.Entity.Teams.Team;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;
+&nbsp;import java.text.SimpleDateFormat;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * Class for comparing user schedules to determine availability
+&nbsp; */
+<b class="nc">&nbsp;public class scheduleCompare {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds all events across all members of a team and returns the times that all members are available for a certain time period.
+&nbsp;     * @param team team to be compared
+&nbsp;     * @param rangeStart beginning of the date range
+&nbsp;     * @param rangeEnd end of the date range
+&nbsp;     * @return returns the availability as a List&lt;Event&gt;
+&nbsp;     */
+&nbsp;    static public List&lt;Event&gt; compareSchedule(Team team, Date rangeStart, Date rangeEnd) {
+&nbsp;
+&nbsp;        //SET DATE RANGE
+<b class="fc">&nbsp;        Event dateRange = new Event();</b>
+<b class="fc">&nbsp;        dateRange.setStartDate(rangeStart);</b>
+<b class="fc">&nbsp;        dateRange.setEndDate(rangeEnd);</b>
+&nbsp;
+&nbsp;        //USER EVENTS ADDED AND SORTED
+<b class="fc">&nbsp;        List&lt;Event&gt; schedule = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        List&lt;User&gt; users = new ArrayList&lt;&gt;(team.getUsers());</b>
+<b class="fc">&nbsp;        for (User user : users) {</b>
+<b class="fc">&nbsp;            schedule.addAll(user.getEvents());</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        // FILTER AND SORT BY DATE
+<b class="fc">&nbsp;        schedule.removeIf(event -&gt; !event.getStartDate().before(dateRange.getEndDate()) || !event.getEndDate().after(dateRange.getStartDate()));</b>
+<b class="fc">&nbsp;        schedule.sort(new startDateComparator());</b>
+&nbsp;
+&nbsp;        //IF NO EVENTS
+<b class="fc">&nbsp;        if (schedule.isEmpty()) {</b>
+<b class="fc">&nbsp;            return schedule;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        //INITIALIZE UNAVAILABLE LIST
+<b class="fc">&nbsp;        List&lt;Event&gt; unavailable = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        unavailable.add(new Event());</b>
+<b class="fc">&nbsp;        unavailable.get(0).setStartDate(schedule.get(0).getStartDate());</b>
+<b class="fc">&nbsp;        unavailable.get(0).setEndDate(schedule.get(0).getEndDate());</b>
+&nbsp;
+&nbsp;        //MISC
+<b class="fc">&nbsp;        int k = 0;</b>
+<b class="fc">&nbsp;        int i = 0;</b>
+<b class="fc">&nbsp;        boolean done = false;</b>
+&nbsp;
+&nbsp;        //MERGE USER EVENTS INTO UNAVAILABLE EVENTS
+<b class="fc">&nbsp;        for (i = 0; i &lt; schedule.size(); ++i) {</b>
+&nbsp;            // CURRENT VS NEW EVENT;
+<b class="fc">&nbsp;            if (dateWithin(schedule.get(i).getStartDate(), dateRange)) {</b>
+<b class="fc">&nbsp;                done = false;</b>
+<b class="fc">&nbsp;                k = 0;</b>
+<b class="fc">&nbsp;                while (!done) {</b>
+<b class="fc">&nbsp;                    if (dateWithin(schedule.get(i).getStartDate(), unavailable.get(k))) {</b>
+&nbsp;                        //Extend current unavailable...
+<b class="fc">&nbsp;                        if (schedule.get(i).getStartDate().before(unavailable.get(k).getStartDate())) {</b>
+<b class="nc">&nbsp;                            unavailable.get(k).setStartDate(schedule.get(i).getStartDate());</b>
+&nbsp;                        }
+<b class="fc">&nbsp;                        if (schedule.get(i).getEndDate().after(unavailable.get(k).getEndDate())) {</b>
+<b class="nc">&nbsp;                            unavailable.get(k).setEndDate(schedule.get(i).getEndDate());</b>
+&nbsp;                        }
+<b class="fc">&nbsp;                        done = true;</b>
+&nbsp;                    } else {
+&nbsp;                        //iterate to next unavailable
+<b class="nc">&nbsp;                        ++k;</b>
+&nbsp;                        // if no next, creates new
+<b class="nc">&nbsp;                        if (k &gt;= unavailable.size()) {</b>
+<b class="nc">&nbsp;                            unavailable.add(new Event());</b>
+<b class="nc">&nbsp;                            unavailable.get(k).setStartDate(schedule.get(i).getStartDate());</b>
+<b class="nc">&nbsp;                            unavailable.get(k).setEndDate(schedule.get(i).getEndDate());</b>
+<b class="nc">&nbsp;                            done = true;</b>
+&nbsp;                        }
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;            // CONSTRAIN BY TARGET RANGE
+<b class="fc">&nbsp;            if (unavailable.get(k).getStartDate().before(dateRange.getStartDate())) {</b>
+<b class="nc">&nbsp;                unavailable.get(k).setStartDate(dateRange.getStartDate());</b>
+&nbsp;            }
+<b class="fc">&nbsp;            if (unavailable.get(k).getEndDate().after(dateRange.getEndDate())) {</b>
+<b class="nc">&nbsp;                unavailable.get(k).setEndDate(dateRange.getEndDate());</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        //GET AVAILABLE FROM UNAVAILABLE
+<b class="fc">&nbsp;        i = 0;  //i=AVAILABLE</b>
+<b class="fc">&nbsp;        k = 0;  // k=UNAVAILABLE</b>
+<b class="fc">&nbsp;        List&lt;Event&gt; available = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        available.add(new Event());</b>
+&nbsp;
+&nbsp;        //START AVAILABLE
+<b class="fc">&nbsp;        if (unavailable.get(0).getStartDate() != dateRange.getStartDate()) {</b>
+<b class="fc">&nbsp;            available.get(0).setStartDate(dateRange.getStartDate());        //NO START CONFLICT</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            available.get(0).setStartDate(unavailable.get(0).getEndDate()); //START CONFLICT</b>
+<b class="nc">&nbsp;            ++k;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        if (k &lt; unavailable.size()) {</b>
+<b class="fc">&nbsp;            available.get(0).setEndDate(unavailable.get(k).getStartDate());</b>
+<b class="fc">&nbsp;            ++i;</b>
+&nbsp;        }
+&nbsp;        //AVAILABLE REPEATING
+<b class="fc">&nbsp;        while (k &lt; unavailable.size()) {</b>
+<b class="fc">&nbsp;            available.add(new Event());</b>
+<b class="fc">&nbsp;            available.get(i).setStartDate(unavailable.get(k).getEndDate());</b>
+<b class="fc">&nbsp;            ++k;</b>
+<b class="fc">&nbsp;            if (k &lt; unavailable.size()) {</b>
+<b class="nc">&nbsp;                available.get(i).setEndDate(unavailable.get(k).getStartDate());</b>
+<b class="nc">&nbsp;                ++i;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;        //FINAL AVAILABLE END DATE
+<b class="fc">&nbsp;        if (available.get(i).getEndDate() == null) {</b>
+<b class="fc">&nbsp;            available.get(i).setEndDate(dateRange.getEndDate());</b>
+<b class="fc">&nbsp;            if (available.get(i).getStartDate().equals(dateRange.getEndDate())) {</b>
+<b class="nc">&nbsp;                available.remove(i);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        //CONVERT TO STRING
+&nbsp;        /*
+&nbsp;        StringBuilder unavailability = new StringBuilder(&quot;Unavailable: \n&quot;);
+&nbsp;        for (Event event : unavailable) {
+&nbsp;            unavailability.append(&quot;  &quot;).append(event.getStartDate().toString()).append(&quot; - &quot;).append(event.getEndDate().toString()).append(&#39;\n&#39;);
+&nbsp;        }
+&nbsp;        StringBuilder availability = new StringBuilder(&quot;Available: \n&quot;);
+&nbsp;        for (Event event : available) {
+&nbsp;            availability.append(&quot;  &quot;).append(event.getStartDate().toString()).append(&quot; - &quot;).append(event.getEndDate().toString()).append(&#39;\n&#39;);
+&nbsp;        }
+&nbsp;        //availability = unavailability.append(availability);  //MERGE STRINGS
+&nbsp;        return availability.toString();
+&nbsp;         */
+<b class="fc">&nbsp;        return available;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //RETURNS AVAILABILITY AS STRING
+&nbsp;    /**
+&nbsp;     * Calls the &#39;compareSchedule&#39; function and formats the results into a String
+&nbsp;     * @param team team to be compared
+&nbsp;     * @param rangeStart beginning of the date range
+&nbsp;     * @param rangeEnd end of the date range
+&nbsp;     * @return returns the availability as a String
+&nbsp;     */
+&nbsp;    static public String compareStandard(Team team, Date rangeStart, Date rangeEnd) {
+&nbsp;
+<b class="fc">&nbsp;        List&lt;Event&gt; available = compareSchedule(team, rangeStart, rangeEnd);</b>
+&nbsp;
+&nbsp;        //IF NO EVENTS
+<b class="fc">&nbsp;        if (available.isEmpty()) {</b>
+<b class="fc">&nbsp;            return (&quot;Available: \n  &quot; + rangeStart.toString() + &quot; - &quot; + rangeEnd.toString() + &#39;\n&#39;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        //OTHERWISE
+<b class="fc">&nbsp;        StringBuilder availability = new StringBuilder(&quot;Available: \n&quot;);</b>
+<b class="fc">&nbsp;        for (Event event : available) {</b>
+<b class="fc">&nbsp;            availability.append(&quot;  &quot;).append(formatDate(event.getStartDate())).append(&quot; - &quot;).append(formatDate(event.getEndDate())).append(&#39;\n&#39;);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        return availability.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //RETURNS AVAILABILITY IN HALF HOUR INCREMENTS
+&nbsp;    // WORK IN PROGRESS....
+&nbsp;    /**
+&nbsp;     * Calls the &#39;scheduleCompare&#39; function, breaks it down into 30 minute increments, and formats it into a string.
+&nbsp;     * @param team team to be compared
+&nbsp;     * @param rangeStart beginning of the date range
+&nbsp;     * @param rangeEnd end of the date range
+&nbsp;     * @return returns the availability as a String
+&nbsp;     */
+&nbsp;    static public String compareBy30(Team team, Date rangeStart, Date rangeEnd) {
+&nbsp;
+<b class="fc">&nbsp;        boolean done = false;</b>
+<b class="fc">&nbsp;        StringBuilder toReturn = new StringBuilder(&quot;Available: \n&quot;);</b>
+<b class="fc">&nbsp;        String temp = &quot;&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;        while (!done) {</b>
+<b class="fc">&nbsp;            Date newEnd = rangeStart;</b>
+<b class="fc">&nbsp;            newEnd.setMinutes(rangeStart.getMinutes() + 30);</b>
+&nbsp;
+<b class="fc">&nbsp;            temp = compareStandard(team, rangeStart, newEnd);</b>
+&nbsp;
+<b class="fc">&nbsp;            if (temp.length() &gt; 15) {</b>
+<b class="fc">&nbsp;                temp = temp.substring(12);</b>
+<b class="fc">&nbsp;                toReturn.append(temp);</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            rangeStart = newEnd;</b>
+&nbsp;
+<b class="fc">&nbsp;            if (newEnd.after(rangeEnd)) {</b>
+<b class="fc">&nbsp;                done = true;</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return toReturn.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //HELPER METHOD, CHECKS FOR DATE INSIDE EVENT START/END
+&nbsp;    /**
+&nbsp;     * Determines if a single date is within the start and end dates of an event.
+&nbsp;     * @param date date to be examined
+&nbsp;     * @param event provides a start and end date to compare
+&nbsp;     * @return true/false
+&nbsp;     */
+&nbsp;    static public boolean dateWithin(Date date, Event event) {
+<b class="fc">&nbsp;        if (date == null || event.getStartDate() == null) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return ((event.getStartDate().before(date) &amp;&amp; event.getEndDate().after(date))</b>
+<b class="fc">&nbsp;                || event.getStartDate().equals(date) || event.getEndDate().equals(date));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //COMPARATOR FOR EVENTS, based on startDate
+&nbsp;    /**
+&nbsp;     * Enables events to be compared and sorted based on their start dates
+&nbsp;     */
+<b class="fc">&nbsp;    static private class startDateComparator implements Comparator&lt;Event&gt; {</b>
+&nbsp;        public int compare(Event event1, Event event2) {
+<b class="nc">&nbsp;            if (event1.getStartDate() == null || event2.getStartDate() == null) {</b>
+<b class="nc">&nbsp;                return 0;</b>
+<b class="nc">&nbsp;            } else if (event1.getStartDate().equals(event2.getStartDate())) {</b>
+<b class="nc">&nbsp;                return 0;</b>
+<b class="nc">&nbsp;            } else if (event1.getStartDate().after(event2.getStartDate())) {</b>
+<b class="nc">&nbsp;                return 1;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                return -1;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //FORMAT DATE STRING
+&nbsp;    /**
+&nbsp;     * Returns a date as a consistent String
+&nbsp;     * @param inputDate date to be converted
+&nbsp;     * @return String based on specified format
+&nbsp;     */
+&nbsp;    private static String formatDate(Date inputDate) {
+<b class="fc">&nbsp;        SimpleDateFormat sdf = new SimpleDateFormat(&quot;E MMM dd HH:mm:ss z yyyy&quot;, Locale.US);</b>
+<b class="fc">&nbsp;        return sdf.format(inputDate);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
