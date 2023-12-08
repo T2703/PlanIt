@@ -110,7 +110,7 @@ public class ScheduleCompareSystemTest {
                 contentType("application/json").
                 body(event2).
                 when().
-                get("/compareStandard/1/dates");
+                post("/compareStandard/1/dates");
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
         System.out.println(response2.getBody());
