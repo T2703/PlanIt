@@ -43,7 +43,7 @@ public class TeamAvailability extends AppCompatActivity {
 
     private TextView textView;
 
-    private static String group_id = ""; //TODO GET GROUP ID
+    private int group_id;
     private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/compareStandard/"; //+ group_id + "/dates"
 
     private String result ="";
@@ -54,8 +54,6 @@ public class TeamAvailability extends AppCompatActivity {
     private EditText event_start_time2;
     private EditText event_end_time2;
 
-    Button see_Availability = findViewById(R.id.see_Availability);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +62,13 @@ public class TeamAvailability extends AppCompatActivity {
 
         // Initialize
         //context = this;
-        int groupId = getIntent().getIntExtra("groupId", 0);
+        group_id = getIntent().getIntExtra("groupId", 0);
         event_start_date2 = findViewById(R.id.start_date_input2);
         event_end_date2 = findViewById(R.id.end_date_input2);
         event_start_time2 = findViewById(R.id.start_time_input2);
         event_end_time2 = findViewById(R.id.end_time_input2);
+
+        Button see_Availability = findViewById(R.id.see_Availability);
 
         /// NEED DATE PICKER FOR REQUEST BODY
             event_start_date2.setOnClickListener(new View.OnClickListener() {
