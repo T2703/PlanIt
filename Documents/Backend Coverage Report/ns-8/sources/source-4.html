@@ -1,0 +1,97 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TeamRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Teams</a>
+</div>
+
+<h1>Coverage Summary for Class: TeamRepository (planIT.Entity.Teams)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">TeamRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Teams;
+&nbsp;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for managing Team entities using Spring Data JPA.
+&nbsp; * This interface extends JpaRepository, providing basic CRUD operations for Team entities.
+&nbsp; * Additionally, it includes custom query methods for finding Teams by ID and deleting a Team by ID.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; *
+&nbsp; */
+&nbsp;public interface TeamRepository extends JpaRepository&lt;Team, Long&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a Team in the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the Team.
+&nbsp;     * @return The Team entity corresponding to the provided ID.
+&nbsp;     */
+&nbsp;    Team findById(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a Team from the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the Team to be deleted.
+&nbsp;     */
+&nbsp;    void deleteById(int id);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,248 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Users</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (planIT.Entity.Users)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.3%
+  </span>
+  <span class="absValue">
+    (36/37)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.3%
+  </span>
+  <span class="absValue">
+    (36/37)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Users;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service class for managing User entities.
+&nbsp; * This class handles business logic related to user operations, interacting with the UserRepository.
+&nbsp; * It is annotated with @Service to denote it as a service component, and @Transactional to enable transactional actions.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; */
+&nbsp;@Service
+&nbsp;@Transactional
+<b class="fc">&nbsp;public class UserService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepository userRepository;
+&nbsp;
+<b class="fc">&nbsp;    private String success = &quot;{\&quot;message\&quot;:\&quot;success\&quot;}&quot;;</b>
+<b class="fc">&nbsp;    private String failure = &quot;{\&quot;message\&quot;:\&quot;failure\&quot;}&quot;;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all users from the repository.
+&nbsp;     *
+&nbsp;     * @return List of User entities.
+&nbsp;     */
+&nbsp;    public List&lt;User&gt; getAllUsers() {
+<b class="fc">&nbsp;        return userRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a specific user from the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the user.
+&nbsp;     * @return The User entity corresponding to the provided ID.
+&nbsp;     */
+&nbsp;    public User getUserById(int id) {
+<b class="fc">&nbsp;        return userRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new user in the repository.
+&nbsp;     *
+&nbsp;     * @param user The User entity to be created.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    public String createUser(User user) {
+<b class="fc">&nbsp;        userRepository.save(user);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates an existing user in the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id      The unique identifier of the user to be updated.
+&nbsp;     * @param request The updated User entity.
+&nbsp;     * @return The updated User entity or null if the user with the provided ID is not found.
+&nbsp;     */
+&nbsp;    public String updateUser(int id, User request) {
+<b class="fc">&nbsp;        User user = userRepository.findById(id);</b>
+<b class="fc">&nbsp;        if (user == null)</b>
+<b class="fc">&nbsp;            return failure;</b>
+&nbsp;
+<b class="fc">&nbsp;        user.setUsername(request.getUsername());</b>
+<b class="fc">&nbsp;        user.setEmail(request.getEmail());</b>
+&nbsp;
+<b class="fc">&nbsp;        userRepository.save(user);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String addFollower(String name1, String name2) {
+<b class="fc">&nbsp;        User user = userRepository.findByUsername(name1);</b>
+<b class="fc">&nbsp;        User follower = userRepository.findByUsername(name2);</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;User&gt; following = user.getFollowing();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (following.contains(follower)) return &quot;You already follow &quot; + follower.getUsername() + &quot;.&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;        user.getFollowing().add(follower);</b>
+<b class="fc">&nbsp;        userRepository.save(user);</b>
+&nbsp;
+<b class="fc">&nbsp;        follower.getFollowers().add(user);</b>
+<b class="fc">&nbsp;        userRepository.save(follower);</b>
+&nbsp;
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String removeFollower(String name1, String name2) {
+<b class="fc">&nbsp;        User user = userRepository.findByUsername(name1);</b>
+<b class="fc">&nbsp;        User follower = userRepository.findByUsername(name2);</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;User&gt; following = user.getFollowing();</b>
+&nbsp;
+<b class="fc">&nbsp;        if (following.contains(follower)) {</b>
+<b class="fc">&nbsp;            user.getFollowing().remove(follower);</b>
+<b class="fc">&nbsp;            follower.getFollowers().remove(user);</b>
+&nbsp;
+<b class="fc">&nbsp;            userRepository.save(user);</b>
+<b class="fc">&nbsp;            userRepository.save(follower);</b>
+&nbsp;
+<b class="fc">&nbsp;            return success;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return &quot;You do not follow &quot; + name2 + &quot;.&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a user from the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the user to be deleted.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    public String deleteUser(int id) {
+<b class="fc">&nbsp;        userRepository.deleteById(id);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a user in the repository based on the provided username.
+&nbsp;     *
+&nbsp;     * @param username The username of the user.
+&nbsp;     * @return The User entity corresponding to the provided username.
+&nbsp;     */
+&nbsp;    public User findUserByUsername(String username) {
+<b class="fc">&nbsp;        return userRepository.findByUsername(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public User saveUser(User user) {
+<b class="fc">&nbsp;        return userRepository.save(user);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

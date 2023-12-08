@@ -1,0 +1,302 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Assignment</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Assignments</a>
+</div>
+
+<h1>Coverage Summary for Class: Assignment (planIT.Entity.Assignments)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Assignment</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Assignment$HibernateInstantiator$cduRVWSW</td>
+  </tr>
+  <tr>
+    <td class="name">Assignment$HibernateInstantiator$ikZ82XYu</td>
+  </tr>
+  <tr>
+    <td class="name">Assignment$HibernateProxy$m4EwEJWZ</td>
+  </tr>
+  <tr>
+    <td class="name">Assignment$HibernateProxy$QtjkYLrc</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/21)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Assignments;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+&nbsp;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;import java.util.Date;
+&nbsp;import jakarta.persistence.Entity;
+&nbsp;import jakarta.persistence.GeneratedValue;
+&nbsp;import jakarta.persistence.GenerationType;
+&nbsp;import jakarta.persistence.Id;
+&nbsp;import jakarta.persistence.JoinColumn;
+&nbsp;import jakarta.persistence.ManyToOne;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;
+&nbsp;/**
+&nbsp; * Assignment entity.  Contains info for a user assignment, its due date, and whether or not the assignment is complete.
+&nbsp; */
+&nbsp;@Entity
+&nbsp;@Tag(name = &quot;Assignment&quot;, description = &quot;Assignment entity.  Contains info for a user assignment, its due date, and whether or not the assignment is complete.&quot;)
+&nbsp;@RestController
+&nbsp;public class Assignment {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    @Schema(description = &quot;ID of assignment&quot;)
+&nbsp;    private int id;
+&nbsp;
+&nbsp;    @Schema(description = &quot;Title of assignment&quot;)
+&nbsp;    private String title;
+&nbsp;
+&nbsp;    @Schema(description = &quot;Description of assignment&quot;)
+&nbsp;    private String description;
+&nbsp;
+&nbsp;    @Schema(description = &quot;Courses for the assignment&quot;)
+&nbsp;    private String course;
+&nbsp;
+&nbsp;    @Schema(description = &quot;Due date of the assignment&quot;)
+&nbsp;    private Date dueDate;
+&nbsp;
+&nbsp;    @Schema(description = &quot;Checks if the assignment is completed.&quot;)
+&nbsp;    private boolean isCompleted;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tracks the user entity that this assignment belongs to.
+&nbsp;     */
+&nbsp;    @JsonIgnoreProperties(&quot;assignments&quot;)
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;user_id&quot;)
+&nbsp;    private User user;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for assignment entity.
+&nbsp;     * @param title Title of the assignment.
+&nbsp;     * @param description Description of the assignment.
+&nbsp;     * @param course Course of the assignment.
+&nbsp;     * @param dueDate The date the assignment is due.
+&nbsp;     * @param isCompleted Whether or not the assignment is completed.
+&nbsp;     */
+<b class="fc">&nbsp;    public Assignment(String title, String description, String course, Date dueDate, boolean isCompleted) {</b>
+<b class="fc">&nbsp;        this.title = title;</b>
+<b class="fc">&nbsp;        this.description = description;</b>
+<b class="fc">&nbsp;        this.course = course;</b>
+<b class="fc">&nbsp;        this.dueDate = dueDate;</b>
+<b class="fc">&nbsp;        this.isCompleted = isCompleted;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Empty constructor for assignment
+&nbsp;     */
+<b class="fc">&nbsp;    public Assignment() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the id number of the assignment
+&nbsp;     * @return assignment id
+&nbsp;     */
+<b class="fc">&nbsp;    public int getId() { return id; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets assignment id number
+&nbsp;     * @param id new id number
+&nbsp;     */
+&nbsp;    public void setId(int id){
+<b class="fc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the title of the assingment
+&nbsp;     * @return title
+&nbsp;     */
+&nbsp;    public String getTitle(){
+<b class="fc">&nbsp;        return title;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the assignment course
+&nbsp;     * @return course
+&nbsp;     */
+&nbsp;    public String getCourse(){
+<b class="fc">&nbsp;        return course;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the assignment description
+&nbsp;     * @return description
+&nbsp;     */
+&nbsp;    public String getDescription(){
+<b class="fc">&nbsp;        return description;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the assignment dueDate
+&nbsp;     * @return dueDate
+&nbsp;     */
+<b class="fc">&nbsp;    public Date getDueDate() { return dueDate; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the completion status of the assignment
+&nbsp;     * @return isCompleted
+&nbsp;     */
+<b class="fc">&nbsp;    public boolean getIsCompleted() { return isCompleted; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the assignment title
+&nbsp;     * @param title new title
+&nbsp;     */
+&nbsp;    public void setTitle(String title){
+<b class="fc">&nbsp;        this.title = title;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the assignment course
+&nbsp;     * @param course new course
+&nbsp;     */
+&nbsp;    public void setCourse(String course){
+<b class="fc">&nbsp;        this.course = course;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the assignment description
+&nbsp;     * @param description new description
+&nbsp;     */
+&nbsp;    public void setDescription(String description){
+<b class="fc">&nbsp;        this.description = description;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the dueDate of the assignment
+&nbsp;     * @param dueDate new dueDate
+&nbsp;     */
+<b class="fc">&nbsp;    public void setDueDate(Date dueDate) { this.dueDate = dueDate; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the completion status of the assignment
+&nbsp;     * @param isCompleted
+&nbsp;     */
+<b class="fc">&nbsp;    public void setIsCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the assignment&#39;s user
+&nbsp;     * @return user
+&nbsp;     */
+&nbsp;    public User getUser() {
+<b class="fc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the assignment&#39;s user
+&nbsp;     * @param user
+&nbsp;     */
+&nbsp;    public void setUser(User user) {
+<b class="fc">&nbsp;        this.user = user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
