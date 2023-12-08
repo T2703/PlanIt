@@ -6,12 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".AnalyzeSchedule">
 
+    <ImageButton
+        android:id="@+id/back_button_two2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_arrow_back_24" />
+
     <TextView
         android:id="@+id/response"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="147dp"
-        android:layout_marginTop="135dp"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="152dp"
         android:text="TextView"
         android:translationX="-100dp"
         app:layout_constraintStart_toStartOf="parent"

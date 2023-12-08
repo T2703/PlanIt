@@ -52,6 +52,10 @@ public class User {
     @Schema(description = "Email of user")
     private String email;
 
+    // Email for each User
+    @Schema(description = "Canvas token of user")
+    private String canvasToken;
+
     @Schema(description = "List of User's Followers")
     @ManyToMany
     @JoinTable(
@@ -281,6 +285,14 @@ public class User {
      */
     public List<Team> getAdministrates() {
         return administrates;
+    }
+
+    public String getCanvasToken() {
+        return canvasToken;
+    }
+
+    public void setCanvasToken(String canvasToken) {
+        this.canvasToken = canvasToken;
     }
 
 }
