@@ -1,0 +1,247 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Message</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Messages</a>
+</div>
+
+<h1>Coverage Summary for Class: Message (planIT.Entity.Messages)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Message</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Message$HibernateInstantiator$olwJgCK8</td>
+  </tr>
+  <tr>
+    <td class="name">Message$HibernateInstantiator$sElKtyyM</td>
+  </tr>
+  <tr>
+    <td class="name">Message$HibernateProxy$BOLMj37Q</td>
+  </tr>
+  <tr>
+    <td class="name">Message$HibernateProxy$jblprDv8</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Messages;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+&nbsp;import planIT.Entity.Chats.Chat;
+&nbsp;import planIT.Entity.Notifications.Notification;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * Message entity for containing message info within a chat
+&nbsp; * @author Melani Hodge
+&nbsp; *
+&nbsp; */
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Tag(name = &quot;Message&quot;, description = &quot;Message entity for containing message info within a chat.&quot;)
+&nbsp;public class Message {
+&nbsp;
+&nbsp;    // Generated ID for each Message
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private int id;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties(&quot;message&quot;)
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;chat_id&quot;)
+&nbsp;    @Schema(description = &quot;Chat&quot;)
+&nbsp;    private Chat chat;
+&nbsp;
+&nbsp;
+&nbsp;    // Body for each Message
+&nbsp;    @Schema(description = &quot;Body of message&quot;)
+&nbsp;    private String body;
+&nbsp;
+&nbsp;    // Send time for each Message
+&nbsp;    @Schema(description = &quot;Send time of message&quot;)
+&nbsp;    private Date sendTime;
+&nbsp;
+&nbsp;    // Receive time for each Message
+&nbsp;    @Schema(description = &quot;Receive time of message&quot;)
+&nbsp;    private Date receiveTime;
+&nbsp;
+&nbsp;    // Message constructor (with parameters)
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor for message
+&nbsp;     * @param body text content of a message
+&nbsp;     * @param sendTime time message was sent
+&nbsp;     * @param receiveTime time message was received
+&nbsp;     */
+<b class="fc">&nbsp;    public Message(String body, Date sendTime, Date receiveTime) {</b>
+<b class="fc">&nbsp;        this.body = body;</b>
+<b class="fc">&nbsp;        this.sendTime = sendTime;</b>
+<b class="fc">&nbsp;        this.receiveTime = receiveTime;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Message constructor (without parameters)
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Empty message constructor
+&nbsp;     */
+<b class="fc">&nbsp;    public Message() { }</b>
+&nbsp;
+&nbsp;    /* =============== GETTER &amp; SETTER FUNCTIONS =============== */
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns message id numbers
+&nbsp;     * @return id
+&nbsp;     */
+<b class="fc">&nbsp;    public int getId() { return id; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the message id number
+&nbsp;     * @param id new id number for message
+&nbsp;     */
+&nbsp;    public void setId(int id){
+<b class="fc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the message body
+&nbsp;     * @return body
+&nbsp;     */
+&nbsp;    public String getBody(){
+<b class="fc">&nbsp;        return body;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the body of the message
+&nbsp;     * @param body new message body
+&nbsp;     */
+&nbsp;    public void setBody(String body){
+<b class="fc">&nbsp;        this.body = body;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns time the message was sent
+&nbsp;     * @return sendTime
+&nbsp;     */
+<b class="fc">&nbsp;    public Date getSendTime() { return sendTime; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the time message was sent
+&nbsp;     * @param sendTime time message was sent
+&nbsp;     */
+<b class="fc">&nbsp;    public void setSendTime(Date sendTime) { this.sendTime = sendTime; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the time message was received
+&nbsp;     * @return receiveTime
+&nbsp;     */
+<b class="fc">&nbsp;    public Date getReceiveTime() { return receiveTime; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the time message was received
+&nbsp;     * @param receiveTime time message was received
+&nbsp;     */
+<b class="fc">&nbsp;    public void setReceiveTime(Date receiveTime) { this.receiveTime = receiveTime; }</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

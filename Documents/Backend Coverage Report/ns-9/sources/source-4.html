@@ -1,0 +1,96 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ToDoRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.ToDos</a>
+</div>
+
+<h1>Coverage Summary for Class: ToDoRepository (planIT.Entity.ToDos)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ToDoRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.ToDos;
+&nbsp;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;
+&nbsp;/**
+&nbsp; * Repository interface for managing To-Do entities using Spring Data JPA.
+&nbsp; * This interface extends JpaRepository, providing basic CRUD operations for To-Do entities.
+&nbsp; * Additionally, it includes custom query methods for finding To-Dos by ID and deleting a To-Do by ID.
+&nbsp; *
+&nbsp; * @author Chris Smith
+&nbsp; *
+&nbsp; */
+&nbsp;public interface ToDoRepository extends JpaRepository&lt;ToDo, Long&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds a To-Do in the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the To-Do.
+&nbsp;     * @return The ToDo entity corresponding to the provided ID.
+&nbsp;     */
+&nbsp;    ToDo findById(int id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a To-Do from the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the To-Do to be deleted.
+&nbsp;     */
+&nbsp;    void deleteById(int id);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

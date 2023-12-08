@@ -4,10 +4,7 @@ import planIT.Entity.Events.*;
 import planIT.Entity.Users.*;
 import planIT.ScheduleCompare.scheduleCompare;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Utility class for analyzing a user's schedule and measuring weekly activity.
@@ -33,6 +30,7 @@ public class scheduleAnalysis {
         int[] dayNum = new int[7];
         int[] dayCount = new int[7];
         int[] dayLength = new int[7];
+        int weekCount = 1;
 
         if(userSchedule.isEmpty()){
             return "Schedule is Empty";
@@ -53,36 +51,42 @@ public class scheduleAnalysis {
             cal.setTime(userSchedule.get(i).getStartDate());
             dayNum[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             dayLength[cal.get(Calendar.DAY_OF_WEEK)-1] += eventLength(userSchedule.get(i));
-            if(i>= userSchedule.size()-1){
-                if(userSchedule.get(i+1).getStartDate().getDay() != userSchedule.get(i).getStartDate().getDay()){
-                    dayCount[cal.get(Calendar.DAY_OF_WEEK) -1] +=1;
+            if(userSchedule.size()-1 > i) {
+                if (userSchedule.get(i).getStartDate().getDate() != userSchedule.get(i + 1).getStartDate().getDate()) {
+                    dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
                 }
-            }else{
-                dayCount[cal.get(Calendar.DAY_OF_WEEK) -1] +=1;
             }
         }
 
-        for(int day: dayCount){ //no div by 0
-            if(day<=1){
-                day=1;
+//        for(int day: dayCount){ //no div by 0
+//            if(day<=1){
+//                day=1;
+//            }
+//        }
+        for(int i=0; i<7; ++i){
+            if(dayCount[i]<=0){
+                dayCount[i] =1;
+            }
+            if(dayCount[i]>weekCount){
+                weekCount = dayCount[i];
             }
         }
 
         String week =
-                "Sunday" + dayCount[0]+":    " +dayNum[0] +" Events, Total of " +dayLength[0]/60/dayCount[0] +" Hours " +dayLength[0]%60 +" Minutes\n"
-                        +toLine(dayLength[0])
-                        +"Monday" + dayCount[1]+":    " +dayNum[1] +" Events, Total of " +dayLength[1]/60/dayCount[0] +" Hours " +dayLength[1]%60 +" Minutes\n"
-                        +toLine(dayLength[1])
-                        +"Tuesday" + dayCount[2]+":   " +dayNum[2] +" Events, Total of " +dayLength[2]/60/dayCount[0] +" Hours " +dayLength[2]%60 +" Minutes\n"
-                        +toLine(dayLength[2])
-                        +"Wednesday" + dayCount[3]+": " +dayNum[3] +" Events, Total of " +dayLength[3]/60/dayCount[0] +" Hours " +dayLength[3]%60 +" Minutes\n"
-                        +toLine(dayLength[3])
-                        +"Thursday" + dayCount[4]+":  " +dayNum[4] +" Events, Total of " +dayLength[4]/60/dayCount[0] +" Hours " +dayLength[4]%60 +" Minutes\n"
-                        +toLine(dayLength[4])
-                        +"Friday" + dayCount[5]+":    " +dayNum[5] +" Events, Total of " +dayLength[5]/60/dayCount[0] +" Hours " +dayLength[5]%60 +" Minutes\n"
-                        +toLine(dayLength[5])
-                        +"Saturday" + dayCount[6]+":  " +dayNum[6] +" Events, Total of " +dayLength[6]/60/dayCount[0] +" Hours " +dayLength[6]%60 +" Minutes\n"
-                        +toLine(dayLength[6])
+                "Sunday" + dayCount[0]+":\n    " +dayNum[0] +" Events, Average of " +dayLength[0]/60/weekCount +" Hours " +dayLength[0]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +toLine(dayLength[0]/weekCount)
+                        +"Monday" + dayCount[1]+":\n    " +dayNum[1] +" Events, Average of " +dayLength[1]/60/weekCount +" Hours " +dayLength[1]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +toLine(dayLength[1]/weekCount)
+                        +"Tuesday" + dayCount[2]+":\n   " +dayNum[2] +" Events, Average of " +dayLength[2]/60/weekCount +" Hours " +dayLength[2]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +toLine(dayLength[2]/weekCount)
+                        +"Wednesday" + dayCount[3]+":\n " +dayNum[3] +" Events, Average of " +dayLength[3]/60/weekCount +" Hours " +dayLength[3]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +toLine(dayLength[3]/weekCount)
+                        +"Thursday" + dayCount[4]+":\n  " +dayNum[4] +" Events, Average of " +dayLength[4]/60/weekCount +" Hours " +dayLength[4]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +toLine(dayLength[4]/weekCount)
+                        +"Friday" + dayCount[5]+":\n    " +dayNum[5] +" Events, Average of " +dayLength[5]/60/weekCount +" Hours " +dayLength[5]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +toLine(dayLength[5]/weekCount)
+                        +"Saturday" + dayCount[6]+":\n  " +dayNum[6] +" Events, Average of " +dayLength[6]/60/weekCount +" Hours " +dayLength[6]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +toLine(dayLength[6]/weekCount)
                 ;
 
         return week;
@@ -94,13 +98,21 @@ public class scheduleAnalysis {
      * @param event The event for which to calculate the duration.
      * @return The duration of the event in minutes.
      */
-    static private int eventLength(Event event){
-        int start=0;
-        int end=0;
-        start = event.getStartDate().getHours()*60 + event.getStartDate().getMinutes();
-        end = event.getEndDate().getHours()*60 + event.getEndDate().getMinutes();
-
-        return end-start;
+    static private int eventLength(Event event) {
+        int start = 0;
+        int end = 0;
+        int length =0;
+        if (event.getStartDate().getDate() != event.getEndDate().getDate()){
+            Date temp = event.getStartDate();
+            while(temp.getDate()!=event.getEndDate().getDate()){
+                length += 1440;
+                temp.setDate(temp.getDate()+1);
+            }
+        }
+        start = event.getStartDate().getHours() * 60 + event.getStartDate().getMinutes();
+        end = event.getEndDate().getHours() * 60 + event.getEndDate().getMinutes();
+        length = length + end-start;
+        return length;
     }
 
     /**

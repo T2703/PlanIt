@@ -1,0 +1,260 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TeamService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Teams</a>
+</div>
+
+<h1>Coverage Summary for Class: TeamService (planIT.Entity.Teams)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TeamService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.5%
+  </span>
+  <span class="absValue">
+    (37/40)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TeamService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.5%
+  </span>
+  <span class="absValue">
+    (37/40)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Teams;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;
+&nbsp;import planIT.Entity.Chats.ChatRepository;
+&nbsp;import planIT.Entity.Chats.ChatService;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;import planIT.Entity.Users.UserRepository;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service class for managing Team entities.
+&nbsp; * This class handles business logic related to Team operations, interacting with the TeamRepository and UserRepository.
+&nbsp; * It is annotated with @Service to denote it as a service component, and @Transactional to enable transactional actions.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; *
+&nbsp; */
+&nbsp;@Service
+&nbsp;@Transactional
+<b class="fc">&nbsp;public class TeamService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private TeamRepository teamRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepository userRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ChatService chatService;
+&nbsp;
+<b class="fc">&nbsp;    private String success = &quot;{\&quot;message\&quot;:\&quot;success\&quot;}&quot;;</b>
+<b class="fc">&nbsp;    private String failure = &quot;{\&quot;message\&quot;:\&quot;failure\&quot;}&quot;;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a specific Team from the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the Team.
+&nbsp;     * @return The Team entity corresponding to the provided ID.
+&nbsp;     */
+&nbsp;    public Team getTeamById(int id) {
+<b class="fc">&nbsp;        return teamRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new Team in the repository.
+&nbsp;     *
+&nbsp;     * @param team The Team entity to be created.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    public String createTeam(String username, Team team) {
+<b class="fc">&nbsp;        User user = userRepository.findByUsername(username);</b>
+<b class="fc">&nbsp;        team.setAdmin(user);</b>
+<b class="fc">&nbsp;        team.getUsers().add(user);</b>
+<b class="fc">&nbsp;        user.getTeams().add(team);</b>
+&nbsp;
+<b class="fc">&nbsp;        teamRepository.save(team);</b>
+<b class="fc">&nbsp;        userRepository.save(user);</b>
+&nbsp;
+<b class="fc">&nbsp;        return &quot;{\&quot;message\&quot;:\&quot;success_&quot; +team.getId()  +&quot;\&quot;}&quot;;</b>
+&nbsp;        //return success;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates an existing Team in the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id      The unique identifier of the Team to be updated.
+&nbsp;     * @param request The updated Team entity.
+&nbsp;     * @return The updated Team entity or null if the Team with the provided ID is not found.
+&nbsp;     */
+&nbsp;    public String updateTeam(int id, Team request) {
+<b class="fc">&nbsp;        Team team = teamRepository.findById(id);</b>
+<b class="fc">&nbsp;        if (team == null)</b>
+<b class="fc">&nbsp;            return failure;</b>
+&nbsp;
+<b class="fc">&nbsp;        team.setName(request.getName());</b>
+<b class="fc">&nbsp;        team.setDescription(request.getDescription());</b>
+&nbsp;
+<b class="fc">&nbsp;        teamRepository.save(team);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a Team from the repository based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the Team to be deleted.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    public String deleteTeam(int id) {
+<b class="fc">&nbsp;        if(teamRepository.findById(id).getChat() != null) {</b>
+<b class="nc">&nbsp;            chatService.deleteChat(teamRepository.findById(id).getChat().getId()); //?</b>
+&nbsp;        }
+<b class="fc">&nbsp;        teamRepository.deleteById(id);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a user to a specific Team.
+&nbsp;     *
+&nbsp;     * @param id       The unique identifier of the Team.
+&nbsp;     * @param username The username of the user to be added.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    public String addUserToTeam(int id, String username){
+&nbsp;
+<b class="fc">&nbsp;        User user = userRepository.findByUsername(username);</b>
+<b class="fc">&nbsp;        Team team = teamRepository.findById(id);</b>
+<b class="fc">&nbsp;        team.getUsers().add(user);</b>
+<b class="fc">&nbsp;        user.getTeams().add(team);</b>
+&nbsp;
+<b class="fc">&nbsp;        if(team.getChat() != null){</b>
+<b class="nc">&nbsp;            chatService.addUserToChat(username, team.getChat().getId());</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        teamRepository.save(team);</b>
+<b class="fc">&nbsp;        userRepository.save(user);</b>
+&nbsp;
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a user from a specific team
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the Team.
+&nbsp;     * @param username The username of the user to be removed.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    public String removeUserFromTeam(int id, String username){
+&nbsp;
+<b class="fc">&nbsp;        User user = userRepository.findByUsername(username);</b>
+<b class="fc">&nbsp;        Team team = teamRepository.findById(id);</b>
+<b class="fc">&nbsp;        team.getUsers().remove(user);</b>
+<b class="fc">&nbsp;        user.getTeams().remove(team);</b>
+&nbsp;
+<b class="fc">&nbsp;        if(team.getChat() != null){</b>
+<b class="nc">&nbsp;            chatService.removeUserFromChat(username, team.getChat().getId());</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        teamRepository.save(team);</b>
+<b class="fc">&nbsp;        userRepository.save(user);</b>
+&nbsp;
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ToDoController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.ToDos</a>
+</div>
+
+<h1>Coverage Summary for Class: ToDoController (planIT.Entity.ToDos)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ToDoController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.ToDos;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.DeleteMapping;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.PutMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;import planIT.Entity.Users.UserService;
+&nbsp;
+&nbsp;/**
+&nbsp; * RESTful controller for managing To-Do-related operations.
+&nbsp; * This controller handles HTTP requests related to To-Do entities, such as retrieval, creation, update, and deletion.
+&nbsp; * Requests are processed using the corresponding methods provided by the ToDoService.
+&nbsp; * Additionally, it includes a method for adding a To-Do to a specific user.
+&nbsp; *
+&nbsp; * @author Chris Smith
+&nbsp; *
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@Tag(name = &quot;To-Do Management System&quot;, description = &quot;Operations pertaining to To-Do management&quot;)
+<b class="fc">&nbsp;public class ToDoController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ToDoService toDoService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserService userService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all To-Dos from the service.
+&nbsp;     *
+&nbsp;     * @return List of ToDo entities.
+&nbsp;     */
+&nbsp;    @GetMapping(path = &quot;/ToDos&quot;)
+&nbsp;    @Operation(summary = &quot;Get all To-Dos&quot;, description = &quot;Returns all To-Dos from the repository as a List object&quot;)
+&nbsp;    public List&lt;ToDo&gt; getAllToDos(){
+<b class="fc">&nbsp;        return toDoService.getAllToDos();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a specific To-Do from the service based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the To-Do.
+&nbsp;     * @return The ToDo entity corresponding to the provided ID.
+&nbsp;     */
+&nbsp;    @GetMapping(path = &quot;/ToDos/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Get a To-Do by Id&quot;, description = &quot;Gets a To-Do from the repository based on id number&quot;)
+&nbsp;    public ToDo getEventById(@PathVariable int id){
+<b class="fc">&nbsp;        return toDoService.getToDoById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a To-Do to a specific user.
+&nbsp;     *
+&nbsp;     * @param username The username of the user.
+&nbsp;     * @param toDo     The ToDo entity to be added.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @PostMapping(path = &quot;users/{username}/ToDos&quot;)
+&nbsp;    @Operation(summary = &quot;Add a To-Do to a user&quot;, description = &quot;Adds a To-Do to a user in the repository&quot;)
+&nbsp;    public String createToDo(@PathVariable String username, @RequestBody ToDo toDo){
+<b class="fc">&nbsp;        toDoService.createToDo(toDo);</b>
+&nbsp;
+<b class="fc">&nbsp;        return toDoService.userAddToDo(username, toDo);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates an existing To-Do in the service based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id   The unique identifier of the To-Do to be updated.
+&nbsp;     * @param toDo The updated ToDo entity.
+&nbsp;     * @return The updated ToDo entity.
+&nbsp;     */
+&nbsp;    @PutMapping(path = &quot;/ToDos/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Update an existing To-Do&quot;, description = &quot;Updates a To-Do in the repository&quot;)
+&nbsp;    public String updateToDo(@PathVariable int id, @RequestBody ToDo toDo){
+<b class="fc">&nbsp;        return toDoService.updateToDo(id, toDo);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a To-Do from the service based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the To-Do to be deleted.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @DeleteMapping(path = &quot;users/{username}/ToDos/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Delete a To-Do by Id&quot;, description = &quot;Deletes a To-Do from the repository&quot;)
+&nbsp;    public String deleteToDo(@PathVariable String username, @PathVariable int id){
+<b class="fc">&nbsp;        User user = userService.findUserByUsername(username);</b>
+<b class="fc">&nbsp;        user.getToDos().remove(toDoService.getToDoById(id));</b>
+<b class="fc">&nbsp;        return toDoService.deleteToDo(id);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

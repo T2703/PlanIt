@@ -1,0 +1,305 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ChatWebSocket</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.WebSockets</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatWebSocket (planIT.WebSockets)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatWebSocket</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    27.3%
+  </span>
+  <span class="absValue">
+    (3/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.2%
+  </span>
+  <span class="absValue">
+    (6/49)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.WebSockets;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.util.Hashtable;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import jakarta.websocket.OnClose;
+&nbsp;import jakarta.websocket.OnError;
+&nbsp;import jakarta.websocket.OnMessage;
+&nbsp;import jakarta.websocket.OnOpen;
+&nbsp;import jakarta.websocket.Session;
+&nbsp;import jakarta.websocket.server.PathParam;
+&nbsp;import jakarta.websocket.server.ServerEndpoint;
+&nbsp;
+&nbsp;import planIT.Entity.Chats.Chat;
+&nbsp;import planIT.Entity.Chats.ChatService;
+&nbsp;import planIT.Entity.Messages.*;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * WebSocket endpoint for managing chats between users
+&nbsp; * @author Chris Smith
+&nbsp; *
+&nbsp; */
+&nbsp;@ServerEndpoint(value = &quot;/chatSocket/{chatId}/{username}&quot;)
+&nbsp;@Component
+<b class="fc">&nbsp;public class ChatWebSocket {</b>
+&nbsp;
+&nbsp;    // Store all socket session and their corresponding username
+&nbsp;    // Two maps for the ease of retrieval by key
+<b class="fc">&nbsp;    private static Map &lt; Session, String &gt; sessionUsernameMap = new Hashtable &lt; &gt; ();</b>
+<b class="fc">&nbsp;    private static Map &lt; String, Session &gt; usernameSessionMap = new Hashtable &lt; &gt; ();</b>
+&nbsp;
+&nbsp;    // server side logger
+<b class="fc">&nbsp;    private final Logger logger = LoggerFactory.getLogger(ChatWebSocket.class);</b>
+&nbsp;
+<b class="fc">&nbsp;    public Chat chat = new Chat();</b>
+&nbsp;
+&nbsp;    public ChatService chatService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setChatService(ChatService chatService){
+<b class="fc">&nbsp;        this.chatService = chatService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setChat(Chat chat){
+<b class="nc">&nbsp;        this.chat = chat;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This method is called when a new WebSocket connection is established.
+&nbsp;     *
+&nbsp;     * @param session represents the WebSocket session for the connected user.
+&nbsp;     * @param username username specified in path parameter.
+&nbsp;     */
+&nbsp;    @OnOpen
+&nbsp;    public void onOpen(Session session, @PathParam(&quot;username&quot;) String username) throws IOException {
+&nbsp;
+&nbsp;        // server side log
+<b class="nc">&nbsp;        logger.info(&quot;[onOpen] &quot; + username);</b>
+&nbsp;
+&nbsp;        // Handle the case of a duplicate username
+<b class="nc">&nbsp;        if (usernameSessionMap.containsKey(username)) {</b>
+<b class="nc">&nbsp;            session.getBasicRemote().sendText(&quot;Username already exists&quot;);</b>
+<b class="nc">&nbsp;            session.close();</b>
+&nbsp;        }
+&nbsp;        else {
+&nbsp;            // map current session with username
+<b class="nc">&nbsp;            sessionUsernameMap.put(session, username);</b>
+&nbsp;
+&nbsp;            // map current username with session
+<b class="nc">&nbsp;            usernameSessionMap.put(username, session);</b>
+&nbsp;
+&nbsp;            // send to the user joining in
+<b class="nc">&nbsp;            sendMessageToPArticularUser(username, &quot;Welcome to the chat server, &quot;+username);</b>
+&nbsp;
+&nbsp;            // send to everyone in the chat
+<b class="nc">&nbsp;            broadcast(&quot;User: &quot; + username + &quot; has Joined the Chat&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            chatService.addUserToChat(username, chat.getId());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles incoming WebSocket messages from a client.
+&nbsp;     *
+&nbsp;     * @param session The WebSocket session representing the client&#39;s connection.
+&nbsp;     * @param message The message received from the client.
+&nbsp;     */
+&nbsp;    @OnMessage
+&nbsp;    public void onMessage(Session session, String message) throws IOException {
+&nbsp;
+&nbsp;        // get the username by session
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
+&nbsp;
+&nbsp;        // server side log
+<b class="nc">&nbsp;        logger.info(&quot;[onMessage] &quot; + username + &quot;: &quot; + message);</b>
+&nbsp;
+&nbsp;        // Direct message to a user using the format &quot;@username &lt;message&gt;&quot;
+<b class="nc">&nbsp;        if (message.startsWith(&quot;@&quot;)) {</b>
+&nbsp;
+&nbsp;            // split by space
+<b class="nc">&nbsp;            String[] split_msg =  message.split(&quot;\\s+&quot;);</b>
+&nbsp;
+&nbsp;            // Combine the rest of message
+<b class="nc">&nbsp;            StringBuilder actualMessageBuilder = new StringBuilder();</b>
+<b class="nc">&nbsp;            for (int i = 1; i &lt; split_msg.length; i++) {</b>
+<b class="nc">&nbsp;                actualMessageBuilder.append(split_msg[i]).append(&quot; &quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            String destUserName = split_msg[0].substring(1);    //@username and get rid of @</b>
+<b class="nc">&nbsp;            String actualMessage = actualMessageBuilder.toString();</b>
+<b class="nc">&nbsp;            sendMessageToPArticularUser(destUserName, &quot;[DM from &quot; + username + &quot;]: &quot; + actualMessage);</b>
+<b class="nc">&nbsp;            sendMessageToPArticularUser(username, &quot;[DM from &quot; + username + &quot;]: &quot; + actualMessage);</b>
+&nbsp;            ///////////
+<b class="nc">&nbsp;            Message msg = new Message(message, new Date(), new Date());</b>
+<b class="nc">&nbsp;            chatService.findPrivateChat( sessionUsernameMap.get(session), destUserName).getMessages().add(msg);</b>
+&nbsp;            //msgStorage.add(msg);
+&nbsp;            ///////
+<b class="nc">&nbsp;        }</b>
+&nbsp;        else { // Message to whole chat
+<b class="nc">&nbsp;            Message msg = new Message(message, new Date(), new Date());</b>
+<b class="nc">&nbsp;            chat.getMessages().add(msg);</b>
+&nbsp;            //msgStorage.add(msg);
+<b class="nc">&nbsp;            broadcast(username + &quot;: &quot; + message);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the closure of a WebSocket connection.
+&nbsp;     *
+&nbsp;     * @param session The WebSocket session that is being closed.
+&nbsp;     */
+&nbsp;    @OnClose
+&nbsp;    public void onClose(Session session) throws IOException {
+&nbsp;
+&nbsp;        // get the username from session-username mapping
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
+&nbsp;
+&nbsp;        // server side log
+<b class="nc">&nbsp;        logger.info(&quot;[onClose] &quot; + username);</b>
+&nbsp;
+&nbsp;        // remove user from memory mappings
+<b class="nc">&nbsp;        sessionUsernameMap.remove(session);</b>
+<b class="nc">&nbsp;        usernameSessionMap.remove(username);</b>
+&nbsp;
+&nbsp;        // send the message to chat
+<b class="nc">&nbsp;        broadcast(username + &quot; disconnected&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles WebSocket errors that occur during the connection.
+&nbsp;     *
+&nbsp;     * @param session   The WebSocket session where the error occurred.
+&nbsp;     * @param throwable The Throwable representing the error condition.
+&nbsp;     */
+&nbsp;    @OnError
+&nbsp;    public void onError(Session session, Throwable throwable) {
+&nbsp;
+&nbsp;        // get the username from session-username mapping
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
+&nbsp;
+&nbsp;        // do error handling here
+<b class="nc">&nbsp;        logger.info(&quot;[onError]&quot; + username + &quot;: &quot; + throwable.getMessage());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a message to a specific user in the chat (DM).
+&nbsp;     *
+&nbsp;     * @param username The username of the recipient.
+&nbsp;     * @param message  The message to be sent.
+&nbsp;     */
+&nbsp;    private void sendMessageToPArticularUser(String username, String message) {
+&nbsp;        try {
+<b class="nc">&nbsp;            usernameSessionMap.get(username).getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;        } catch (IOException e) {</b>
+<b class="nc">&nbsp;            logger.info(&quot;[DM Exception] &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Broadcasts a message to all users in the chat.
+&nbsp;     *
+&nbsp;     * @param message The message to be broadcasted to all users.
+&nbsp;     */
+&nbsp;    private void broadcast(String message) {
+<b class="nc">&nbsp;        sessionUsernameMap.forEach((session, username) -&gt; {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                session.getBasicRemote().sendText(message);</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;[Broadcast Exception] &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        });
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,314 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ChatService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Chats</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatService (planIT.Entity.Chats)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatService</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (8/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    39%
+  </span>
+  <span class="absValue">
+    (23/59)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ChatService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (8/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    39%
+  </span>
+  <span class="absValue">
+    (23/59)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Chats;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import planIT.Entity.Messages.MessageRepository;
+&nbsp;import planIT.Entity.Teams.Team;
+&nbsp;import planIT.Entity.Teams.TeamRepository;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;import planIT.Entity.Users.UserRepository;
+&nbsp;import planIT.Entity.Messages.Message;
+&nbsp;
+&nbsp;
+&nbsp;// @Service - Used to denote a service.
+&nbsp;// @Transactional - Used to allow transactional actions on the server.
+&nbsp;/**
+&nbsp; * Service class for the chat entity
+&nbsp; */
+&nbsp;@Service
+&nbsp;@Transactional
+<b class="fc">&nbsp;public class ChatService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ChatRepository chatRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepository userRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private MessageRepository messageRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private TeamRepository teamRepository;
+&nbsp;
+<b class="fc">&nbsp;    private String success = &quot;{\&quot;message\&quot;:\&quot;success\&quot;}&quot;;</b>
+<b class="fc">&nbsp;    private String failure = &quot;{\&quot;message\&quot;:\&quot;failure\&quot;}&quot;;</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns all chats from the repository as a list object
+&nbsp;     * @return chats
+&nbsp;     */
+&nbsp;    public List&lt;Chat&gt; getAllChats() {
+<b class="fc">&nbsp;        return chatRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns a chat from the repository with the matching id number
+&nbsp;     * @param id id number of the target chat
+&nbsp;     * @return chat
+&nbsp;     */
+&nbsp;    public Chat getChatById(int id) {
+<b class="fc">&nbsp;        return chatRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Saves a chat to the repository
+&nbsp;     * @param chat chat entity to be saved
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    public String createChat(Chat chat) {
+<b class="fc">&nbsp;        chatRepository.save(chat);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates a chat in the repository
+&nbsp;     * @param id id number of the target chat
+&nbsp;     * @param request chat entity with the updated info
+&nbsp;     * @return chat
+&nbsp;     */
+&nbsp;    public Chat updateChat(int id, Chat request) {
+<b class="fc">&nbsp;        Chat chat= chatRepository.findById(id);</b>
+<b class="fc">&nbsp;        if (chat == null)</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;
+<b class="fc">&nbsp;        chat.setName(request.getName());</b>
+&nbsp;
+<b class="fc">&nbsp;        chatRepository.save(chat);</b>
+<b class="fc">&nbsp;        return chatRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a preexisting user to a preexisting chat
+&nbsp;     * @param username username of target user
+&nbsp;     * @param chatId id number of the target chat
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    public String addUserToChat(String username, int chatId) {
+<b class="nc">&nbsp;        User user = userRepository.findByUsername(username);</b>
+<b class="nc">&nbsp;        Chat chat = chatRepository.findById(chatId);</b>
+<b class="nc">&nbsp;        user.getChats().add(chat);</b>
+<b class="nc">&nbsp;        chat.getUsers().add(user);</b>
+<b class="nc">&nbsp;        userRepository.save(user);</b>
+&nbsp;        //chatRepository.save(chat);
+<b class="nc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a user from a chat
+&nbsp;     * @param username username of target user
+&nbsp;     * @param chatId id number of target chat
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    public String removeUserFromChat(String username, int chatId) {
+<b class="nc">&nbsp;        User user = userRepository.findByUsername(username);</b>
+<b class="nc">&nbsp;        Chat chat = chatRepository.findById(chatId);</b>
+<b class="nc">&nbsp;        user.getChats().remove(chat);</b>
+<b class="nc">&nbsp;        chat.getUsers().remove(user);</b>
+<b class="nc">&nbsp;        chatRepository.save(chat);</b>
+<b class="nc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a chat from the repository
+&nbsp;     * @param id id number of target chat
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    public String deleteChat(int id) {
+<b class="fc">&nbsp;        for(User user: chatRepository.findById(id).getUsers()){</b>
+<b class="nc">&nbsp;            removeUserFromChat(user.getUsername(), id);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        chatRepository.deleteById(id);</b>
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Searches both users chats looking for a chat of size two that contains both users.
+&nbsp;     * If no such chat exists, it creates a new chat, adds both users, and saves it to the repository.
+&nbsp;     * @param username1 username of the first user to compare
+&nbsp;     * @param username2 username of the second user to compare
+&nbsp;     * @return private chat
+&nbsp;     */
+&nbsp;    public Chat findPrivateChat(String username1, String username2){
+<b class="nc">&nbsp;        User user1 = userRepository.findByUsername(username1);</b>
+<b class="nc">&nbsp;        User user2 = userRepository.findByUsername(username2);</b>
+&nbsp;
+<b class="nc">&nbsp;        for(int i=0; i&lt; chatRepository.findAll().size(); ++i) {</b>
+<b class="nc">&nbsp;            Chat sample = chatRepository.findAll().get(i);</b>
+&nbsp;
+<b class="nc">&nbsp;            if(user1.getChats().contains(sample) &amp; user2.getChats().contains(sample) &amp; sample.chatSize()==2){</b>
+<b class="nc">&nbsp;                return sample;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        Chat newDM = new Chat(&quot;New Private Chat&quot;);</b>
+<b class="nc">&nbsp;        addUserToChat(username1, newDM.getId());</b>
+<b class="nc">&nbsp;        addUserToChat(username2, newDM.getId());</b>
+<b class="nc">&nbsp;        chatRepository.save(newDM);</b>
+<b class="nc">&nbsp;        return newDM;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Simultaneously saves a new message entity and attaches it to a chat.
+&nbsp;     * @param id id number of the target chat
+&nbsp;     * @param message message entity to be saved
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    public String createMessageInChat(int id, Message message){
+<b class="fc">&nbsp;        Chat chat = chatRepository.findById(id);</b>
+<b class="fc">&nbsp;        chat.getMessages().add(message);</b>
+<b class="fc">&nbsp;        messageRepository.save(message);</b>
+&nbsp;
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a preexisting message to preexisting chat
+&nbsp;     * @param chatId id number of target chat
+&nbsp;     * @param messageId id number of target message
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    public String addMessageToChat(int chatId, int messageId){
+<b class="fc">&nbsp;        Chat chat = chatRepository.findById(chatId);</b>
+<b class="fc">&nbsp;        Message message = messageRepository.findById(messageId);</b>
+<b class="fc">&nbsp;        chat.getMessages().add(message);</b>
+&nbsp;
+<b class="fc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new chat entity and adds all members of a team to the chat
+&nbsp;     * @param teamId id number of target team
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    public String createTeamChat(int teamId){
+<b class="nc">&nbsp;        Team team = teamRepository.findById(teamId);</b>
+<b class="nc">&nbsp;        Chat chat = new Chat(team.getName());</b>
+<b class="nc">&nbsp;        for(User user: team.getUsers()){</b>
+<b class="nc">&nbsp;            chat.getUsers().add(user);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        chat.setTeam(team);</b>
+<b class="nc">&nbsp;        team.setChat(chat);</b>
+<b class="nc">&nbsp;        chatRepository.save(chat);</b>
+<b class="nc">&nbsp;        teamRepository.save(team);</b>
+&nbsp;
+<b class="nc">&nbsp;        return success;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
