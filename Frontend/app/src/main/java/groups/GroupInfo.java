@@ -192,7 +192,10 @@ public class GroupInfo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
+
                 Intent intent = new Intent(GroupInfo.this, TeamAvailability.class);
+                intent.putExtra("groupId", getting_group_id);
                 startActivity(intent);
             }
         });

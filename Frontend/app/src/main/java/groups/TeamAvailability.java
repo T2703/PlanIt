@@ -44,7 +44,7 @@ public class TeamAvailability extends AppCompatActivity {
     private TextView textView;
 
     private static String group_id = ""; //TODO GET GROUP ID
-    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/compareStandard/" + group_id + "/dates";
+    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/compareStandard/"; //+ group_id + "/dates"
 
     private String result ="";
     private final Context teamAvailabilityPageContext = this;
@@ -63,7 +63,8 @@ public class TeamAvailability extends AppCompatActivity {
         setContentView(R.layout.activity_team_availability);
 
         // Initialize
-        context = this;
+        //context = this;
+        int groupId = getIntent().getIntExtra("groupId", 0);
         event_start_date2 = findViewById(R.id.start_date_input2);
         event_end_date2 = findViewById(R.id.end_date_input2);
         event_start_time2 = findViewById(R.id.start_time_input2);
@@ -207,7 +208,7 @@ public class TeamAvailability extends AppCompatActivity {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                URL,
+                URL+ group_id + "/dates",
                 body,
                 new Response.Listener<JSONObject>() {
 
