@@ -149,14 +149,24 @@ public class GroupInfo extends AppCompatActivity {
                         if (menuItem.getItemId() == R.id.to_chat_option) {
                             Intent intent = new Intent(GroupInfo.this, MessageView.class);
                             startActivity(intent);
-                        } else if (menuItem.getItemId() == R.id.edit_option) {
+                        }
+
+                        else if (menuItem.getItemId() == R.id.edit_option) {
                             Intent editIntent = new Intent(GroupInfo.this, EditGroup.class);
                             editIntent.putExtra("group_id", getting_group_id);
                             editIntent.putExtra("group_name", getting_group_name);
                             editIntent.putExtra("group_description", getting_group_desc);
                             startActivity(editIntent);
 
-                        } else if (menuItem.getItemId() == R.id.delete_option) {
+                        }
+
+                        else if (menuItem.getItemId() == R.id.add_users_option) {
+                            Intent intent = new Intent(GroupInfo.this, AddFollowersToTeamPage.class);
+                            intent.putExtra("group_id", getting_group_id);
+                            startActivity(intent);
+                        }
+
+                        else if (menuItem.getItemId() == R.id.delete_option) {
                             String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams" + "/" + getting_group_id;
                             makeDeleteRequest(delete_url, getting_group_id);
 
