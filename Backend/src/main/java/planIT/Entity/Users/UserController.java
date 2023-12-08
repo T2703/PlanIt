@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Login.CanvasToken;
 import planIT.Login.LoginRequest;
 import planIT.Login.Password;
 
@@ -172,6 +173,22 @@ public class UserController {
         }
 
         return new ResponseEntity(user, HttpStatus.OK);
+    }
+
+    @PutMapping("users/{username}/set-canvas-token")
+    public String setCanvasToken(@PathVariable String username, @RequestBody CanvasToken token) {
+        User user = userService.findUserByUsername(username);
+
+        user.setCanvasToken(token.getCanvasToken());
+
+        userService.saveUser(user);
+        return success;
+    }
+
+    @GetMapping("users/{username}/canvas-token")
+    public String getCanvasToken(@PathVariable String username) {
+        User user = userService.findUserByUsername(username);
+        return user.getCanvasToken();
     }
 }
 
