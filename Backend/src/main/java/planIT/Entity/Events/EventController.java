@@ -65,7 +65,7 @@ public class EventController {
      */
     @PostMapping(path = "users/{username}/events")
     @Operation(summary = "Create a new Event for a user", description = "Create a new event and attach it to a user")
-    public String createEvent(@PathVariable String username, @RequestBody Event event) {
+    public Event createEvent(@PathVariable String username, @RequestBody Event event) {
         return eventService.createEvent(username, event);
     }
 

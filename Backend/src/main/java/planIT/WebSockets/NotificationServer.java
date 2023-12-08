@@ -100,6 +100,20 @@ public class NotificationServer {
     @OnMessage
     public void onMessage(Session session, String notifications) throws JSONException {
 
+        String parts[] = notifications.split("   ");
+
+        String usernames[] = parts[0].split(" ");
+
+        for (String username : usernames) {
+            logger.info("[onMessage:Notification]" + parts[0]);
+            logger.info("[onMessage:Notification]" + parts[1]);
+            User user = userRepository.findByUsername(username);
+            JSONObject json = new JSONObject(parts[1]);
+            Notification notification = new Notification(json.getString("title"), json.getString("description"), json.getString("type"), Integer.parseInt(json.getString("typeId")));
+            notification.setUser(user);
+            notificationRepository.save(notification);
+        }
+
         broadcastNotifications();
 
     }
