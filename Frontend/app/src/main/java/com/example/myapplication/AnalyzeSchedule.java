@@ -47,7 +47,6 @@ public class AnalyzeSchedule extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
                         Log.d("result", response);
 
                         try {

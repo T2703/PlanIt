@@ -1,0 +1,203 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AssignmentController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Assignments</a>
+</div>
+
+<h1>Coverage Summary for Class: AssignmentController (planIT.Entity.Assignments)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AssignmentController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Assignments;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.media.SchemaProperties;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.DeleteMapping;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.PutMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;/**
+&nbsp; * Controller class for assignment entity
+&nbsp; */
+&nbsp;@Schema(description = &quot;Rest API for assignment entity&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class AssignmentController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    AssignmentService assignmentService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns all assignments from repository as a List object
+&nbsp;     * @return assignments
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Get assignments from repository&quot;, description = &quot;Get assignments from repository&quot;)
+&nbsp;    @GetMapping(path = &quot;/assignments&quot;)
+&nbsp;    public List&lt;Assignment&gt; getAllAssignments() {
+<b class="fc">&nbsp;        return assignmentService.getAllAssignments();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets an assignment from repository from a given id number.
+&nbsp;     * Accesses assignmentService.getAssignmentById() method.
+&nbsp;     * @param id id number of the target assignment
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Get particular assignment from repository&quot;, description = &quot;Get particular assignment from repository&quot;)
+&nbsp;    @GetMapping(path = &quot;/assignments/{id}&quot;)
+&nbsp;    public Assignment getAssignmentById(@PathVariable int id){
+<b class="fc">&nbsp;        return assignmentService.getAssignmentById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Access assignmentService.createAssignment() method.
+&nbsp;     * Creates a new assignment and adds it to the given user
+&nbsp;     * @param username username of target user
+&nbsp;     * @param assignment newly created assignment
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Create assignment&quot;, description = &quot;Creates an assignment&quot;)
+&nbsp;    @PostMapping(path = &quot;users/{username}/assignments&quot;)
+&nbsp;    public String createAssignment(@PathVariable String username, @RequestBody Assignment assignment){
+<b class="fc">&nbsp;        return assignmentService.createAssignment(username, assignment);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Accesses assignmentService.getAssignmentByUser() method.
+&nbsp;     * Returns all assignments from a user as a List object
+&nbsp;     * @param username username of target user
+&nbsp;     * @return assignments
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Get a user&#39;s assignments&quot;, description = &quot;Get a user&#39;s assignments&quot;)
+&nbsp;    @GetMapping(path = &quot;users/{username}/assignments&quot;)
+&nbsp;    public List&lt;Assignment&gt; getUserAssignments(@PathVariable String username){
+<b class="fc">&nbsp;        return assignmentService.getAssignmentByUser(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Accesses assignmentService.updateAssignment() method.
+&nbsp;     * Updates an assignment entity in the repository.
+&nbsp;     * @param id id number of target assignment
+&nbsp;     * @param assignment assignment object with update info
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Update Assignment&quot;, description = &quot;Updates an assignment&quot;)
+&nbsp;    @PutMapping(path = &quot;/assignments/{id}&quot;)
+&nbsp;    public Assignment updateAssignment(@PathVariable int id, @RequestBody Assignment assignment){
+<b class="fc">&nbsp;        return assignmentService.updateAssignment(id, assignment);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Accesses assignmentService.deleteAssignment() method.
+&nbsp;     * Deletes an assignment from the repository.
+&nbsp;     * @param id id of assignment to delete
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Delete assignment&quot;, description = &quot;Deletes an assignment&quot;)
+&nbsp;    @DeleteMapping(path = &quot;/assignments/{id}&quot;)
+&nbsp;    public String deleteAssignment(@PathVariable int id){
+<b class="fc">&nbsp;        return assignmentService.deleteAssignment(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
