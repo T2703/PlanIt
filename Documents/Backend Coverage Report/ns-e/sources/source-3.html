@@ -1,0 +1,267 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > NotificationServer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.WebSockets</a>
+</div>
+
+<h1>Coverage Summary for Class: NotificationServer (planIT.WebSockets)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NotificationServer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (4/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.8%
+  </span>
+  <span class="absValue">
+    (6/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.WebSockets;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.Hashtable;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import jakarta.websocket.OnClose;
+&nbsp;import jakarta.websocket.OnError;
+&nbsp;import jakarta.websocket.OnMessage;
+&nbsp;import jakarta.websocket.OnOpen;
+&nbsp;import jakarta.websocket.Session;
+&nbsp;import jakarta.websocket.server.PathParam;
+&nbsp;import jakarta.websocket.server.ServerEndpoint;
+&nbsp;
+&nbsp;import org.json.JSONException;
+&nbsp;import org.json.JSONObject;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import planIT.Entity.Notifications.Notification;
+&nbsp;import planIT.Entity.Notifications.NotificationRepository;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;import planIT.Entity.Users.UserRepository;
+&nbsp;
+&nbsp;/**
+&nbsp; * WebSocket endpoint for handling user notifications.
+&nbsp; * This class manages the WebSocket connections, processes incoming notifications,
+&nbsp; * and interacts with the NotificationRepository to store chat history.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; *
+&nbsp; */
+&nbsp;@ServerEndpoint(value = &quot;/notification/{username}&quot;)
+&nbsp;@Component
+<b class="fc">&nbsp;public class NotificationServer {</b>
+&nbsp;
+&nbsp;    // cannot autowire static directly (instead we do it by the below
+&nbsp;    // method
+&nbsp;    private static NotificationRepository notificationRepository;
+&nbsp;
+&nbsp;    private static UserRepository userRepository;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the {@link NotificationRepository} for the NotificationServer.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;This method is annotated with {@code @Autowired} to enable Spring to inject
+&nbsp;     * the NotificationRepository bean. It sets the static {@code notificationRepository}
+&nbsp;     * variable, allowing the NotificationServer to interact with the repository.&lt;/p&gt;
+&nbsp;     *
+&nbsp;     * @param repo The NotificationRepository bean to be injected.
+&nbsp;     * @see NotificationRepository
+&nbsp;     */
+&nbsp;    @Autowired
+&nbsp;    public void setNotificationRepository(NotificationRepository repo) {
+<b class="fc">&nbsp;        notificationRepository = repo;  // we are setting the static variable</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    public void setUserRepository(UserRepository repo) {
+<b class="fc">&nbsp;        userRepository = repo;  // we are setting the static variable</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Store all socket session and their corresponding username.
+<b class="fc">&nbsp;    private static Map&lt;Session, String&gt; sessionUsernameMap = new Hashtable&lt;&gt;();</b>
+<b class="fc">&nbsp;    private static Map&lt;String, Session&gt; usernameSessionMap = new Hashtable&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;    private final Logger logger = LoggerFactory.getLogger(NotificationServer.class);</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the opening of a WebSocket session.
+&nbsp;     *
+&nbsp;     * @param session  The WebSocket session.
+&nbsp;     * @param username The username obtained from the path parameter.
+&nbsp;     * @throws IOException If an I/O error occurs.
+&nbsp;     */
+&nbsp;    @OnOpen
+&nbsp;    public void onOpen(Session session, @PathParam(&quot;username&quot;) String username)
+&nbsp;            throws IOException {
+&nbsp;
+<b class="nc">&nbsp;        logger.info(&quot;[onOpen:Notification]&quot;, username);</b>
+&nbsp;
+&nbsp;        // store connecting user information
+<b class="nc">&nbsp;        sessionUsernameMap.put(session, username);</b>
+<b class="nc">&nbsp;        usernameSessionMap.put(username, session);</b>
+&nbsp;
+<b class="nc">&nbsp;        broadcastNotifications();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the reception of a WebSocket message.
+&nbsp;     *
+&nbsp;     * @param session      The WebSocket session.
+&nbsp;     * @param notifications The received notification.
+&nbsp;     */
+&nbsp;    @OnMessage
+&nbsp;    public void onMessage(Session session, String notifications) throws JSONException {
+&nbsp;
+<b class="nc">&nbsp;        String parts[] = notifications.split(&quot;   &quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        String usernames[] = parts[0].split(&quot; &quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        for (String username : usernames) {</b>
+<b class="nc">&nbsp;            logger.info(&quot;[onMessage:Notification]&quot; + parts[0]);</b>
+<b class="nc">&nbsp;            logger.info(&quot;[onMessage:Notification]&quot; + parts[1]);</b>
+<b class="nc">&nbsp;            User user = userRepository.findByUsername(username);</b>
+<b class="nc">&nbsp;            JSONObject json = new JSONObject(parts[1]);</b>
+<b class="nc">&nbsp;            Notification notification = new Notification(json.getString(&quot;title&quot;), json.getString(&quot;description&quot;), &quot;/users/&quot; + username + &quot;/events/&quot; + json.getString(&quot;typeId&quot;), Integer.parseInt(json.getString(&quot;typeId&quot;)));</b>
+<b class="nc">&nbsp;            notification.setUser(user);</b>
+<b class="nc">&nbsp;            notificationRepository.save(notification);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        broadcastNotifications();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles the closing of a WebSocket session.
+&nbsp;     *
+&nbsp;     * @param session The WebSocket session.
+&nbsp;     * @throws IOException If an I/O error occurs.
+&nbsp;     */
+&nbsp;    @OnClose
+&nbsp;    public void onClose(Session session) throws IOException {
+<b class="nc">&nbsp;        String username = sessionUsernameMap.get(session);</b>
+&nbsp;
+<b class="nc">&nbsp;        logger.info(&quot;[onClose:Notification]&quot;, username);</b>
+&nbsp;
+&nbsp;        // remove the user connection information
+<b class="nc">&nbsp;        sessionUsernameMap.remove(session);</b>
+<b class="nc">&nbsp;        usernameSessionMap.remove(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Handles WebSocket errors.
+&nbsp;     *
+&nbsp;     * @param session   The WebSocket session.
+&nbsp;     * @param throwable The Throwable representing the error.
+&nbsp;     */
+&nbsp;    @OnError
+&nbsp;    public void onError(Session session, Throwable throwable) {
+&nbsp;        // Do error handling here
+<b class="nc">&nbsp;        logger.info(&quot;[onError:Notification]&quot;);</b>
+<b class="nc">&nbsp;        throwable.printStackTrace();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sends a notification to a specific user.
+&nbsp;     */
+&nbsp;    private void broadcastNotifications() {
+<b class="nc">&nbsp;        sessionUsernameMap.forEach((session, username) -&gt; {</b>
+&nbsp;            try {
+<b class="nc">&nbsp;                session.getBasicRemote().sendText(&quot;notification&quot;);</b>
+<b class="nc">&nbsp;            } catch (IOException e) {</b>
+<b class="nc">&nbsp;                logger.info(&quot;[Broadcast Exception] &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TeamController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Teams</a>
+</div>
+
+<h1>Coverage Summary for Class: TeamController (planIT.Entity.Teams)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TeamController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Teams;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.DeleteMapping;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.PutMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;import planIT.Entity.Users.UserService;
+&nbsp;
+&nbsp;/**
+&nbsp; * RESTful controller for managing Team-related operations.
+&nbsp; * This controller handles HTTP requests related to Team entities, such as retrieval, creation, update, and deletion.
+&nbsp; * Requests are processed using the corresponding methods provided by the TeamService.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; *
+&nbsp; */
+&nbsp;@RestController
+&nbsp;@Tag(name = &quot;Team Management System&quot;, description = &quot;Operations pertaining to Team management&quot;)
+<b class="fc">&nbsp;public class TeamController {</b>
+&nbsp;
+&nbsp;    // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
+&nbsp;    @Autowired
+&nbsp;    private TeamService teamService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserService userService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all Teams from the service.
+&nbsp;     *
+&nbsp;     * @return List of Team entities.
+&nbsp;     */
+&nbsp;    @GetMapping(path = &quot;users/{username}/teams&quot;)
+&nbsp;    @Operation(summary = &quot;Get all User Teams&quot;, description = &quot;Returns all teams from the repository as a List object&quot;)
+&nbsp;    public List&lt;Team&gt; getAllTeams(@PathVariable String username) {
+<b class="fc">&nbsp;        return userService.findUserByUsername(username).getTeams();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a specific Team from the service based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the Team.
+&nbsp;     * @return The Team entity corresponding to the provided ID.
+&nbsp;     */
+&nbsp;    @GetMapping(path = &quot;/teams/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Get a Team by Id&quot;, description = &quot;Gets a team from the repository based on id number&quot;)
+&nbsp;    public Team getTeamById(@PathVariable int id) {
+<b class="fc">&nbsp;        return teamService.getTeamById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new Team in the service.
+&nbsp;     *
+&nbsp;     * @param team The Team entity to be created.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @PostMapping(path = &quot;users/{username}/teams&quot;)
+&nbsp;    @Operation(summary = &quot;Create a new Team&quot;, description = &quot;Adds a team to the database&quot;)
+&nbsp;    public String createTeam(@PathVariable String username, @RequestBody Team team) {
+<b class="fc">&nbsp;        return teamService.createTeam(username, team);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a user to a specific Team in the service.
+&nbsp;     *
+&nbsp;     * @param id       The unique identifier of the Team.
+&nbsp;     * @param username The username of the user to be added.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @PutMapping(path = &quot;teams/{id}/add-user/{username}&quot;)
+&nbsp;    @Operation(summary = &quot;Add a user to a Team&quot;, description = &quot;Adds a user to a team in the repository&quot;)
+&nbsp;    public String addUserToTeam(@PathVariable int id, @PathVariable String username){
+<b class="fc">&nbsp;        return teamService.addUserToTeam(id, username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates an existing Team in the service based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id   The unique identifier of the Team to be updated.
+&nbsp;     * @param team The updated Team entity.
+&nbsp;     * @return The updated Team entity.
+&nbsp;     */
+&nbsp;    @PutMapping(path = &quot;/teams/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Update an existing Team&quot;, description = &quot;Updates a team in the repository&quot;)
+&nbsp;    public String updateTeam(@PathVariable int id, @RequestBody Team team) {
+<b class="fc">&nbsp;        return teamService.updateTeam(id, team);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a Team from the service based on the provided ID.
+&nbsp;     *
+&nbsp;     * @param id The unique identifier of the Team to be deleted.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @DeleteMapping(path = &quot;users/{username}/teams/{id}&quot;)
+&nbsp;    @Operation(summary = &quot;Delete a Team by Id&quot;, description = &quot;Deletes a team from the repository&quot;)
+&nbsp;    public String deleteTeam(@PathVariable String username, @PathVariable int id) {
+<b class="fc">&nbsp;        teamService.getTeamById(id).getUsers().clear();</b>
+<b class="fc">&nbsp;        User user = userService.findUserByUsername(username);</b>
+<b class="fc">&nbsp;        user.getAdministrates().remove(teamService.getTeamById(id));</b>
+<b class="fc">&nbsp;        return teamService.deleteTeam(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a user to a specific Team in the service.
+&nbsp;     *
+&nbsp;     * @param id       The unique identifier of the Team.
+&nbsp;     * @param username The username of the user to be added.
+&nbsp;     * @return A success or failure message as a JSON string.
+&nbsp;     */
+&nbsp;    @PutMapping(path = &quot;teams/{id}/remove-user/{username}&quot;)
+&nbsp;    @Operation(summary = &quot;Add a user to a Team&quot;, description = &quot;Adds a user to a team in the repository&quot;)
+&nbsp;    public String removeUserFromTeam(@PathVariable int id, @PathVariable String username){
+<b class="fc">&nbsp;        return teamService.removeUserFromTeam(id, username);</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

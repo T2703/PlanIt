@@ -1,0 +1,270 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ChatController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Chats</a>
+</div>
+
+<h1>Coverage Summary for Class: ChatController (planIT.Entity.Chats)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChatController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72.7%
+  </span>
+  <span class="absValue">
+    (8/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72.7%
+  </span>
+  <span class="absValue">
+    (8/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Chats;
+&nbsp;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.DeleteMapping;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PathVariable;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.PutMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;import org.springframework.web.bind.annotation.RestController;
+&nbsp;import planIT.Entity.Assignments.Assignment;
+&nbsp;import planIT.Entity.Messages.Message;
+&nbsp;import planIT.Entity.Teams.Team;
+&nbsp;
+&nbsp;/**
+&nbsp; * Controller class for the chat entity
+&nbsp; */
+&nbsp;@Schema(description = &quot;Controller for Chat entity&quot;)
+&nbsp;@RestController
+<b class="fc">&nbsp;public class ChatController {</b>
+&nbsp;
+&nbsp;    // @Autowired - Injects implementation of the repository interface without the need for explicit bean configuration.
+&nbsp;    /**
+&nbsp;     * Chat service to be utilized by calls
+&nbsp;     */
+&nbsp;    @Autowired
+&nbsp;    private ChatService chatService;
+&nbsp;
+&nbsp;    // GET method - retreives all chats from the database.
+&nbsp;    /**
+&nbsp;     * Accesses the chatService.getAllChats() method
+&nbsp;     * Returns all chats from a repository as a set
+&nbsp;     * @return chats
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;gets all Chats&quot;, description = &quot;gets all Chats&quot;)
+&nbsp;    @GetMapping(path = &quot;/chats&quot;)
+&nbsp;    public List&lt;Chat&gt; getAllChats() {
+<b class="fc">&nbsp;        return chatService.getAllChats();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // GET method - retreives a chat from the database.
+&nbsp;    /**
+&nbsp;     * Accesses chatService.getChatById();
+&nbsp;     * Returns a chat from its id number
+&nbsp;     * @param id the id number of the desired chat
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary=&quot;Get chat by id&quot;, description = &quot;Gets chat by id&quot;)
+&nbsp;    @GetMapping(path = &quot;/chats/{id}&quot;)
+&nbsp;    public Chat getChatById(@PathVariable int id) {
+<b class="fc">&nbsp;        return chatService.getChatById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // POST method - adds a chat to the database.
+&nbsp;    /**
+&nbsp;     * Accesses chatService.createChat()
+&nbsp;     * @param chat newly created chat entity
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Create chat&quot;, description = &quot;Creates a chat&quot;)
+&nbsp;    @PostMapping(path = &quot;/chats&quot;)
+&nbsp;    public String createChat(@RequestBody Chat chat) {
+<b class="fc">&nbsp;        return chatService.createChat(chat);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //POST method - creates a chat from a team entity
+&nbsp;    /**
+&nbsp;     * Accesses the chatService.createTeamChat method.
+&nbsp;     * Creates a new chat entity and immediately adds all users from a given team as
+&nbsp;     * members of the new chat.
+&nbsp;     * @param teamId id number of the team
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary=&quot;Create team chat&quot;, description = &quot;Creates a chat for a team&quot;)
+&nbsp;    @PostMapping(path = &quot;/createTeamChat/{teamId}&quot;)
+&nbsp;    public String createTeamChat(@PathVariable int teamId){
+<b class="nc">&nbsp;        return chatService.createTeamChat(teamId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Accesses the chatService.createMessageInChat() method.
+&nbsp;     * Posts a new message and simultaneously attaches it to a chat entity.
+&nbsp;     * @param id id number of the desired chat
+&nbsp;     * @param message newly created message entity
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Create message in chat&quot;, description = &quot;Creates a message in a chat&quot;)
+&nbsp;    @PostMapping(path = &quot;chats/{id}/messages&quot;)
+&nbsp;    public String createMessageInChat(@PathVariable int id, @RequestBody Message message){
+<b class="fc">&nbsp;        return chatService.createMessageInChat(id, message);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // PUT method - updates a chat in the database.
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Accesses the chatService.updateChat() method.
+&nbsp;     * @param id id number of the chat to be updated
+&nbsp;     * @param chat chat entity with the info to be updated
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;update chat&quot;, description = &quot;Updates a chat&quot;)
+&nbsp;    @PutMapping(path = &quot;/chats/{id}&quot;)
+&nbsp;    public Chat updateChat(@PathVariable int id, @RequestBody Chat chat) {
+<b class="fc">&nbsp;        return chatService.updateChat(id, chat);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // PUT method - adds a user to a chat
+&nbsp;    /**
+&nbsp;     * Accesses chatService.addUserToChat()
+&nbsp;     * Adds a preexisting user to a preexisting chat
+&nbsp;     * @param username username of the user to be added
+&nbsp;     * @param chatId id number of the target chat entity
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Add User to Chat&quot;, description = &quot;Adds a user to a chat&quot;)
+&nbsp;    @PutMapping(path = &quot;/chats/{chatId}/users/{username}&quot;)
+&nbsp;    public String addUserToChat(@PathVariable String username, @PathVariable int chatId) {
+<b class="nc">&nbsp;        return chatService.addUserToChat(username, chatId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // PUT method - adds a user to a chat
+&nbsp;    /**
+&nbsp;     * Acccesses chatService.addMessageToChat() method.
+&nbsp;     * Adds a preexisting message entity to a preexisting chat entity
+&nbsp;     * @param chatId id number of the target chat
+&nbsp;     * @param messageId id number of the target message
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;Add message to chat&quot;, description = &quot;Adds a message to a chat&quot;)
+&nbsp;    @PutMapping(path = &quot;/chats/{chatId}/messages/{messageId}&quot;)
+&nbsp;    public String addMessageToChat(@PathVariable int chatId, @PathVariable int messageId) {
+<b class="fc">&nbsp;        return chatService.addMessageToChat(chatId, messageId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // DELETE method - deletes a chat from the database.
+&nbsp;    /**
+&nbsp;     * Accesses chatService.deleteChat() method.
+&nbsp;     * Deletes a chat from the database
+&nbsp;     * @param id id number of the target chat
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;delete chat&quot;, description = &quot;Deletes a message from a chat&quot;)
+&nbsp;    @DeleteMapping(path = &quot;/chats/{id}&quot;)
+&nbsp;    public String deleteChat(@PathVariable int id) {
+<b class="fc">&nbsp;        return chatService.deleteChat(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // DELETE method - deletes a user from a chat.
+&nbsp;    /**
+&nbsp;     * Accesses chatService.removeUserFromChat() method.
+&nbsp;     * Removes a user from a chat
+&nbsp;     * @param username username of target user
+&nbsp;     * @param chatID id number of the chat
+&nbsp;     * @return success
+&nbsp;     */
+&nbsp;    @Operation(summary = &quot;remove user from chat&quot;, description = &quot;Removes a user from a chat&quot;)
+&nbsp;    @DeleteMapping(path = &quot;/chats/{chatID}/users/{username}&quot;)
+&nbsp;    public String removeUserFromChat(@PathVariable String username,@PathVariable int chatID) {
+<b class="nc">&nbsp;        return chatService.removeUserFromChat(username, chatID);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>

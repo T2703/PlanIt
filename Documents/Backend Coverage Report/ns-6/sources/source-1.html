@@ -1,0 +1,267 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Notification</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.Entity.Notifications</a>
+</div>
+
+<h1>Coverage Summary for Class: Notification (planIT.Entity.Notifications)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Notification</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.8%
+  </span>
+  <span class="absValue">
+    (15/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.2%
+  </span>
+  <span class="absValue">
+    (20/21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Notification$HibernateInstantiator$2EmhtMYf</td>
+  </tr>
+  <tr>
+    <td class="name">Notification$HibernateInstantiator$qn4Ph4Zl</td>
+  </tr>
+  <tr>
+    <td class="name">Notification$HibernateProxy$0EvzjkDg</td>
+  </tr>
+  <tr>
+    <td class="name">Notification$HibernateProxy$Lj07QfkZ</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    93.8%
+  </span>
+  <span class="absValue">
+    (15/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95.2%
+  </span>
+  <span class="absValue">
+    (20/21)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.Entity.Notifications;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import jakarta.persistence.Entity;
+&nbsp;import jakarta.persistence.GeneratedValue;
+&nbsp;import jakarta.persistence.GenerationType;
+&nbsp;import jakarta.persistence.Id;
+&nbsp;import jakarta.persistence.ManyToOne;
+&nbsp;import jakarta.persistence.JoinColumn;
+&nbsp;import io.swagger.v3.oas.annotations.media.Schema;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;
+&nbsp;import planIT.Entity.Users.User;
+&nbsp;
+&nbsp;/**
+&nbsp; * Notifcations entity
+&nbsp; * @author Melani Hodge
+&nbsp; *
+&nbsp; */
+&nbsp;@Entity
+&nbsp;@Tag(name = &quot;Notification&quot;, description = &quot;Notifcations entity.&quot;)
+&nbsp;public class Notification {
+&nbsp;
+&nbsp;    // Generated ID for each Notification
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    @Schema(description = &quot;ID of notification&quot;)
+&nbsp;    private int id;
+&nbsp;
+&nbsp;    // Title for each Notification
+&nbsp;    @Schema(description = &quot;Title of notification&quot;)
+&nbsp;    private String title;
+&nbsp;
+&nbsp;    // Description for each Notification
+&nbsp;    @Schema(description = &quot;Description of notification&quot;)
+&nbsp;    private String description;
+&nbsp;
+&nbsp;    // type of Notification
+&nbsp;    @Schema(description = &quot;Type of notification&quot;)
+&nbsp;    private String type;
+&nbsp;
+&nbsp;    // type id of Notification
+&nbsp;    @Schema(description = &quot;TypeId of notification&quot;)
+&nbsp;    private int typeId;
+&nbsp;
+&nbsp;    // type of Notification
+<b class="fc">&nbsp;    @Schema(description = &quot;If the notification has been seen or not&quot;)</b>
+&nbsp;    private boolean seen = false;
+&nbsp;
+&nbsp;    @JsonIgnoreProperties(&quot;notifications&quot;)
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;user_id&quot;)
+&nbsp;    private User user;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notification constructor with parameters
+&nbsp;     * @param title notification title
+&nbsp;     * @param description notification description
+&nbsp;     */
+<b class="fc">&nbsp;    public Notification(String title, String description, String type, int typeId) {</b>
+<b class="fc">&nbsp;        this.title = title;</b>
+<b class="fc">&nbsp;        this.description = description;</b>
+<b class="fc">&nbsp;        this.type = type;</b>
+<b class="fc">&nbsp;        this.typeId = typeId;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Notification constructor (without parameters)
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Notification constructor without parameters
+&nbsp;     */
+<b class="fc">&nbsp;    public Notification() { }</b>
+&nbsp;
+&nbsp;    /* =============== GETTER &amp; SETTER FUNCTIONS =============== */
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the notification id number
+&nbsp;     * @return id
+&nbsp;     */
+<b class="fc">&nbsp;    public int getId() { return id; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets notification id number
+&nbsp;     * @param id id number
+&nbsp;     */
+<b class="fc">&nbsp;    public void setId(int id){ this.id = id; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the notification title
+&nbsp;     * @return title
+&nbsp;     */
+<b class="fc">&nbsp;    public String getTitle(){ return title; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets notification title
+&nbsp;     * @param title notification title
+&nbsp;     */
+<b class="fc">&nbsp;    public void setTitle(String title){ this.title = title; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the notification description
+&nbsp;     * @return description
+&nbsp;     */
+<b class="fc">&nbsp;    public String getDescription() { return description; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Set notification description
+&nbsp;     * @param description description of notification
+&nbsp;     */
+<b class="fc">&nbsp;    public void setDescription(String description) { this.description = description; }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the user attached to notification
+&nbsp;     * @return user
+&nbsp;     */
+&nbsp;    public User getUser() {
+<b class="fc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the user of the notification
+&nbsp;     * @param user new user
+&nbsp;     */
+&nbsp;    public void setUser(User user) {
+<b class="fc">&nbsp;        this.user = user;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public String getType() { return type; }</b>
+<b class="fc">&nbsp;    public void setType(String type) { this.type = type; }</b>
+&nbsp;
+<b class="fc">&nbsp;    public int getTypeId() { return typeId; }</b>
+<b class="fc">&nbsp;    public void setTypeId(int typeId) { this.typeId = typeId; }</b>
+&nbsp;
+&nbsp;    public boolean isSeen() {
+<b class="fc">&nbsp;        return seen;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSeen() {
+<b class="nc">&nbsp;        seen = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
