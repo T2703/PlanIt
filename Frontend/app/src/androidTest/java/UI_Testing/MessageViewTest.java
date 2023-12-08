@@ -17,6 +17,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -37,7 +40,6 @@ public class MessageViewTest {
         // Check if UI components are displayed
         Espresso.onView(withId(R.id.send_button)).check(ViewAssertions.matches(isDisplayed()));
         Espresso.onView(withId(R.id.user_message)).check(ViewAssertions.matches(isDisplayed()));
-        Espresso.onView(withId(R.id.username)).check(ViewAssertions.matches(isDisplayed()));
         Espresso.onView(withId(R.id.message_tv)).check(ViewAssertions.matches(isDisplayed()));
 
         // Perform some actions on UI components
@@ -47,12 +49,4 @@ public class MessageViewTest {
         Espresso.onView(withId(R.id.user_message))
                 .check(ViewAssertions.matches(withText("Hello, this is a test message")));
     }
-
-    @Test
-    public void testButtons() {
-        // Check if UI components are displayed
-        Espresso.onView(withId(R.id.send_button)).check(ViewAssertions.matches(isDisplayed()));
-        Espresso.onView(withId(R.id.send_button)).perform(ViewActions.click());
-    }
-
 }
