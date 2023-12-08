@@ -223,17 +223,6 @@
             android:layout_height="500dp"
             android:translationY="140dp" />
 
-        <Button
-            android:id="@+id/analyzeWeek"
-            android:layout_width="80dp"
-            android:layout_height="25dp"
-            android:scaleX="1.0"
-            android:scaleY="1.2"
-            android:text="Activity"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:translationX="105dp"
-            android:translationY="25dp" />
-
         <ImageButton
             android:id="@+id/prevWeekButton"
             android:layout_width="wrap_content"

@@ -40,9 +40,6 @@ public class CalendarWeeklyTest {
 
     @Test
     public void testUIComponents() {
-        // Check if the "Analyze Week" button is displayed
-        onView(withId(R.id.analyzeWeek)).check(matches(isDisplayed()));
-
         // Check if the days of the week TextViews are displayed
         //onView(withId(R.id.sunDate)).check(matches(isDisplayed()));
         onView(withId(R.id.monDate)).check(matches(isDisplayed()));
@@ -96,6 +93,17 @@ public class CalendarWeeklyTest {
         Espresso.onView(withId(R.id.thuDate)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.friDate)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.satDate)).perform(ViewActions.click());
+
+    }
+
+    @Test
+    public void navigateToAnalyze() {
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Weekly View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Analyze Schedule")).perform(ViewActions.click());
+
 
     }
 

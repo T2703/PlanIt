@@ -81,4 +81,16 @@ public class CalendarDailyPageTest {
         Espresso.onView(withId(R.id.nextDayButton)).perform(ViewActions.click());
         Espresso.onView(withId(R.id.prevDayButton)).perform(ViewActions.click());
     }
+
+    @Test
+    public void navigateToAnalyze() {
+        // Click on the menu button to open the popup menu
+        Espresso.onView(withId(R.id.menu_calendar_button)).perform(ViewActions.click());
+
+        // Click on the "Weekly View" option in the popup menu
+        Espresso.onView(ViewMatchers.withText("Analyze Schedule")).perform(ViewActions.click());
+
+
+    }
+
 }

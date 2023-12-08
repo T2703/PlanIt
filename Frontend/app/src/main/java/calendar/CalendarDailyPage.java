@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.AnalyzeSchedule;
 import com.example.myapplication.NavBarView;
 import com.example.myapplication.R;
 
@@ -220,6 +221,12 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
 
                         else if (menuItem.getItemId() == R.id.all_events) {
                             Intent intent = new Intent(CalendarDailyPage.this, EventsListViewer.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
+                        else if (menuItem.getItemId() == R.id.schedule_analyze) {
+                            Intent intent = new Intent(CalendarDailyPage.this, AnalyzeSchedule.class);
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);
                             startActivity(intent, options.toBundle());
                         }
