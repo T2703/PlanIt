@@ -66,7 +66,7 @@ public class NotificationSystemTest {
         }
 
         // Post Notification To Database
-        Notification t = new Notification("test", "description", new ArrayList<>(), "event-invite");
+        Notification t = new Notification("test", "description", "events", 1);
         Response response2 = RestAssured.given().
                 contentType("application/json").
                 body(t).
