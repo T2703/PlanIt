@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import api.VolleySingleton;
+import websockets.WebSocketManager;
 
 /**
  * The {@code NotificationsHelper} class provides utility methods for handling notifications,
@@ -28,7 +29,9 @@ public class NotificationsHelper {
     /**
      * The base URL for notification requests.
      */
-    public static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/notifications";
+    public static final String username = WebSocketManager.getInstance().getUsername();
+
+    public static final String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/users/" + username + "/notifications";
 
     /**
      * Retrieves the number of unread notifications from the server and updates the provided {@code TextView}.

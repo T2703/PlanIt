@@ -65,4 +65,20 @@ public class NotificationService {
     public List<Notification> getNotificationByUser(String username) {
         return userRepository.findByUsername(username).getNotifications();
     }
+
+    public int getUnreadNotificationByUser(String username) {
+        User user = userRepository.findByUsername(username);
+
+        List<Notification> notifications = user.getNotifications();
+
+        int count = 0;
+
+        for (int i = 0; i < notifications.size(); i++) {
+            if (!notifications.get(i).isSeen()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 }
