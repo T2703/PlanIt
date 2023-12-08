@@ -51,7 +51,7 @@ public class scheduleAnalysis {
             cal.setTime(userSchedule.get(i).getStartDate());
             dayNum[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             dayLength[cal.get(Calendar.DAY_OF_WEEK)-1] += eventLength(userSchedule.get(i));
-            if(userSchedule.size()-2 >= i) {
+            if(userSchedule.size()-1 > i) {
                 if (userSchedule.get(i).getStartDate().getDate() != userSchedule.get(i + 1).getStartDate().getDate()) {
                     dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
                 }
