@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfilePage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">profile</a> &gt; <span class="el_source">ProfilePage.java</span></div><h1>ProfilePage.java</h1><pre class="source lang-java linenums">package profile;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
+import homepage.User;
+import profile.LoginFormPage;
+import api.VolleySingleton;
+import events.Event;
+import groups.MemberViewer;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import profile.UserManager;
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
+import homepage.HomePage;
+import websockets.WebSocketManager;
+
+/**
+ * The account/profile page where the user can change/edit their account info like their name, email, password, or profile picture,
+ * and delete their account. This class extends AppCompatActivity and implements NavBarView.OnButtonClickListener for handling
+ * navigation bar button clicks.
+ *
+ * &lt;p&gt;The activity includes functionality for changing the profile picture, saving changes, deleting the account,
+ * and navigating to other pages through the navigation bar.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L51">public class ProfilePage extends AppCompatActivity implements NavBarView.OnButtonClickListener {</span>
+    /**
+     * The button for changing the pfp.
+     */
+    private Button change_pfp_button;
+
+    /**
+     * The button for saving the changes in the profile.
+     */
+    private Button save_changes_button;
+
+    /**
+     * The button for deleting the profile.
+     */
+    private Button delete_account_button;
+
+    /**
+     * Settings button for going into the settings page.
+     */
+    private ImageButton settings_button;
+
+    /**
+     * The image view for pulling up the profile pics.
+     */
+    private ImageView profile_image_view;
+
+    /**
+     * It's our navbar. Once again.
+     */
+    private NavBarView navbar_view;
+
+    /**
+     * This is for the transitioning between pages.
+     */
+    private ActivityOptions options;
+
+    /*
+    The variables for editing the profile info.
+     */
+    private EditText editName, editEmail, editPass;
+
+    private String ID;
+
+    /*
+    The image loader.
+     */
+    private static final int RESULT_LOAD_IMG = 1;
+
+    private static final String URL_USERS = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot;;
+
+    /**
+     * Initializes the activity, sets up UI components.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L108">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L109">        setContentView(R.layout.activity_profile_page);</span>
+
+        // Initialize
+<span class="fc" id="L112">        change_pfp_button = findViewById(R.id.changeImageButton);</span>
+<span class="fc" id="L113">        profile_image_view = findViewById(R.id.profileImageView);</span>
+<span class="fc" id="L114">        save_changes_button = findViewById(R.id.save_changes_button);</span>
+<span class="fc" id="L115">        delete_account_button = findViewById(R.id.delete_account_button);</span>
+<span class="fc" id="L116">        editName = findViewById(R.id.editTextName);</span>
+<span class="fc" id="L117">        editPass = findViewById(R.id.editTextPassword);</span>
+<span class="fc" id="L118">        editEmail = findViewById(R.id.editTextEmail);</span>
+<span class="fc" id="L119">        settings_button = findViewById(R.id.gear5);</span>
+<span class="fc" id="L120">        navbar_view = findViewById(R.id.navbar);</span>
+<span class="fc" id="L121">        navbar_view.setOnButtonClickListener(this);</span>
+<span class="fc" id="L122">        UserManager userManager = UserManager.getInstance();</span>
+<span class="fc" id="L123">        ID = userManager.getUserID();</span>
+
+<span class="fc" id="L125">        editName.setText(WebSocketManager.getInstance().getUsername());</span>
+
+<span class="fc" id="L127">        navbar_view.setSelectedButton(navbar_view.getProfileButton());</span>
+
+        // Load the default square profile picture
+<span class="fc" id="L130">        profile_image_view.setImageResource(R.drawable.default_profile_image);</span>
+        // Apply the circular mask
+<span class="fc" id="L132">        profile_image_view.setBackgroundResource(R.drawable.circular_background);</span>
+
+<span class="fc" id="L134">        getUserInfoRequest(ID);</span>
+
+
+        // Set a click listener for the change pfp button
+<span class="fc" id="L138">        change_pfp_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Handles the click event for changing the profile picture button. Initiates the image picker activity,
+             * allowing the user to select a new profile picture from the gallery or another source.
+             *
+             * @param view The View that was clicked (in this case, the change profile picture button).
+             * @see View.OnClickListener#onClick(View)
+             */
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L148">                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);</span>
+<span class="nc" id="L149">                photoPickerIntent.setType(&quot;image/*&quot;);</span>
+                // Start the image picker activity
+<span class="nc" id="L151">                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);</span>
+<span class="nc" id="L152">            }</span>
+        });
+
+        // Set a click listener for the save changes button
+<span class="fc" id="L156">        save_changes_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Handles the click event for saving changes in the profile. This method will be invoked when the user clicks
+             * the &quot;Save Changes&quot; button. It logs a message indicating that changes have been saved.
+             *
+             * @param view The View that was clicked (in this case, the save changes button).
+             */
+            @Override
+            public void onClick(View view) {
+                // This will handle the button click.
+<span class="nc" id="L166">                Log.d(&quot;TAG&quot;, &quot;Saved&quot;);</span>
+<span class="nc" id="L167">            }</span>
+        });
+
+        // Set a click listener for the delete button
+<span class="fc" id="L171">        delete_account_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Handles the click event for deleting the user's account. This method will be invoked when the user clicks
+             * the &quot;Delete Account&quot; button. It logs a message indicating that the account deletion process has been initiated.
+             *
+             * @param view The View that was clicked (in this case, the delete account button).
+             */
+            @Override
+            public void onClick(View view) {
+                // This will handle the button click.
+<span class="nc" id="L181">                Log.d(&quot;TAG&quot;, &quot;Delete&quot;);</span>
+<span class="nc" id="L182">            }</span>
+        });
+
+<span class="fc" id="L185">        settings_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Handles the click event for navigating to the Settings page. This method is invoked when the user clicks
+             * the settings button. It creates an Intent to start the Settings activity and applies custom animations
+             * for a smooth transition.
+             *
+             * @param view The View that was clicked (in this case, the settings button).
+             */
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L195">                Intent intent = new Intent(ProfilePage.this, Settings.class);</span>
+<span class="nc" id="L196">                ActivityOptions options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L197">                startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L198">            }</span>
+        });
+<span class="fc" id="L200">    }</span>
+
+    /**
+     * Handles the result of the image picker activity. It is invoked when the user selects an image
+     * from the gallery or another source. The method checks if the requestCode matches the constant RESULT_LOAD_IMG,
+     * the resultCode is RESULT_OK, and the data is not null. If these conditions are met, it retrieves
+     * the selected image URI and loads and displays the image in the ImageView.
+     *
+     * &lt;p&gt;This method is part of the Android Activity lifecycle and is called when an activity launched with
+     * {@link #startActivityForResult(Intent, int)} finishes and returns a result. In this case, it is used to handle
+     * the result of the image picker activity.
+     *
+     * @param requestCode An integer code that represents the request code passed to {@link #startActivityForResult(Intent, int)}.
+     * @param resultCode An integer result code returned by the child activity.
+     * @param data An Intent containing the result data. It may include various data depending on the activity.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+<span class="nc" id="L218">        super.onActivityResult(requestCode, resultCode, data);</span>
+
+        // Checks if the requestCode matches the constant RESULT_LOAD_IMG the resultCode is RESULT_OK, and the data is not null.
+<span class="nc bnc" id="L221" title="All 6 branches missed.">        if (requestCode == RESULT_LOAD_IMG &amp;&amp; resultCode == RESULT_OK &amp;&amp; data != null) {</span>
+            // Get the selected image URI
+<span class="nc" id="L223">            Uri selectedImageUri = data.getData();</span>
+
+            try {
+                // Load and display the selected image in the ImageView
+<span class="nc" id="L227">                profile_image_view.setImageURI(selectedImageUri);</span>
+<span class="nc" id="L228">            } catch (Exception e) {</span>
+<span class="nc" id="L229">                e.printStackTrace();</span>
+<span class="nc" id="L230">            }</span>
+        }
+
+<span class="nc" id="L233">    }</span>
+
+    /*
+    How to retreive the user info for this page.
+     */
+    private void getUserInfoRequest(String userID) {
+<span class="fc" id="L239">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                URL_USERS + userID,
+<span class="fc" id="L242">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+<span class="nc" id="L246">                            JSONObject jsonObject = new JSONObject(response);</span>
+
+                            // Extract user information from the JSON response
+<span class="nc" id="L249">                            String email = jsonObject.getString(&quot;email&quot;);</span>
+<span class="nc" id="L250">                            String password = jsonObject.getString(&quot;password&quot;);</span>
+
+<span class="nc" id="L252">                            editEmail.setText(email);</span>
+                            //editPass.setText(password);
+
+<span class="nc" id="L255">                        } catch (JSONException e) {</span>
+<span class="nc" id="L256">                            e.printStackTrace();</span>
+                            // Handle any JSON parsing errors
+<span class="nc" id="L258">                        }</span>
+<span class="nc" id="L259">                    }</span>
+                },
+<span class="fc" id="L261">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+<span class="fc" id="L265">                        Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="fc" id="L266">                    }</span>
+                }
+        );
+
+        // Adding the request to the request queue
+<span class="fc" id="L271">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCalendarButtonClick() {
+<span class="nc" id="L280">        Intent intent = new Intent(ProfilePage.this, CalendarMonthlyPage.class);</span>
+<span class="nc" id="L281">        options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L282">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L283">    }</span>
+
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onHomeButtonClick() {
+<span class="nc" id="L291">        Intent intent = new Intent(ProfilePage.this, HomePage.class);</span>
+<span class="nc" id="L292">        options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L293">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L294">    }</span>
+
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onMessagesButtonClick() {
+<span class="nc" id="L302">        Intent intent = new Intent(ProfilePage.this, MemberViewer.class);</span>
+<span class="nc" id="L303">        options = ActivityOptions.makeCustomAnimation(ProfilePage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L304">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L305">    }</span>
+
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onProfileButtonClick() {
+        /*
+        Does nothing
+         */
+<span class="nc" id="L316">    }</span>
+
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCreateEventButtonClick() {
+        // Navigate to Create Events page
+<span class="nc" id="L325">        Intent intent = new Intent(ProfilePage.this, CreateEventPage.class);</span>
+<span class="nc" id="L326">        startActivity(intent);</span>
+<span class="nc" id="L327">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

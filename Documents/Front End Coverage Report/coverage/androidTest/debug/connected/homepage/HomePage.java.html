@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HomePage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">homepage</a> &gt; <span class="el_source">HomePage.java</span></div><h1>HomePage.java</h1><pre class="source lang-java linenums">package homepage;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
+import com.android.volley.VolleyError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
+import com.google.android.material.navigation.NavigationView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.java_websocket.handshake.ServerHandshake;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import assignments.AssignmentsPage;
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
+import followers.FollowersPage;
+import followers.FollowingPage;
+import followers.ListOfUsers;
+import groups.MemberViewer;
+import notifications.NotificationPage;
+import profile.LoginFormPage;
+import profile.ProfilePage;
+import utilities.NotificationsHelper;
+import websockets.NotificationWebSocketManager;
+import websockets.WebSocketListener;
+import websockets.WebSocketManager;
+
+/**
+ * @author Joshua Gutierrez
+ * The main activity representing the home page of the application.
+ * The home page displays user greetings, active users, upcoming assignments, and provides navigation options.
+ * Implements the {@link NavBarView.OnButtonClickListener} for handling bottom navigation events and
+ * {@link WebSocketListener} for WebSocket communication.
+ */
+<span class="fc" id="L63">public class HomePage extends AppCompatActivity implements NavBarView.OnButtonClickListener, WebSocketListener {</span>
+    // Constants
+    private static final String URL_ACTIVE_WEBSOCKET = &quot;ws://coms-309-024.class.las.iastate.edu:8080/active/&quot;;
+    private static final String URL_NOTIFICATION_WEBSOCKET = &quot;ws://coms-309-024.class.las.iastate.edu:8080/notification/&quot;;
+
+    // UI components
+    private RecyclerView activeUsersRecyclerView;
+    private RecyclerView assignmentsRecyclerView;
+    private UserAdapter userAdapter;
+    private AssignmentAdapter assignmentsAdapter;
+    private List&lt;User&gt; userList;
+    private List&lt;Assignment&gt; assignmentsList;
+    private NavBarView navbar_view;
+    private TextView homePageGreeting;
+    private ImageView notificationButton;
+    private ImageButton menuButton;
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+
+    /**
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down, this Bundle contains the data it
+     *                           most recently supplied in onSaveInstanceState(Bundle).
+     *                           Note: Otherwise, it is null.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L93">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L94">        setContentView(R.layout.activity_homepage);</span>
+
+<span class="fc" id="L96">        drawerLayout = findViewById(R.id.drawerLayout);</span>
+<span class="fc" id="L97">        NavigationView navView = findViewById(R.id.navView);</span>
+
+<span class="fc" id="L99">        MenuHeader menuHeader = new MenuHeader(this);</span>
+
+<span class="fc" id="L101">        View headerView = navView.getHeaderView(0);</span>
+<span class="fc" id="L102">        TextView headerUsername = headerView.findViewById(R.id.menuHeaderUsername);</span>
+<span class="fc" id="L103">        TextView headerEmailAddress = headerView.findViewById(R.id.menuHeaderEmailAddress);</span>
+
+<span class="fc" id="L105">        String usernameText = menuHeader.getUsername();</span>
+<span class="fc" id="L106">        menuHeader.getUserEmailAddress(usernameText, headerEmailAddress);</span>
+
+<span class="fc" id="L108">        headerUsername.setText(usernameText);</span>
+
+<span class="fc" id="L110">        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);</span>
+<span class="fc" id="L111">        drawerLayout.addDrawerListener(toggle);</span>
+<span class="fc" id="L112">        toggle.syncState();</span>
+
+<span class="fc" id="L114">        String username = WebSocketManager.getInstance().getUsername();</span>
+<span class="fc" id="L115">        WebSocketManager.getInstance().connectWebSocket(URL_ACTIVE_WEBSOCKET + username);</span>
+<span class="fc" id="L116">        WebSocketManager.getInstance().setWebSocketListener(HomePage.this);</span>
+<span class="fc" id="L117">        WebSocketManager.getInstance().sendMessage(&quot;Update User List&quot;);</span>
+
+<span class="fc" id="L119">        NotificationWebSocketManager.getInstance().connectWebSocket(URL_NOTIFICATION_WEBSOCKET + username);</span>
+<span class="fc" id="L120">        NotificationWebSocketManager.getInstance().setWebSocketListener(HomePage.this);</span>
+<span class="fc" id="L121">        NotificationWebSocketManager.getInstance().sendMessage(&quot;Update Notification List&quot;);</span>
+
+<span class="fc" id="L123">        TextView notificationsCount = findViewById(R.id.notificationCount);</span>
+<span class="fc" id="L124">        NotificationsHelper.setNumberOfUnreadNotifications(notificationsCount);</span>
+
+<span class="fc" id="L126">        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {</span>
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+<span class="nc" id="L129">                int itemId = item.getItemId();</span>
+
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if (itemId == R.id.menu_logout) {</span>
+<span class="nc" id="L132">                    WebSocketManager.getInstance().disconnectWebSocket();</span>
+<span class="nc" id="L133">                    NotificationWebSocketManager.getInstance().disconnectWebSocket();</span>
+
+<span class="nc" id="L135">                    Intent intent = new Intent(HomePage.this, LoginFormPage.class);</span>
+<span class="nc" id="L136">                    startActivity(intent);</span>
+<span class="nc" id="L137">                }</span>
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                else if (itemId == R.id.list_of_users) {</span>
+<span class="nc" id="L140">                    Intent intent = new Intent(HomePage.this, ListOfUsers.class);</span>
+<span class="nc" id="L141">                    startActivity(intent);</span>
+<span class="nc" id="L142">                }</span>
+
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                else if (itemId == R.id.list_of_following) {</span>
+<span class="nc" id="L145">                    Intent intent = new Intent(HomePage.this, FollowingPage.class);</span>
+<span class="nc" id="L146">                    startActivity(intent);</span>
+<span class="nc" id="L147">                }</span>
+
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                else if (itemId == R.id.list_of_followers) {</span>
+<span class="nc" id="L150">                    Intent intent = new Intent(HomePage.this, FollowersPage.class);</span>
+<span class="nc" id="L151">                    startActivity(intent);</span>
+<span class="nc" id="L152">                }</span>
+
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                else if (itemId == R.id.list_of_assignments) {</span>
+<span class="nc" id="L155">                    Intent intent = new Intent(HomePage.this, AssignmentsPage.class);</span>
+<span class="nc" id="L156">                    startActivity(intent);</span>
+                }
+<span class="nc" id="L158">                return true;</span>
+            }
+        });
+
+<span class="fc" id="L162">        menuButton = findViewById(R.id.menuButton);</span>
+
+<span class="fc" id="L164">        menuButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L167">                drawerLayout.openDrawer(GravityCompat.START);</span>
+<span class="fc" id="L168">            }</span>
+        });
+
+<span class="fc" id="L171">        navbar_view = findViewById(R.id.navbar);</span>
+<span class="fc" id="L172">        navbar_view.setOnButtonClickListener(this);</span>
+<span class="fc" id="L173">        navbar_view.setSelectedButton(navbar_view.getHomeButton());</span>
+
+<span class="fc" id="L175">        notificationButton = findViewById(R.id.notificationIcon);</span>
+
+<span class="fc" id="L177">        homePageGreeting = findViewById(R.id.homepage_greeting);</span>
+<span class="fc" id="L178">        TextView todayDate = findViewById(R.id.homepage_today_date);</span>
+
+<span class="fc" id="L180">        todayDate.setText(getTodayDate());</span>
+
+<span class="fc" id="L182">        activeUsersRecyclerView = findViewById(R.id.activeUsersRecyclerView);</span>
+<span class="fc" id="L183">        userList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L185">        userAdapter = new UserAdapter(userList);</span>
+<span class="fc" id="L186">        activeUsersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));</span>
+<span class="fc" id="L187">        activeUsersRecyclerView.setAdapter(userAdapter);</span>
+
+<span class="fc" id="L189">        assignmentsRecyclerView = findViewById(R.id.assignments_recyclerView);</span>
+<span class="fc" id="L190">        assignmentsList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L192">        assignmentsAdapter = new AssignmentAdapter(assignmentsList);</span>
+<span class="fc" id="L193">        assignmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));</span>
+<span class="fc" id="L194">        assignmentsRecyclerView.setAdapter(assignmentsAdapter);</span>
+
+<span class="fc" id="L196">        getAssignments();</span>
+
+<span class="fc" id="L198">        notificationButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L201">                Intent intent = new Intent(HomePage.this, NotificationPage.class);</span>
+<span class="fc" id="L202">                startActivity(intent);</span>
+<span class="fc" id="L203">            }</span>
+        });
+<span class="fc" id="L205">    }</span>
+
+    private void getAssignments() {
+<span class="fc" id="L208">        RequestQueue requestQueue = Volley.newRequestQueue(this);</span>
+
+<span class="fc" id="L210">        String URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/assignments&quot;;</span>
+
+<span class="fc" id="L212">        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener&lt;JSONArray&gt;() {</span>
+            @Override
+            public void onResponse(JSONArray response) {
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">                for (int i = 0; i &lt; response.length(); i++) {</span>
+                    try {
+<span class="nc" id="L217">                        JSONObject assignment = response.getJSONObject(i);</span>
+
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                        if (assignment.getString(&quot;isCompleted&quot;).equals(&quot;false&quot;)) {</span>
+<span class="nc" id="L220">                            String course = assignment.getString(&quot;course&quot;);</span>
+<span class="nc" id="L221">                            String title = assignment.getString(&quot;title&quot;);</span>
+<span class="nc" id="L222">                            String dueDate = assignment.getString(&quot;dueDate&quot;);</span>
+
+<span class="nc" id="L224">                            assignmentsList.add(new Assignment(course, title, dueDate));</span>
+                        }
+<span class="nc" id="L226">                    } catch (JSONException e) {</span>
+<span class="nc" id="L227">                        e.printStackTrace();</span>
+<span class="nc" id="L228">                    }</span>
+                }
+
+<span class="fc" id="L231">                assignmentsAdapter.notifyDataSetChanged();</span>
+<span class="fc" id="L232">            }</span>
+<span class="fc" id="L233">        }, new Response.ErrorListener() {</span>
+            @Override
+            public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L236">                Toast.makeText(getApplicationContext(), &quot;Assignments could not be loaded&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L237">            }</span>
+        });
+
+<span class="fc" id="L240">        requestQueue.add(jsonArrayRequest);</span>
+<span class="fc" id="L241">    }</span>
+
+    private String getTodayDate() {
+<span class="fc" id="L244">        Date today = new Date();</span>
+
+<span class="fc" id="L246">        Calendar calendar = Calendar.getInstance();</span>
+<span class="fc" id="L247">        calendar.setTime(today);</span>
+
+<span class="fc" id="L249">        int year = calendar.get(Calendar.YEAR);</span>
+<span class="fc" id="L250">        int day = calendar.get(Calendar.DAY_OF_MONTH);</span>
+<span class="fc" id="L251">        int hour = calendar.get(Calendar.HOUR_OF_DAY);</span>
+
+<span class="fc" id="L253">        SimpleDateFormat monthFormat = new SimpleDateFormat(&quot;MMMM&quot;, Locale.getDefault());</span>
+<span class="fc" id="L254">        String monthName = monthFormat.format(today);</span>
+
+<span class="fc" id="L256">        SimpleDateFormat dayFormat = new SimpleDateFormat(&quot;EEEE&quot;, Locale.getDefault());</span>
+<span class="fc" id="L257">        String dayName = dayFormat.format(today);</span>
+
+<span class="fc" id="L259">        displayGreeting(hour);</span>
+
+<span class="fc" id="L261">        return dayName + &quot; &quot; + monthName + &quot; &quot; + day + &quot;, &quot; + year;</span>
+    }
+
+    private void displayGreeting(int hour) {
+<span class="fc" id="L265">        String username = WebSocketManager.getInstance().getUsername();</span>
+<span class="fc" id="L266">        String greeting = &quot;&quot;;</span>
+
+<span class="pc bpc" id="L268" title="2 of 4 branches missed.">        if (hour &gt; 0 &amp;&amp; hour &lt; 12) {</span>
+<span class="nc" id="L269">            greeting = &quot;Good morning, &quot; + username;</span>
+<span class="pc bpc" id="L270" title="2 of 4 branches missed.">        } else if (hour &gt;= 12 &amp;&amp; hour &lt; 18) {</span>
+<span class="fc" id="L271">            greeting = &quot;Good afternoon, &quot; + username;</span>
+        } else {
+<span class="nc" id="L273">            greeting = &quot;Good evening, &quot; + username;</span>
+        }
+
+<span class="fc" id="L276">        homePageGreeting.setText(greeting);</span>
+<span class="fc" id="L277">    }</span>
+
+    /**
+     * Handles the click event for the calendar button in the {@link HomePage}.
+     * Initiates the navigation to the {@link CalendarMonthlyPage} with a custom animation.
+     * Uses an {@link Intent} to start the new activity and {@link ActivityOptions} to specify custom animations.
+     */
+    @Override
+    public void onCalendarButtonClick() {
+<span class="fc" id="L286">        Intent intent = new Intent(HomePage.this, CalendarMonthlyPage.class);</span>
+<span class="fc" id="L287">        ActivityOptions options = ActivityOptions.makeCustomAnimation(HomePage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="fc" id="L288">        startActivity(intent, options.toBundle());</span>
+<span class="fc" id="L289">    }</span>
+
+    /**
+     * Placeholder method for handling the click event on the home button in the {@link HomePage}.
+     * This method does not perform any specific actions and can be overridden as needed.
+     */
+    @Override
+    public void onHomeButtonClick() {
+
+<span class="fc" id="L298">    }</span>
+
+    /**
+     * Handles the click event for the messages button in the {@link HomePage}.
+     * Initiates the navigation to the {@link MemberViewer} with a custom animation.
+     * Uses an {@link Intent} to start the new activity and {@link ActivityOptions} to specify custom animations.
+     */
+    @Override
+    public void onMessagesButtonClick() {
+<span class="fc" id="L307">        Intent intent = new Intent(HomePage.this, MemberViewer.class);</span>
+<span class="fc" id="L308">        ActivityOptions options = ActivityOptions.makeCustomAnimation(HomePage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="fc" id="L309">        startActivity(intent, options.toBundle());</span>
+<span class="fc" id="L310">    }</span>
+
+    /**
+     * Handles the click event for the profile button in the {@link HomePage}.
+     * Initiates the navigation to the {@link ProfilePage} with a custom animation.
+     * Uses an {@link Intent} to start the new activity and {@link ActivityOptions} to specify custom animations.
+     */
+    @Override
+    public void onProfileButtonClick() {
+<span class="fc" id="L319">        Intent intent = new Intent(HomePage.this, ProfilePage.class);</span>
+<span class="fc" id="L320">        ActivityOptions options = ActivityOptions.makeCustomAnimation(HomePage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="fc" id="L321">        startActivity(intent, options.toBundle());</span>
+<span class="fc" id="L322">    }</span>
+
+    /**
+     * Handles the click event for the &quot;Create Event&quot; button in the {@link HomePage}.
+     * Initiates the navigation to the {@link CreateEventPage}.
+     * Uses an {@link Intent} to start the new activity.
+     */
+    @Override
+    public void onCreateEventButtonClick() {
+<span class="nc" id="L331">        Intent intent = new Intent(HomePage.this, CreateEventPage.class);</span>
+<span class="nc" id="L332">        startActivity(intent);</span>
+<span class="nc" id="L333">    }</span>
+
+    /**
+     * Callback method triggered when a WebSocket connection is opened.
+     * Logs the information about the open event using {@link Log}.
+     *
+     * @param handshakedata Information about the WebSocket handshake.
+     */
+    @Override
+    public void onWebSocketOpen(ServerHandshake handshakedata) {
+<span class="fc" id="L343">        Log.d(&quot;ON OPEN&quot;, handshakedata.toString());</span>
+<span class="fc" id="L344">    }</span>
+
+    /**
+     * Callback method triggered when a WebSocket message is received.
+     * Parses the received message to determine the number of active users and updates the UI accordingly.
+     *
+     * @param message The WebSocket message containing information about active users.
+     */
+    @Override
+    public void onWebSocketMessage(String message) {
+<span class="fc" id="L354">        int activeUsers = Integer.parseInt(message);</span>
+
+<span class="fc" id="L356">        runOnUiThread(() -&gt; {</span>
+<span class="pc bpc" id="L357" title="1 of 2 branches missed.">            if (message.equals(&quot;notification&quot;)) {</span>
+<span class="nc" id="L358">                Log.d(&quot;NOTIFICATION&quot;, message);</span>
+<span class="nc" id="L359">                TextView notificationsCount = findViewById(R.id.notificationCount);</span>
+<span class="nc" id="L360">                NotificationsHelper.setNumberOfUnreadNotifications(notificationsCount);</span>
+            }
+<span class="fc" id="L362">            userList.clear();</span>
+<span class="fc bfc" id="L363" title="All 2 branches covered.">            for (int i = 0; i &lt; activeUsers; i++) {</span>
+<span class="fc" id="L364">                userList.add(new User(R.drawable.icons8_avatar_48, true));</span>
+            }
+<span class="fc" id="L366">            userAdapter.notifyDataSetChanged();</span>
+
+<span class="fc" id="L368">        });</span>
+<span class="fc" id="L369">    }</span>
+
+    /**
+     * Callback method triggered when a WebSocket connection is closed.
+     *
+     * @param code   The close code.
+     * @param reason The reason for the close.
+     * @param remote Indicates if the close was initiated by the remote party.
+     */
+    @Override
+    public void onWebSocketClose(int code, String reason, boolean remote) {
+
+<span class="fc" id="L381">    }</span>
+
+    /**
+     * Callback method triggered when a WebSocket error occurs.
+     *
+     * @param ex The exception representing the WebSocket error.
+     */
+    @Override
+    public void onWebSocketError(Exception ex) {
+<span class="fc" id="L390">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>
