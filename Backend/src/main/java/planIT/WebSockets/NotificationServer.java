@@ -86,23 +86,21 @@ public class NotificationServer {
         // store connecting user information
         sessionUsernameMap.put(session, username);
         usernameSessionMap.put(username, session);
+
+        broadcastNotifications();
+
     }
 
     /**
      * Handles the reception of a WebSocket message.
      *
      * @param session      The WebSocket session.
-     * @param notification The received notification.
+     * @param notifications The received notification.
      */
     @OnMessage
-    public void onMessage(Session session, String notification) throws JSONException {
-        JSONObject json = new JSONObject(notification);
+    public void onMessage(Session session, String notifications) throws JSONException {
 
-        JSONArray sendTo = json.getJSONArray("sendTo");
-
-        for(int i = 0; i < sendTo.length(); i++) {
-            sendNotification(sendTo.getString(i), notification);
-        }
+        broadcastNotifications();
 
     }
 
@@ -138,16 +136,16 @@ public class NotificationServer {
 
     /**
      * Sends a notification to a specific user.
-     *
-     * @param username The username of the recipient.
-     * @param message  The notification message.
      */
-    private void sendNotification(String username, String message) {
-        try {
-            usernameSessionMap.get(username).getBasicRemote().sendText(message);
-        } catch (IOException e) {
-            logger.info("[DM Exception:Notification] " + e.getMessage());
-        }
+    private void broadcastNotifications() {
+        sessionUsernameMap.forEach((session, username) -> {
+            try {
+                session.getBasicRemote().sendText("notification");
+            } catch (IOException e) {
+                logger.info("[Broadcast Exception] " + e.getMessage());
+            }
+
+        });
     }
 
 }

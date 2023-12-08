@@ -38,13 +38,17 @@ public class Notification {
     @Schema(description = "Description of notification")
     private String description;
 
-    // SentTo for each Notification
-    @Schema(description = "SentTo of notification")
-    private List<String> sentTo;
-
     // type of Notification
     @Schema(description = "Type of notification")
     private String type;
+
+    // type id of Notification
+    @Schema(description = "TypeId of notification")
+    private int typeId;
+
+    // type of Notification
+    @Schema(description = "If the notification has been seen or not")
+    private boolean seen = false;
 
     @JsonIgnoreProperties("notifications")
     @ManyToOne
@@ -56,11 +60,11 @@ public class Notification {
      * @param title notification title
      * @param description notification description
      */
-    public Notification(String title, String description, List<String> sentTo, String type) {
+    public Notification(String title, String description, String type, int typeId) {
         this.title = title;
         this.description = description;
-        this.sentTo = sentTo;
         this.type = type;
+        this.typeId = typeId;
     }
 
     // Notification constructor (without parameters)
@@ -124,10 +128,18 @@ public class Notification {
         this.user = user;
     }
 
-    public List<String> getSentTo() { return sentTo; }
-    public void setSentTo(List<String> sentTo) { this.sentTo = sentTo; }
-
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public int getTypeId() { return typeId; }
+    public void setTypeId(int typeId) { this.typeId = typeId; }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen() {
+        seen = true;
+    }
 
 }
