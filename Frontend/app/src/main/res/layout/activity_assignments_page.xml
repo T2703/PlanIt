@@ -54,7 +54,6 @@
             android:hint="Token"
             android:inputType="none"
             android:padding="15dp"
-            android:text="10835~WTrzhTJF3Q32r5ZgF6merplOxIVWfNYph6D4dNGS524FSSP0PoExHO7VFEnUGLQ6"
             android:textIsSelectable="true" />
 
         <Button
