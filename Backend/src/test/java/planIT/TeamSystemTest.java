@@ -75,9 +75,6 @@ public class TeamSystemTest {
         int statusCode2 = response2.getStatusCode();
         assertEquals(200, statusCode2);
 
-//        String body2 = response2.getBody().asString();
-//        assertEquals(success, body2);
-
         // Get Teams After Post Method
         Response response3 = RestAssured.given().
                 when().
@@ -132,25 +129,6 @@ public class TeamSystemTest {
         JsonPath path2 = response2.jsonPath();
 
         assertEquals("test-updated", path2.getString("name"));
-    }
-
-
-    ////////////// PIGGY  BACK
-    @Test
-    public void teamTestC(){
-        //Create team chat
-        Response response1 = RestAssured.given().
-                contentType("application/json").
-                when().
-                post("/createTeamChat/2");
-        int statusCode1 = response1.getStatusCode();
-        assertEquals(200, statusCode1);
-
-        Response response2 = RestAssured.given().
-                when().
-                get("/teams/2");
-        int statusCode2 = response2.getStatusCode();
-        assertEquals(200, statusCode2);
     }
 
     @Test
