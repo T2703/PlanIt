@@ -47,6 +47,7 @@ import notifications.NotificationPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
 import utilities.NotificationsHelper;
+import websockets.NotificationWebSocketManager;
 import websockets.WebSocketListener;
 import websockets.WebSocketManager;
 
@@ -60,6 +61,7 @@ import websockets.WebSocketManager;
 public class HomePage extends AppCompatActivity implements NavBarView.OnButtonClickListener, WebSocketListener {
     // Constants
     private static final String URL_ACTIVE_WEBSOCKET = "ws://coms-309-024.class.las.iastate.edu:8080/active/";
+    private static final String URL_NOTIFICATION_WEBSOCKET = "ws://coms-309-024.class.las.iastate.edu:8080/notification/";
 
     // UI components
     private RecyclerView activeUsersRecyclerView;
@@ -112,6 +114,10 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         WebSocketManager.getInstance().setWebSocketListener(HomePage.this);
         WebSocketManager.getInstance().sendMessage("Update User List");
 
+        NotificationWebSocketManager.getInstance().connectWebSocket(URL_NOTIFICATION_WEBSOCKET + username);
+        NotificationWebSocketManager.getInstance().setWebSocketListener(HomePage.this);
+        NotificationWebSocketManager.getInstance().sendMessage("Update Notification List");
+
         TextView notificationsCount = findViewById(R.id.notificationCount);
         NotificationsHelper.setNumberOfUnreadNotifications(notificationsCount);
 
@@ -122,28 +128,23 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
 
                 if (itemId == R.id.menu_logout) {
                     WebSocketManager.getInstance().disconnectWebSocket();
+                    NotificationWebSocketManager.getInstance().disconnectWebSocket();
 
                     Intent intent = new Intent(HomePage.this, LoginFormPage.class);
                     startActivity(intent);
                 }
 
                 else if (itemId == R.id.list_of_users) {
-                    WebSocketManager.getInstance().disconnectWebSocket();
-
                     Intent intent = new Intent(HomePage.this, ListOfUsers.class);
                     startActivity(intent);
                 }
 
                 else if (itemId == R.id.list_of_following) {
-                    WebSocketManager.getInstance().disconnectWebSocket();
-
                     Intent intent = new Intent(HomePage.this, FollowingPage.class);
                     startActivity(intent);
                 }
 
                 else if (itemId == R.id.list_of_followers) {
-                    WebSocketManager.getInstance().disconnectWebSocket();
-
                     Intent intent = new Intent(HomePage.this, FollowersPage.class);
                     startActivity(intent);
                 }
@@ -347,11 +348,17 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         int activeUsers = Integer.parseInt(message);
 
         runOnUiThread(() -> {
+            if (message.equals("notification")) {
+                Log.d("NOTIFICATION", message);
+                TextView notificationsCount = findViewById(R.id.notificationCount);
+                NotificationsHelper.setNumberOfUnreadNotifications(notificationsCount);
+            }
             userList.clear();
             for (int i = 0; i < activeUsers; i++) {
                 userList.add(new User(R.drawable.icons8_avatar_48, true));
             }
             userAdapter.notifyDataSetChanged();
+
         });
     }
 

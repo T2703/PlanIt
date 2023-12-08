@@ -52,7 +52,7 @@ public class Team {
 
 
     @JsonIgnoreProperties({"team", "users", "messages"}) //{"team", "chat", "messages"}
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_id")  //chat_id
     private Chat chat;
 
