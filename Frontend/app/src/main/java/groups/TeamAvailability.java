@@ -118,10 +118,10 @@ public class TeamAvailability extends AppCompatActivity {
                 String event_start_time_value = event_start_time2.getText().toString();
                 String event_end_time_value = event_end_time2.getText().toString();
 
-                String event_start_Combinded = DateAndTimeHelper.combineDateAndTime(event_start_date_value, event_start_time_value);
-                String event_end_Combinded = DateAndTimeHelper.combineDateAndTime(event_end_date_value, event_end_time_value);
+                String event_start_Combined = DateAndTimeHelper.combineDateAndTime(event_start_date_value, event_start_time_value);
+                String event_end_Combined = DateAndTimeHelper.combineDateAndTime(event_end_date_value, event_end_time_value);
 
-                getRequest(event_name_value2, event_description_value2, event_location_value2, event_type_value2, event_start_Combinded, event_end_Combinded);
+                getRequest(event_name_value2, event_description_value2, event_location_value2, event_type_value2, event_start_Combined, event_end_Combined);
             }
         });
     }
@@ -145,7 +145,7 @@ public class TeamAvailability extends AppCompatActivity {
         }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST,
+                Request.Method.PUT,
                 URL+ group_id + "/dates",
                 body,
                 new Response.Listener<JSONObject>() {
@@ -155,8 +155,6 @@ public class TeamAvailability extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 
                         //Log.d("result", response);
-//                        Intent intent = new Intent(TeamAvailability.this, EventsListViewer.class); //TODO
-//                        startActivity(intent);
 
                         try {
                             textView = findViewById(R.id.response);
@@ -174,8 +172,6 @@ public class TeamAvailability extends AppCompatActivity {
                 }
         );
 
-        // Adding request to request queue
-        //VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
         requestQueue.add(jsonObjectRequest);
     }
 

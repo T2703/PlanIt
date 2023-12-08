@@ -38,7 +38,7 @@ public class scheduleCompareController {
         return returnList;
     }
 
-    @PostMapping(path = "/compareStandard/{teamId}/dates")
+    @PutMapping(path = "/compareStandard/{teamId}/dates")
     @Operation(summary = "Compares team schedules, returns a String", description = "Compares the events of a team and returns the availability as a String")
     public String compareStandard(@PathVariable int teamId, @RequestBody Event event) {
 
