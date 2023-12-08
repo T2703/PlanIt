@@ -169,7 +169,6 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         setContentView(R.layout.activity_calendar_weekly_page);
 
         // Initialize
-        analyzeWeek = findViewById(R.id.analyzeWeek);
         sunDate = findViewById(R.id.sunDate);
         monDate = findViewById(R.id.monDate);
         tueDate = findViewById(R.id.tueDate);
@@ -275,6 +274,12 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
 
                         else if (menuItem.getItemId() == R.id.all_events) {
                             Intent intent = new Intent(CalendarWeeklyPage.this, EventsListViewer.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
+                        else if (menuItem.getItemId() == R.id.schedule_analyze) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
                             startActivity(intent, options.toBundle());
                         }
@@ -433,22 +438,6 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                 date_getter = getDateForDayOfWeek(Calendar.SATURDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Saturday", date_getter);
-            }
-        });
-
-        analyzeWeek.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Called when the specified view is clicked. Launches an Intent to navigate
-             * from the current CalendarWeeklyPage to the AnalyzeSchedule activity.
-             *
-             * @param view The view that was clicked.
-             *             It can be used to identify which view triggered the click event.
-             */
-            @Override
-            public void onClick(View view) {
-               Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
-               startActivity(intent);
-                //Log.d("TEST", "TEST2");
             }
         });
 

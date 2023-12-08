@@ -32,6 +32,21 @@ public class DateAndTimeHelper {
         return outputFormat.format(fDate);
     }
 
+    public static String formatDateForAssignments(String date) {
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+
+        try {
+            Date myDate = inputDateFormat.parse(date);
+
+            return outputDateFormat.format(myDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String formatTime(String date) throws ParseException {
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault());
         inputDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
