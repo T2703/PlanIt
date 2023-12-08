@@ -30,7 +30,7 @@ public class AssignmentsListPage extends AppCompatActivity {
 
         AssignmentsHelper.populateAssignments(this);
 
-        assignmentsAdapter = new AssignmentAdapter(assignmentsList);
+        assignmentsAdapter = new AssignmentAdapter(assignmentsList, findViewById(R.id.assignments_message));
         assignmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         assignmentsRecyclerView.setAdapter(assignmentsAdapter);
     }

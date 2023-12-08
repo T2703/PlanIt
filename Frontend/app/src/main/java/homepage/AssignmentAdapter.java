@@ -21,14 +21,16 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
      * List of assignments to be displayed.
      */
     private List<Assignment> assignments;
+    private TextView message;
 
     /**
      * Constructs an AssignmentAdapter with the given list of assignments.
      *
      * @param assignments The list of assignments to be displayed.
      */
-    public AssignmentAdapter(List<Assignment> assignments) {
+    public AssignmentAdapter(List<Assignment> assignments, TextView message) {
         this.assignments = assignments;
+        this.message = message;
     }
 
     /**
@@ -55,10 +57,14 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
      */
     @Override
     public void onBindViewHolder(@NonNull AssignmentAdapter.AssignmentViewHolder holder, int position) {
-        Assignment assignment = assignments.get(position);
-        holder.assignmentClass.setText(assignment.getAssignmentClass());
-        holder.assignmentTitle.setText(assignment.getAssignmentTitle());
-        holder.assignmentDueDate.setText(assignment.getDueDate());
+        if (assignments.size() != 0) {
+            Assignment assignment = assignments.get(position);
+            holder.assignmentClass.setText(assignment.getAssignmentClass());
+            holder.assignmentTitle.setText(assignment.getAssignmentTitle());
+            holder.assignmentDueDate.setText(assignment.getDueDate());
+        } else {
+            message.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

@@ -48,6 +48,7 @@ import groups.MemberViewer;
 import notifications.NotificationPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
+import utilities.AssignmentsHelper;
 import utilities.NotificationsHelper;
 import websockets.NotificationWebSocketManager;
 import websockets.WebSocketListener;
@@ -189,7 +190,7 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
         assignmentsRecyclerView = findViewById(R.id.assignments_recyclerView);
         assignmentsList = new ArrayList<>();
 
-        assignmentsAdapter = new AssignmentAdapter(assignmentsList);
+        assignmentsAdapter = new AssignmentAdapter(assignmentsList, findViewById(R.id.assignments_message));
         assignmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         assignmentsRecyclerView.setAdapter(assignmentsAdapter);
 
