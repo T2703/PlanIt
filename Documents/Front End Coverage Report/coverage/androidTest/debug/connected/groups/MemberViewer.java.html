@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MemberViewer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">groups</a> &gt; <span class="el_source">MemberViewer.java</span></div><h1>MemberViewer.java</h1><pre class="source lang-java linenums">// Author: Tristan Nono
+
+package groups;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageButton;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import api.VolleySingleton;
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
+import events.Event;
+import homepage.HomePage;
+import profile.ProfilePage;
+import websockets.WebSocketManager;
+
+/**
+ * The MemberViewer class represents the page for viewing group members.
+ * It includes functionality for displaying and managing group members using a RecyclerView.
+ * This class also handles interactions with the navigation bar and provides options for creating new groups.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L52">public class MemberViewer extends AppCompatActivity implements NavBarView.OnButtonClickListener {</span>
+    /**
+     * Create group button for creating groups
+     */
+    private ImageButton create_group_button;
+
+    /**
+     * Recycler view to display the list of items.
+     */
+    private RecyclerView recycler_view;
+
+    /**
+     * Manages the layout as stated in the name.
+     */
+    private LinearLayoutManager layout_manger;
+
+    /**
+     * Array list for the members to display them.
+     */
+    private List&lt;Member&gt; member_list;
+
+    /**
+     * Member adapter for the member list.
+     */
+    private MemberAdapter adapter;
+
+    /**
+     * Navbar.
+     */
+    private NavBarView navbar_view;
+
+    /**
+     * This is for the transitioning between pages.
+     */
+    private ActivityOptions options;
+
+    /**
+     * The URL for making the calls.
+     */
+<span class="fc" id="L91">    private static final String TEAMS_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot; + WebSocketManager.getInstance().getUsername() + &quot;/teams&quot;;</span>
+
+    /**
+     * Initializes the MemberViewer activity, setting up the UI components and handling user interactions.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, if available.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L100">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L101">        setContentView(R.layout.activity_member_viewer);</span>
+
+        // Initialize
+<span class="fc" id="L104">        create_group_button = findViewById(R.id.create_button_add);</span>
+<span class="fc" id="L105">        recycler_view = findViewById(R.id.recycler_view);</span>
+<span class="fc" id="L106">        member_list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L107">        adapter = new MemberAdapter(member_list, this);</span>
+<span class="fc" id="L108">        layout_manger = new LinearLayoutManager(this);</span>
+<span class="fc" id="L109">        navbar_view = findViewById(R.id.navbar);</span>
+<span class="fc" id="L110">        navbar_view.setOnButtonClickListener(this);</span>
+<span class="fc" id="L111">        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(adapter);</span>
+<span class="fc" id="L112">        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);</span>
+<span class="fc" id="L113">        itemTouchHelper.attachToRecyclerView(recycler_view);</span>
+
+<span class="fc" id="L115">        recycler_view.setLayoutManager(layout_manger);</span>
+<span class="fc" id="L116">        recycler_view.setAdapter(adapter);</span>
+
+<span class="fc" id="L118">        navbar_view.setSelectedButton(navbar_view.getMessagesButton());</span>
+
+<span class="fc" id="L120">        getGroupsRequest();</span>
+
+        // Sample data
+        //member_list.add(new Member(&quot;Group 1&quot;, &quot;Hello&quot;, &quot;2&quot;));
+        //member_list.add(new Member(&quot;Tristan&quot;, &quot;Group 1&quot;, &quot;1&quot;));
+
+<span class="fc" id="L126">        create_group_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * The button to navigate to the create event page
+             *
+             * @param view The View that was clicked.
+             */
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L134">                Log.d(&quot;MemberViewer&quot;, &quot;Number of members: &quot; + member_list.size());</span>
+<span class="fc" id="L135">                Intent intent = new Intent(MemberViewer.this, AddGroup.class);</span>
+<span class="fc" id="L136">                startActivity(intent);</span>
+<span class="fc" id="L137">            }</span>
+        });
+
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Creates the options menu for the activity, including a search bar for filtering group members.
+     *
+     * @param menu The options menu in which you place your items.
+     * @return true for the menu to be displayed; false otherwise.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // So yeah basically creates the search bar.
+<span class="nc" id="L151">        getMenuInflater().inflate(R.menu.event_search_bar, menu);</span>
+<span class="nc" id="L152">        MenuItem search_event = menu.findItem(R.id.searchBar);</span>
+<span class="nc" id="L153">        SearchView search_view = (SearchView) search_event.getActionView();</span>
+
+<span class="nc" id="L155">        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {</span>
+            /**
+             * Called when the user submits the query.
+             *
+             * @param text The submitted query text.
+             * @return true if the query has been handled, false otherwise.
+             */
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+<span class="nc" id="L164">                return false;</span>
+            }
+
+            /**
+             * Called when the query text is changed by the user.
+             *
+             * @param newText The new text in the query.
+             * @return true if the query text change has been handled, false otherwise.
+             */
+            @Override
+            public boolean onQueryTextChange(String newText) {
+<span class="nc" id="L175">                filterText(newText);</span>
+<span class="nc" id="L176">                return false;</span>
+            }
+        });
+
+<span class="nc" id="L180">        return true;</span>
+    }
+
+    /**
+     * Filters the displayed group members based on the provided text.
+     *
+     * @param text The text used for filtering group members.
+     */
+    private void filterText(String text) {
+        // List to filter the data.
+<span class="nc" id="L190">        ArrayList&lt;Member&gt; filtered_event_list = new ArrayList&lt;Member&gt;();</span>
+
+<span class="nc" id="L192">        Pattern pattern = Pattern.compile(&quot;\\b&quot; + Pattern.quote(text), Pattern.CASE_INSENSITIVE);</span>
+
+        // Iterate we are using this to compare each event.
+        // And this is how we shared.
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        for (Member member_item : member_list) {</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">            if (pattern.matcher(member_item.getGroupName()).find()) {</span>
+<span class="nc" id="L198">                filtered_event_list.add(member_item);</span>
+            }
+<span class="nc" id="L200">        }</span>
+
+        // Well I mean there is nothing lol so you'll get this.
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (filtered_event_list.isEmpty()) {</span>
+<span class="nc" id="L204">            Log.d(&quot;We Are The Empty&quot;, &quot;DeSense&quot;); // This a cool song you should totally check it out!</span>
+        }
+        else {
+<span class="nc" id="L207">            adapter.filterEventList(filtered_event_list);</span>
+        }
+<span class="nc" id="L209">    }</span>
+
+    /**
+     * Initiates a request to the server to retrieve group data and populates the member list accordingly.
+     */
+    private void getGroupsRequest() {
+<span class="fc" id="L215">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                TEAMS_URL,
+<span class="fc" id="L218">                new Response.Listener&lt;String&gt;() {</span>
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+<span class="nc" id="L231">                            responseArray = new JSONArray(response);</span>
+<span class="nc" id="L232">                        } catch (JSONException e) {</span>
+<span class="nc" id="L233">                            throw new RuntimeException(e);</span>
+<span class="nc" id="L234">                        }</span>
+
+                        // Iterate
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                        for (int i = 0; i &lt; responseArray.length(); i++) {</span>
+                            try {
+<span class="nc" id="L239">                                JSONObject jsonObject = responseArray.getJSONObject(i);</span>
+<span class="nc" id="L240">                                String name = jsonObject.getString(&quot;name&quot;);</span>
+<span class="nc" id="L241">                                String description = jsonObject.getString(&quot;description&quot;);</span>
+<span class="nc" id="L242">                                String id = jsonObject.getString(&quot;id&quot;);</span>
+
+<span class="nc" id="L244">                                member_list.add(0, new Member(name, description, id));</span>
+<span class="nc" id="L245">                                Log.d(&quot;List&quot;, id);</span>
+<span class="nc" id="L246">                            } catch (JSONException e) {</span>
+<span class="nc" id="L247">                                e.printStackTrace();</span>
+<span class="nc" id="L248">                            }</span>
+                        }
+
+<span class="nc" id="L251">                        adapter.notifyDataSetChanged();</span>
+<span class="nc" id="L252">                    }</span>
+                },
+<span class="fc" id="L254">                new Response.ErrorListener() {</span>
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+<span class="fc" id="L265">                        Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="fc" id="L266">                    }</span>
+                }
+        );
+
+        // Adding request to request queue
+<span class="fc" id="L271">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCalendarButtonClick() {
+<span class="nc" id="L280">        Intent intent = new Intent(MemberViewer.this, CalendarMonthlyPage.class);</span>
+<span class="nc" id="L281">        options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L282">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L283">    }</span>
+
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onHomeButtonClick() {
+<span class="nc" id="L291">        Intent intent = new Intent(MemberViewer.this, HomePage.class);</span>
+<span class="nc" id="L292">        ActivityOptions options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L293">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L294">    }</span>
+
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onMessagesButtonClick() {
+        /*
+        Do nothing why should you.
+         */
+<span class="nc" id="L305">    }</span>
+
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onProfileButtonClick() {
+<span class="nc" id="L313">        Intent intent = new Intent(MemberViewer.this, ProfilePage.class);</span>
+<span class="nc" id="L314">        options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L315">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L316">    }</span>
+
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCreateEventButtonClick() {
+        //Log.d(&quot;MemberViewer&quot;, &quot;Create Event button clicked.&quot;);
+<span class="nc" id="L325">        Intent intent = new Intent(MemberViewer.this, CreateEventPage.class);</span>
+<span class="nc" id="L326">        startActivity(intent);</span>
+<span class="nc" id="L327">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

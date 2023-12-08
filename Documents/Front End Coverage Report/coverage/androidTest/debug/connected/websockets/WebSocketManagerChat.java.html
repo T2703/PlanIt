@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebSocketManagerChat.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">websockets</a> &gt; <span class="el_source">WebSocketManagerChat.java</span></div><h1>WebSocketManagerChat.java</h1><pre class="source lang-java linenums">package websockets;
+
+import android.util.Log;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+
+/*
+Manages the websocket connections in the app.
+Makes sure that there is one websocket running in the app's lifecycle.
+ */
+public class WebSocketManagerChat {
+    /*
+    The instance of the websocket manager.
+     */
+    private static WebSocketManagerChat manager_instance;
+
+    /*
+    The custom web socket.
+    mywebsocket.wad.
+     */
+    private MyWebSocketClient web_socket_client;
+
+    /*
+    The listener for the websocket.
+     */
+    private WebSocketListener web_socket_listener;
+
+<span class="fc" id="L31">    private boolean isConnected = false;</span>
+
+    private String username;
+
+
+    /*
+    Yeah, this is empty.
+     */
+<span class="fc" id="L39">    private WebSocketManagerChat() {}</span>
+
+    /*
+    This retrieves a synchronized instance of the websocket.
+    Makes sure that only ONE instance is exists.
+     */
+    public static synchronized WebSocketManagerChat getInstance() {
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (manager_instance == null) {</span>
+<span class="fc" id="L47">            manager_instance = new WebSocketManagerChat();</span>
+        }
+<span class="fc" id="L49">        return manager_instance;</span>
+    }
+
+    public String getUsername () {
+<span class="nc" id="L53">        return username;</span>
+    }
+
+    public void setUsername (String username) {
+<span class="nc" id="L57">        this.username = username;</span>
+<span class="nc" id="L58">    }</span>
+
+    /*
+    This handles the events like the messages and errors.
+     */
+    public void setWebSocketListener(WebSocketListener listener) {
+<span class="fc" id="L64">        this.web_socket_listener = listener;</span>
+<span class="fc" id="L65">    }</span>
+
+    public void removeWebSocketListener() {
+<span class="nc" id="L68">        this.web_socket_listener = null;</span>
+<span class="nc" id="L69">    }</span>
+
+
+    /*
+    Connects a WebSocket connection to the server. So, in a nutshell it just makes
+    the connection.
+     */
+    public void connectWebSocket(String server_url) {
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (!isConnected) {</span>
+            try {
+<span class="fc" id="L79">                URI serverUri = URI.create(server_url);</span>
+<span class="fc" id="L80">                web_socket_client = new MyWebSocketClient(serverUri);</span>
+<span class="fc" id="L81">                web_socket_client.connect();</span>
+<span class="fc" id="L82">                isConnected = true;</span>
+<span class="nc" id="L83">            } catch (Exception e) {</span>
+<span class="nc" id="L84">                e.printStackTrace();</span>
+<span class="nc" id="L85">                isConnected = false;</span>
+<span class="fc" id="L86">            }</span>
+        }
+<span class="fc" id="L88">    }</span>
+
+    /*
+    Sends the message to the connected the websocket server.
+     */
+    public void sendMessage(String message) {
+<span class="nc bnc" id="L94" title="All 4 branches missed.">        if (web_socket_client != null &amp;&amp; web_socket_client.isOpen()) {</span>
+<span class="nc" id="L95">            web_socket_client.send(message);</span>
+        }
+<span class="nc" id="L97">    }</span>
+
+    /*
+    As stated in the name this disconnects the web socket connection.
+     */
+    public void disconnectWebSocket() {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (web_socket_client != null) {</span>
+<span class="nc" id="L104">            web_socket_client.close();</span>
+<span class="nc" id="L105">            isConnected = false;</span>
+        }
+<span class="nc" id="L107">    }</span>
+
+    /*
+    Custom client which handles the functionality within the WebSocketManager.
+     */
+    private class MyWebSocketClient extends WebSocketClient {
+
+<span class="fc" id="L114">        public MyWebSocketClient(URI serverUri) {</span>
+<span class="fc" id="L115">            super(serverUri);</span>
+<span class="fc" id="L116">        }</span>
+
+        @Override
+        public void onOpen(ServerHandshake handshakedata) {
+<span class="fc" id="L120">            Log.d(&quot;WebSocket&quot;, &quot;Connected&quot;);</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">            if (web_socket_listener != null) {</span>
+<span class="fc" id="L122">                web_socket_listener.onWebSocketOpen(handshakedata);</span>
+            }
+<span class="fc" id="L124">        }</span>
+
+        @Override
+        public void onMessage(String message) {
+<span class="fc" id="L128">            Log.d(&quot;WebSocket&quot;, &quot;Received message: &quot; + message);</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">            if (web_socket_listener != null) {</span>
+<span class="fc" id="L130">                web_socket_listener.onWebSocketMessage(message);</span>
+            }
+<span class="fc" id="L132">        }</span>
+
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+<span class="fc" id="L136">            Log.d(&quot;WebSocket&quot;, &quot;Closed&quot;);</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">            if (web_socket_listener != null) {</span>
+<span class="fc" id="L138">                web_socket_listener.onWebSocketClose(code, reason, remote);</span>
+            }
+<span class="fc" id="L140">        }</span>
+
+        @Override
+        public void onError(Exception ex) {
+<span class="nc" id="L144">            Log.d(&quot;WebSocket&quot;, &quot;Error&quot;);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            if (web_socket_listener != null) {</span>
+<span class="nc" id="L146">                web_socket_listener.onWebSocketError(ex);</span>
+            }
+<span class="nc" id="L148">        }</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

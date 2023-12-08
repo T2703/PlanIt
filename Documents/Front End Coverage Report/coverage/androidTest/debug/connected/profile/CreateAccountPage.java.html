@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreateAccountPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">profile</a> &gt; <span class="el_source">CreateAccountPage.java</span></div><h1>CreateAccountPage.java</h1><pre class="source lang-java linenums">// Author: Tristan Nono
+package profile;
+
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.myapplication.Index;
+import com.example.myapplication.NavBar;
+import com.example.myapplication.R;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import android.widget.Toast;
+
+
+import api.VolleySingleton;
+import homepage.HomePage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * The CreateAccountPage class represents the activity where users can create a new account.
+ * It allows users to input a username, email, and password, and then sends a POST request to the server
+ * to create a new user account. The class also includes functionality for checking empty values in the input fields.
+ *
+ * &lt;p&gt;The class includes methods for handling user interactions, such as clicking the create account button,
+ * returning to the login page, and checking for empty values in the input fields.
+ *
+ * &lt;p&gt;This class uses Volley to handle network requests and communicates with a backend server to create user accounts.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L47">public class CreateAccountPage extends AppCompatActivity {</span>
+    /**
+     * URL Request for the POST.
+     */
+    private static final String URL_POST_REQUEST = &quot;http://coms-309-024.class.las.iastate.edu:8080/users&quot;;
+
+    /**
+     * The create account button
+     */
+    private Button create_account_button;
+
+    /**
+     * The user's username that the user will use.
+     */
+    private EditText user_username;
+
+    /**
+     * The email that the user will use.
+     */
+    private EditText user_email;
+
+    /**
+     * The password that the user will use.
+     */
+    private EditText user_password;
+
+    /**
+     * Return login button.
+     */
+    private ImageButton return_login_button;
+
+    /**
+     * Create Account URL for the users.
+     */
+    private static final String CREATE_ACCOUNT_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/users&quot;;
+
+    /**
+     * Initializes the activity, sets up UI components, and retrieves events for the current date.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L90">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L91">        setContentView(R.layout.activity_create_account);</span>
+
+        // Initialization
+<span class="fc" id="L94">        create_account_button = findViewById(R.id.create_account_button);</span>
+<span class="fc" id="L95">        user_username = findViewById(R.id.group_description);</span>
+<span class="fc" id="L96">        user_email = findViewById(R.id.input_email);</span>
+<span class="fc" id="L97">        user_password = findViewById(R.id.input_password);</span>
+<span class="fc" id="L98">        create_account_button.setEnabled(false); // Set this to false for checking the inputs of the user.</span>
+<span class="fc" id="L99">        return_login_button = findViewById(R.id.return_login_button);</span>
+
+        // Navigate to home page
+<span class="fc" id="L102">        return_login_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Called when the specified View v is clicked. Initiates the creation of an Intent to navigate
+             * from the CreateAccountPage to the Index activity and starts the activity.
+             *
+             * @param v The view that was clicked, triggering the onClick event.
+             *          It can be used to identify which view triggered the click event.
+             */
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L112">                Intent intent = new Intent(CreateAccountPage.this, Index.class);</span>
+<span class="nc" id="L113">                startActivity(intent);</span>
+<span class="nc" id="L114">            }</span>
+        });
+
+        // This should have user be in the main app after logging in.
+<span class="fc" id="L118">        create_account_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Called when the specified view is clicked. Retrieves the text entered by the user
+             * in the username, password, and email input fields, sends a POST request to the server to create a new user account,
+             * and initiates the navigation to the LoginFormPage activity.
+             *
+             * @param view The view that was clicked, triggering the onClick event.
+             *             It can be used to identify which view triggered the click event.
+             */
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L129">                String username = user_username.getText().toString();</span>
+<span class="nc" id="L130">                String password = user_password.getText().toString();</span>
+<span class="nc" id="L131">                String email = user_email.getText().toString();</span>
+
+<span class="nc" id="L133">                sendPostRequest(username, password, email);</span>
+
+<span class="nc" id="L135">                Intent intent = new Intent(CreateAccountPage.this, LoginFormPage.class);</span>
+<span class="nc" id="L136">                startActivity(intent);</span>
+<span class="nc" id="L137">            }</span>
+        });
+
+        // This is for the user's name to see if anything is in it or not.
+<span class="fc" id="L141">        user_username.addTextChangedListener(new TextWatcher() {</span>
+            /**
+             * Called to notify you that the characters within {@code charSequence} are about to be replaced
+             * with new text with a specified range.
+             *
+             * @param charSequence The sequence of characters before the change.
+             * @param i The starting position of the characters to be replaced.
+             * @param i1 The number of characters to be replaced.
+             * @param i2 The length of the new text that will replace the characters.
+             */
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L153">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code charSequence}, the text has been changed.
+             * It is legitimate to make further changes to {@code charSequence} from this callback.
+             *
+             * @param charSequence The sequence of characters after the change.
+             * @param i The starting position of the changed text.
+             * @param i1 The length of the text that has been changed.
+             * @param i2 The length of the new text that has replaced the old text.
+             */
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L166">                checkFieldsForEmptyValues();</span>
+<span class="fc" id="L167">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code editable}, the text has been changed.
+             * It is legitimate to make further changes to {@code editable} from this callback.
+             *
+             * @param editable The Editable containing the modified text.
+             */
+            @Override
+            public void afterTextChanged(Editable editable) {
+<span class="fc" id="L177">            }</span>
+        });
+
+        // This is for the user's email to see if anything is in it or not.
+<span class="fc" id="L181">        user_email.addTextChangedListener(new TextWatcher() {</span>
+            /**
+             * Called to notify you that the characters within {@code charSequence} are about to be replaced
+             * with new text with a specified range.
+             *
+             * @param charSequence The sequence of characters before the change.
+             * @param i The starting position of the characters to be replaced.
+             * @param i1 The number of characters to be replaced.
+             * @param i2 The length of the new text that will replace the characters.
+             */
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L193">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code charSequence}, the text has been changed.
+             * It is legitimate to make further changes to {@code charSequence} from this callback.
+             *
+             * @param charSequence The sequence of characters after the change.
+             * @param i The starting position of the changed text.
+             * @param i1 The length of the text that has been changed.
+             * @param i2 The length of the new text that has replaced the old text.
+             */
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L206">                checkFieldsForEmptyValues();</span>
+<span class="fc" id="L207">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code editable}, the text has been changed.
+             * It is legitimate to make further changes to {@code editable} from this callback.
+             *
+             * @param editable The Editable containing the modified text.
+             */
+            @Override
+            public void afterTextChanged(Editable editable) {
+<span class="fc" id="L217">            }</span>
+        });
+
+        // This is for the user's password to see if anything is in it or not.
+<span class="fc" id="L221">        user_password.addTextChangedListener(new TextWatcher() {</span>
+            /**
+             * Called to notify you that the characters within {@code charSequence} are about to be replaced
+             * with new text with a specified range.
+             *
+             * @param charSequence The sequence of characters before the change.
+             * @param i The starting position of the characters to be replaced.
+             * @param i1 The number of characters to be replaced.
+             * @param i2 The length of the new text that will replace the characters.
+             */
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L233">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code charSequence}, the text has been changed.
+             * It is legitimate to make further changes to {@code charSequence} from this callback.
+             *
+             * @param charSequence The sequence of characters after the change.
+             * @param i The starting position of the changed text.
+             * @param i1 The length of the text that has been changed.
+             * @param i2 The length of the new text that has replaced the old text.
+             */
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L246">                checkFieldsForEmptyValues();</span>
+<span class="fc" id="L247">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code editable}, the text has been changed.
+             * It is legitimate to make further changes to {@code editable} from this callback.
+             *
+             * @param editable The Editable containing the modified text.
+             */
+            @Override
+            public void afterTextChanged(Editable editable) {
+<span class="fc" id="L257">            }</span>
+        });
+<span class="fc" id="L259">    }</span>
+
+    /**
+     * Sends a POST request to the server to create a new user account.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     * @param email The email entered by the user.
+     */
+    private void sendPostRequest(String username, String password, String email) {
+<span class="nc" id="L269">        RequestQueue requestQueue = Volley.newRequestQueue(this);</span>
+<span class="nc" id="L270">        JSONObject body = new JSONObject();</span>
+
+        try {
+<span class="nc" id="L273">            body.put(&quot;username&quot;, username);</span>
+<span class="nc" id="L274">            body.put(&quot;password&quot;, password);</span>
+<span class="nc" id="L275">            body.put(&quot;email&quot;, email);</span>
+<span class="nc" id="L276">        } catch (JSONException e) {</span>
+<span class="nc" id="L277">            e.printStackTrace();</span>
+<span class="nc" id="L278">        }</span>
+
+        // Make the request
+<span class="nc" id="L281">        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(</span>
+                Request.Method.POST,
+                URL_POST_REQUEST,
+                body,
+<span class="nc" id="L285">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L295">                        Toast.makeText(getApplicationContext(), &quot;New User created&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L296">                    }</span>
+                },
+<span class="nc" id="L298">                new Response.ErrorListener() {</span>
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L308">                        Toast.makeText(getApplicationContext(), &quot;POST request failed&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L309">                    }</span>
+                }
+        );
+
+<span class="nc" id="L313">        requestQueue.add(jsonObjectRequest);</span>
+<span class="nc" id="L314">    }</span>
+
+    /**
+     * This checks for empty values in the edit text variables so in other words,
+     * if there's nothing in both the email and password then, it shouldn't go through.
+     */
+    private void checkFieldsForEmptyValues() {
+<span class="fc" id="L321">        String username_login = user_username.getText().toString();</span>
+<span class="fc" id="L322">        String user_email_login = user_email.getText().toString();</span>
+<span class="fc" id="L323">        String password = user_password.getText().toString();</span>
+
+<span class="pc bpc" id="L325" title="1 of 6 branches missed.">        if (!user_email_login.isEmpty() &amp;&amp; !password.isEmpty() &amp;&amp; !username_login.isEmpty()) {</span>
+<span class="fc" id="L326">            create_account_button.setEnabled(true);</span>
+        }
+
+        else {
+<span class="fc" id="L330">            create_account_button.setEnabled(false);</span>
+        }
+<span class="fc" id="L332">    }</span>
+
+    /**
+     * This method is used for the link aka the text that says &quot;Create an account&quot;
+     * this gives the function of making the text work a like button and should take
+     * the user to the register page.
+     * @param view the view that was clicked on
+     */
+    public void onRegisterLinkClick(View view) {
+        // For logging checking the button clicks could be deleted later idk.
+<span class="nc" id="L342">        Log.d(TAG, &quot;Register Clicked!&quot;);</span>
+<span class="nc" id="L343">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

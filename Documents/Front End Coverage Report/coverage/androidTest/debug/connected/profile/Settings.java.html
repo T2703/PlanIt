@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Settings.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">profile</a> &gt; <span class="el_source">Settings.java</span></div><h1>Settings.java</h1><pre class="source lang-java linenums">package profile;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
+import android.content.SharedPreferences;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Bundle;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
+import calendar.CalendarMonthlyPage;
+import events.CreateEventPage;
+import groups.MemberViewer;
+import homepage.HomePage;
+
+/**
+ * The Settings page of the app where users can configure preferences, including toggling between dark and light modes.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L24">public class Settings extends AppCompatActivity implements NavBarView.OnButtonClickListener {</span>
+    /**
+     * Navbar.
+     */
+    private NavBarView navbar_view;
+
+    /**
+     * The switch that toggles the dark or light themes.
+     */
+    private Switch dark_or_light_mode_switch;
+
+    /**
+     * Saves the theme.
+     */
+    private SharedPreferences sharedPreferencesTheme;
+
+    /**
+     * Initializes the activity and sets up UI components.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L47">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L48">        setContentView(R.layout.activity_settings);</span>
+
+<span class="fc" id="L50">        navbar_view = findViewById(R.id.navbar);</span>
+<span class="fc" id="L51">        navbar_view.setOnButtonClickListener(this);</span>
+<span class="fc" id="L52">        navbar_view.setSelectedButton(navbar_view.getProfileButton());</span>
+<span class="fc" id="L53">        dark_or_light_mode_switch = findViewById(R.id.theme_switch);</span>
+
+<span class="fc" id="L55">        sharedPreferencesTheme = getSharedPreferences(&quot;MyPrefs&quot;, MODE_PRIVATE);</span>
+
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Resumes the activity and updates the UI based on the current night mode.
+     */
+    @Override
+    protected void onResume() {
+<span class="fc" id="L64">        super.onResume();</span>
+
+        // Retrieve the current night mode
+<span class="fc" id="L67">        int currentNightMode = AppCompatDelegate.getDefaultNightMode();</span>
+
+        // Set the switch state based on the current night mode
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (currentNightMode == AppCompatDelegate.MODE_NIGHT_YES) {</span>
+<span class="fc" id="L71">            dark_or_light_mode_switch.setChecked(true); // Dark mode is on</span>
+        }
+        else {
+<span class="fc" id="L74">            dark_or_light_mode_switch.setChecked(false); // Dark mode is off</span>
+        }
+
+<span class="fc" id="L77">        dark_or_light_mode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {</span>
+            /**
+             * Handles the change event when the dark/light mode switch is toggled. Updates the app's theme based on the switch state
+             * and saves the dark mode preference.
+             *
+             * @param buttonView The compound button view whose state has changed.
+             * @param isChecked  True if the switch is in the checked state (user wants dark mode), false otherwise (user wants light mode).
+             */
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // Check if the switch is checked (user wants dark mode) or unchecked (user wants light mode).
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                if (isChecked) {</span>
+<span class="fc" id="L89">                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);</span>
+                }
+                else {
+<span class="nc" id="L92">                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);</span>
+                }
+
+<span class="fc" id="L95">                sharedPreferencesTheme.edit().putBoolean(&quot;darkMode&quot;, isChecked).apply();</span>
+<span class="fc" id="L96">            }</span>
+        });
+<span class="fc" id="L98">    }</span>
+
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCalendarButtonClick() {
+<span class="nc" id="L106">        Intent intent = new Intent(Settings.this, CalendarMonthlyPage.class);</span>
+<span class="nc" id="L107">        ActivityOptions options = ActivityOptions.makeCustomAnimation(Settings.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L108">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L109">    }</span>
+
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onHomeButtonClick() {
+<span class="nc" id="L117">        Intent intent = new Intent(Settings.this, HomePage.class);</span>
+<span class="nc" id="L118">        ActivityOptions options = ActivityOptions.makeCustomAnimation(Settings.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L119">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L120">    }</span>
+
+    /**
+     * Handles the click event on the message button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onMessagesButtonClick() {
+<span class="nc" id="L128">        Intent intent = new Intent(Settings.this, MemberViewer.class);</span>
+<span class="nc" id="L129">        ActivityOptions options = ActivityOptions.makeCustomAnimation(Settings.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L130">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L131">    }</span>
+
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onProfileButtonClick() {
+<span class="nc" id="L139">        Intent intent = new Intent(Settings.this, ProfilePage.class);</span>
+<span class="nc" id="L140">        ActivityOptions options = ActivityOptions.makeCustomAnimation(Settings.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L141">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L142">    }</span>
+
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCreateEventButtonClick() {
+        // Navigate to Create Events page
+<span class="nc" id="L151">        Intent intent = new Intent(Settings.this, CreateEventPage.class);</span>
+<span class="nc" id="L152">        startActivity(intent);</span>
+<span class="nc" id="L153">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

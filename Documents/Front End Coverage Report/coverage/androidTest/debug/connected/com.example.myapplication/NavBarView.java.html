@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NavBarView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">com.example.myapplication</a> &gt; <span class="el_source">NavBarView.java</span></div><h1>NavBarView.java</h1><pre class="source lang-java linenums">package com.example.myapplication;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+
+/**
+ * Navigation bar for navigating throughout the pages and app.
+ * @author Tristan Nono
+ */
+public class NavBarView extends RelativeLayout {
+    /**
+     * Button for navigating to the calendar.
+     */
+    private ImageButton calendar_button;
+
+    /**
+     * Button for navigating to messages.
+     */
+    private ImageButton messages_button;
+
+    /**
+     * Button for navigating to the home page.
+     */
+    private ImageButton home_button;
+
+    /**
+     * Button for navigating to the user's profile.
+     */
+    private ImageButton profile_button;
+
+    /**
+     * Button for creating events.
+     */
+    private ImageButton create_event_button;
+
+    /**
+     * Variable to check if a button has been clicked.
+     */
+    private OnButtonClickListener button_click_listener;
+
+
+    /**
+    An interface mainly used for calling these methods for the navbar
+    since, we can't just use intent here it won't work.
+     */
+    public interface OnButtonClickListener {
+        void onCalendarButtonClick();
+        void onHomeButtonClick();
+        void onMessagesButtonClick();
+        void onProfileButtonClick();
+        void onCreateEventButtonClick();
+    }
+
+
+    /**
+     * The view for the navbar.
+     * @param context
+     * @param attrs
+     */
+    public NavBarView(Context context, AttributeSet attrs) {
+<span class="fc" id="L68">        super(context, attrs);</span>
+
+<span class="fc" id="L70">        LayoutInflater.from(context).inflate(R.layout.activity_navbar, this);</span>
+
+        // Initialize
+<span class="fc" id="L73">        calendar_button = findViewById(R.id.calendar_button_nav);</span>
+<span class="fc" id="L74">        messages_button = findViewById(R.id.message_button);</span>
+<span class="fc" id="L75">        create_event_button = findViewById(R.id.create_events_button);</span>
+<span class="fc" id="L76">        home_button = findViewById(R.id.home_button);</span>
+<span class="fc" id="L77">        profile_button = findViewById(R.id.profile_button);</span>
+<span class="fc" id="L78">        create_event_button = findViewById(R.id.create_events_button);</span>
+
+        // Set a click listeners for the corresponding buttons.
+<span class="fc" id="L81">        home_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L84">                setSelectedButton(home_button);</span>
+<span class="fc" id="L85">                button_click_listener.onHomeButtonClick();</span>
+<span class="fc" id="L86">            }</span>
+        });
+
+<span class="fc" id="L89">        calendar_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L92">                setSelectedButton(calendar_button);</span>
+<span class="fc" id="L93">                button_click_listener.onCalendarButtonClick();</span>
+<span class="fc" id="L94">            }</span>
+        });
+
+<span class="fc" id="L97">        create_event_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+                // Navigate to Create Events page
+<span class="nc" id="L101">                button_click_listener.onCreateEventButtonClick();</span>
+<span class="nc" id="L102">            }</span>
+        });
+
+<span class="fc" id="L105">        messages_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L108">                setSelectedButton(messages_button);</span>
+<span class="fc" id="L109">                button_click_listener.onMessagesButtonClick();</span>
+<span class="fc" id="L110">            }</span>
+        });
+
+<span class="fc" id="L113">        profile_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L116">                setSelectedButton(profile_button);</span>
+<span class="fc" id="L117">                button_click_listener.onProfileButtonClick();</span>
+<span class="fc" id="L118">            }</span>
+        });
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * This method here sets the color of the selected button on the navbar depending on what is clicked.
+     * Example: if calendar button is clicked then the calendar button is lit up.
+     * @param button
+     */
+    public void setSelectedButton(ImageButton button) {
+        // Deselect all buttons
+<span class="fc" id="L129">        calendar_button.setSelected(false);</span>
+<span class="fc" id="L130">        messages_button.setSelected(false);</span>
+<span class="fc" id="L131">        home_button.setSelected(false);</span>
+<span class="fc" id="L132">        profile_button.setSelected(false);</span>
+
+        // Select the clicked button
+<span class="fc" id="L135">        button.setSelected(true);</span>
+
+        // Set tints based on the selected state
+<span class="fc" id="L138">        calendar_button.setColorFilter(getResources().getColor(</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">                calendar_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+
+<span class="fc" id="L141">        messages_button.setColorFilter(getResources().getColor(</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                messages_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+
+<span class="fc" id="L144">        home_button.setColorFilter(getResources().getColor(</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">                home_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+
+<span class="fc" id="L147">        profile_button.setColorFilter(getResources().getColor(</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                profile_button.isSelected() ? R.color.primary_color : R.color.deselected_tint));</span>
+
+<span class="fc" id="L150">    }</span>
+
+    /**
+    Sets the button click listener.
+     */
+    public void setOnButtonClickListener(OnButtonClickListener listener) {
+<span class="fc" id="L156">        this.button_click_listener = listener;</span>
+<span class="fc" id="L157">    }</span>
+
+    /**
+     * Gets the calendar button.
+     * @return calendar_button
+     */
+    public ImageButton getCalendarButton() {
+<span class="fc" id="L164">        return calendar_button;</span>
+    }
+
+    /**
+     * Gets the message button.
+     * @return message button
+     */
+    public ImageButton getMessagesButton() {
+<span class="fc" id="L172">        return messages_button;</span>
+    }
+
+    /**
+     * Gets the profile button.
+     * @return profile button
+     */
+    public ImageButton getProfileButton() {
+<span class="fc" id="L180">        return profile_button;</span>
+    }
+
+    /**
+     * Gets the home button.
+     * @return home button
+     */
+    public ImageButton getHomeButton() {
+<span class="fc" id="L188">        return home_button;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>
