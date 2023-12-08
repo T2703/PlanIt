@@ -37,6 +37,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import assignments.AssignmentsPage;
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
 import followers.FollowersPage;
@@ -128,23 +130,22 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 }
 
                 else if (itemId == R.id.list_of_users) {
-                    WebSocketManager.getInstance().disconnectWebSocket();
-
                     Intent intent = new Intent(HomePage.this, ListOfUsers.class);
                     startActivity(intent);
                 }
 
                 else if (itemId == R.id.list_of_following) {
-                    WebSocketManager.getInstance().disconnectWebSocket();
-
                     Intent intent = new Intent(HomePage.this, FollowingPage.class);
                     startActivity(intent);
                 }
 
                 else if (itemId == R.id.list_of_followers) {
-                    WebSocketManager.getInstance().disconnectWebSocket();
-
                     Intent intent = new Intent(HomePage.this, FollowersPage.class);
+                    startActivity(intent);
+                }
+
+                else if (itemId == R.id.list_of_assignments) {
+                    Intent intent = new Intent(HomePage.this, AssignmentsPage.class);
                     startActivity(intent);
                 }
                 return true;
@@ -209,7 +210,6 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                         JSONObject assignment = response.getJSONObject(i);
 
                         if (assignment.getString("isCompleted").equals("false")) {
-                            Log.d("found", "yes");
                             String course = assignment.getString("course");
                             String title = assignment.getString("title");
                             String dueDate = assignment.getString("dueDate");

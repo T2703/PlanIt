@@ -45,6 +45,9 @@
     <string name="back">Back</string>
     <string name="edit_event_name">Edit event name</string>
     <string name="create_group">Create Group</string>
+    <string name="connect_to_canvas">Connect to Canvas</string>
+    <string name="assignments_page_title">Welcome to Canvas Integration</string>
+    <string name="assignments_page_description">"Paste your Canvas token below. "</string>
     <string-array name="event_types">
         <item>Select an event type</item>
         <item>Private</item>

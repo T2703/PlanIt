@@ -21,5 +21,10 @@
             android:id="@+id/list_of_followers"
             android:icon="@drawable/baseline_person_add_alt_1_24"
             android:title="Followers" />
+
+        <item
+            android:id="@+id/list_of_assignments"
+            android:icon="@drawable/baseline_task_24"
+            android:title="Assignments" />
     </group>
 </menu>
