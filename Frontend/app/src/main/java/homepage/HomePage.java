@@ -48,6 +48,7 @@ import groups.MemberViewer;
 import notifications.NotificationPage;
 import profile.LoginFormPage;
 import profile.ProfilePage;
+import profile.ProfilePageViewer;
 import utilities.NotificationsHelper;
 import websockets.NotificationWebSocketManager;
 import websockets.WebSocketListener;
@@ -316,7 +317,7 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
      */
     @Override
     public void onProfileButtonClick() {
-        Intent intent = new Intent(HomePage.this, ProfilePage.class);
+        Intent intent = new Intent(HomePage.this, ProfilePageViewer.class);
         ActivityOptions options = ActivityOptions.makeCustomAnimation(HomePage.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }
