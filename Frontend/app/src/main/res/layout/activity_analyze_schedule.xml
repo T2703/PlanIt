@@ -6,24 +6,61 @@
     android:layout_height="match_parent"
     tools:context=".AnalyzeSchedule">
 
-    <ImageButton
-        android:id="@+id/back_button_two2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        android:background="@color/primary_color"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_arrow_back_24" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <TextView
-        android:id="@+id/response"
+        <!-- Add your header content here -->
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Schedule Analyzer"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:translationX="105dp" />
+
+        <!-- You can add more views as needed -->
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/menu_calendar_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="108dp"
-        android:layout_marginTop="152dp"
-        android:text="TextView"
-        android:translationX="-100dp"
+        android:background="@null"
+        android:translationX="360dp"
+        android:translationY="20dp"
+        app:srcCompat="@drawable/baseline_menu_24"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:translationY="100dp"
+        android:backgroundTint="@color/primary_color"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/response"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:translationX="0dp" />
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
