@@ -1,0 +1,147 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PlanITApplication</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT</a>
+</div>
+
+<h1>Coverage Summary for Class: PlanITApplication (planIT)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlanITApplication</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PlanITApplication$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT;
+&nbsp;
+&nbsp;import org.springframework.boot.SpringApplication;
+&nbsp;import org.springframework.boot.autoconfigure.SpringBootApplication;
+&nbsp;import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration;
+&nbsp;import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+&nbsp;import org.springframework.transaction.annotation.EnableTransactionManagement;
+&nbsp;
+&nbsp;
+&nbsp;/**
+&nbsp; * The main class for the PlanIT application.
+&nbsp; * This class configures and launches the Spring Boot application.
+&nbsp; * It excludes security auto-configuration and enables transaction management.
+&nbsp; * The application can be started by running the {@link #main(String[])} method.
+&nbsp; *
+&nbsp; * @author Melani Hodge
+&nbsp; * @author Chris Smith
+&nbsp; *
+&nbsp; */
+&nbsp;@SpringBootApplication(exclude = { SecurityAutoConfiguration.class , PropertyPlaceholderAutoConfiguration.class })
+&nbsp;@EnableTransactionManagement
+<b class="fc">&nbsp;public class PlanITApplication {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * The main entry point for the PlanIT application.
+&nbsp;     * It starts the Spring Boot application.
+&nbsp;     *
+&nbsp;     * @param args Command line arguments passed to the application.
+&nbsp;     */
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        SpringApplication.run(PlanITApplication.class, args);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
