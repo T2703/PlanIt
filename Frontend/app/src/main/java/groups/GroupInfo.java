@@ -3,6 +3,7 @@ package groups;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import java.util.List;
 
 import api.VolleySingleton;
 import messages.MessageView;
+import websockets.WebSocketManager;
 
 /**
  * Activity class for displaying group information including the group's profile picture and general details.
@@ -49,7 +51,7 @@ public class GroupInfo extends AppCompatActivity {
     /**
      * The request code for editing the group.
      */
-    private static final int EDIT_GROUP_REQUEST_CODE = 1;
+    public static final int EDIT_GROUP_REQUEST_CODE = 1;
 
     /**
      * Back button.
@@ -75,7 +77,7 @@ public class GroupInfo extends AppCompatActivity {
     /**
      * The list of groups.
      */
-    private List<Member> member_list;
+    public List<Member> member_list;
 
     /**
      * Context: context
@@ -105,7 +107,7 @@ public class GroupInfo extends AppCompatActivity {
     /**
      * The teams url for making the request.
      */
-    private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
+    private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
 
     /**
      * Initializes the activity and sets up UI components.
@@ -135,7 +137,7 @@ public class GroupInfo extends AppCompatActivity {
         getGroupsRequest();
 
 
-         menu_button.setOnClickListener(new View.OnClickListener() {
+        menu_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(GroupInfo.this, view);
@@ -146,8 +148,10 @@ public class GroupInfo extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.to_chat_option) {
                             Intent intent = new Intent(GroupInfo.this, MessageView.class);
+                            intent.putExtra("group_id", getting_group_id);
                             startActivity(intent);
                         }
+
                         else if (menuItem.getItemId() == R.id.edit_option) {
                             Intent editIntent = new Intent(GroupInfo.this, EditGroup.class);
                             editIntent.putExtra("group_id", getting_group_id);
@@ -157,10 +161,15 @@ public class GroupInfo extends AppCompatActivity {
 
                         }
 
+                        else if (menuItem.getItemId() == R.id.add_users_option) {
+                            Intent intent = new Intent(GroupInfo.this, AddFollowersToTeamPage.class);
+                            intent.putExtra("group_id", getting_group_id);
+                            startActivity(intent);
+                        }
+
                         else if (menuItem.getItemId() == R.id.delete_option) {
-                            String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + getting_group_id;
+                            String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams" + "/" + getting_group_id;
                             makeDeleteRequest(delete_url, getting_group_id);
-                            Log.d("GID", getting_group_id);
 
                             Intent intent = new Intent(GroupInfo.this, MemberViewer.class);
                             startActivity(intent);
@@ -186,7 +195,6 @@ public class GroupInfo extends AppCompatActivity {
         });
 
 
-
     }
 
     /**
@@ -197,7 +205,7 @@ public class GroupInfo extends AppCompatActivity {
      * @param data        An Intent, which can return result data to the caller.
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == EDIT_GROUP_REQUEST_CODE) {
@@ -270,7 +278,7 @@ public class GroupInfo extends AppCompatActivity {
      * @param deleteUrl The URL for the delete request.
      * @param group_id  The unique identifier of the group to be deleted.
      */
-    private void makeDeleteRequest(String deleteUrl, String group_id) {
+    public void makeDeleteRequest(String deleteUrl, String group_id) {
         // Find the position of the item with the given group_id
         Log.d("TAG", String.valueOf(member_list.size()));
         int positionToDelete = -1;
@@ -314,16 +322,5 @@ public class GroupInfo extends AppCompatActivity {
             VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
         }
     }
-
-    /**
-     * Updates the UI with the received group data.
-     */
-    private void updateUIWithGroupData() {
-        // Update your UI components with the new group data
-        group_name.setText(getting_group_name);
-        group_description.setText(getting_group_desc);
-        adapter.notifyDataSetChanged(); // Update the RecyclerView if you have one
-    }
-
 }
 

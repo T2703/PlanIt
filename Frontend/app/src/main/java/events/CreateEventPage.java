@@ -27,10 +27,14 @@ import com.example.myapplication.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
+
+import websockets.NotificationWebSocketManager;
 import websockets.WebSocketManager;
 
 
@@ -50,6 +54,7 @@ public class CreateEventPage extends AppCompatActivity {
     private EditText event_end_time;
     private EditText event_location;
     private EditText event_description;
+    private EditText event_add_people;
 
     private final Context createEventPageContext = this;
 
@@ -77,6 +82,7 @@ public class CreateEventPage extends AppCompatActivity {
         event_end_time = findViewById(R.id.end_time_input);
         event_location = findViewById(R.id.event_location_input);
         event_description = findViewById(R.id.event_description_input);
+        event_add_people = findViewById(R.id.event_add_people);
 
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,13 +195,14 @@ public class CreateEventPage extends AppCompatActivity {
                 String event_end_date = dates[1];
                 String event_location_value = event_location.getText().toString();
                 String event_description_value = event_description.getText().toString();
+                String event_add_people_value = event_add_people.getText().toString();
 
-                sendPostRequest(event_name_value, event_description_value, event_location_value, event_type_value, event_start_date, event_end_date);
+                sendPostRequest(event_name_value, event_description_value, event_location_value, event_type_value, event_start_date, event_end_date, event_add_people_value);
             }
         });
     }
 
-    private void sendPostRequest(String eventNameValue, String eventDescriptionValue, String eventLocationValue, String eventTypeValue, String eventStartDateValue, String eventEndDateValue) {
+    private void sendPostRequest(String eventNameValue, String eventDescriptionValue, String eventLocationValue, String eventTypeValue, String eventStartDateValue, String eventEndDateValue, String eventAddPeopleValue) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject body = new JSONObject();
 
@@ -204,11 +211,21 @@ public class CreateEventPage extends AppCompatActivity {
             body.put("description", eventDescriptionValue);
             body.put("location", eventLocationValue);
             body.put("type", eventTypeValue);
-            body.put("startDate", eventStartDateValue);
-            body.put("endDate", eventEndDateValue);
+            //body.put("startDate", eventStartDateValue);
+            //body.put("endDate", eventEndDateValue);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date startDate = sdf.parse(eventStartDateValue);
+            Date endDate = sdf.parse(eventEndDateValue);
+
+            body.put("startDate", sdf.format(startDate));
+            body.put("endDate", sdf.format(endDate));
 
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
 
         String username = WebSocketManager.getInstance().getUsername();
@@ -222,6 +239,17 @@ public class CreateEventPage extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Toast.makeText(getApplicationContext(), "New event created", Toast.LENGTH_SHORT).show();
+
+                        try {
+                            JSONObject json = new JSONObject();
+                            json.put("type", "events");
+                            json.put("title", "Event Invite");
+                            json.put("typeId", response.get("id"));
+                            json.put("description", "You have been invited to " + eventNameValue + "! Please accept or reject.");
+                            NotificationWebSocketManager.getInstance().sendMessage(eventAddPeopleValue + "   " + json);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         Intent intent = new Intent(CreateEventPage.this, EventsListViewer.class);
                         startActivity(intent);

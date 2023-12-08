@@ -75,13 +75,12 @@ public class ChatController {
      * Creates a new chat entity and immediately adds all users from a given team as
      * members of the new chat.
      * @param teamId id number of the team
-     * @param chat newly created chat entity
      * @return success
      */
     @Operation(summary="Create team chat", description = "Creates a chat for a team")
-    @PostMapping(path = "/chats/{teamId}/chat")
-    public String createTeamChat(@PathVariable int teamId, @RequestBody Chat chat){
-        return chatService.createTeamChat(teamId, chat);
+    @PostMapping(path = "/createTeamChat/{teamId}")
+    public String createTeamChat(@PathVariable int teamId){
+        return chatService.createTeamChat(teamId);
     }
 
     /**
@@ -162,7 +161,7 @@ public class ChatController {
      */
     @Operation(summary = "remove user from chat", description = "Removes a user from a chat")
     @DeleteMapping(path = "/chats/{chatID}/users/{username}")
-    public String removeUserFromChat(@PathVariable String username, int chatID) {
+    public String removeUserFromChat(@PathVariable String username,@PathVariable int chatID) {
         return chatService.removeUserFromChat(username, chatID);
     }
 }

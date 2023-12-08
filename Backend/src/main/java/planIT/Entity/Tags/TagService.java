@@ -22,10 +22,6 @@ public class TagService {
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
 
-    public List<Tag> getAllTags() {
-        return tagRepository.findAll();
-    }
-
     public Tag getTagById(int id) {
         return tagRepository.findById(id);
     }
@@ -36,16 +32,16 @@ public class TagService {
         return success;
     }
 
-    public Tag updateTag(int id, Tag request) {
+    public String updateTag(int id, Tag request) {
         Tag tag = tagRepository.findById(id);
         if (tag == null)
-            return null;
+            return failure;
 
         tag.setName(request.getName());
         tag.setDescription(request.getDescription());
 
         tagRepository.save(tag);
-        return tagRepository.findById(id);
+        return success;
     }
 
     public String deleteTag(int id) {

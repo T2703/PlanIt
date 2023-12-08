@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import planIT.Entity.Users.User;
+import planIT.Entity.Users.UserService;
 
 /**
  * Controller class for the notification entity
@@ -27,17 +29,8 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    // GET method - retreives all notifications from the database.
-
-    /**
-     * Returns all notifications from the repository as a List object
-     * @return notifications
-     */
-    @GetMapping(path = "/notifications")
-    @Operation(summary = "Get all Notifications", description = "Returns all notifications from the repository as a List object")
-    public List<Notification> getAllNotifications() {
-        return notificationService.getAllNotifications();
-    }
+    @Autowired
+    private UserService userService;
 
     // GET method - retreives a notification from the database.
     /**
@@ -76,17 +69,10 @@ public class NotificationController {
         return notificationService.getNotificationByUser(username);
     }
 
-    // PUT method - updates a notification in the database.
-    /**
-     * Updates a notification in the repository
-     * @param id id number for the target notification
-     * @param notification newly created notification
-     * @return notification
-     */
-    @PutMapping(path = "/notifications/{id}")
-    @Operation(summary = "Update an existing Notification", description = "Updates a notification in the repository")
-    public Notification updateNotification(@PathVariable int id, @RequestBody Notification notification) {
-        return notificationService.updateNotification(id, notification);
+    @GetMapping(path = "/users/{username}/notifications-unread")
+    @Operation(summary = "Get Notifications for a specific user", description = "Gets all of a user's notifications and returns them as a List")
+    public int getUserUnreadNotifications(@PathVariable String username) {
+        return notificationService.getUnreadNotificationByUser(username);
     }
 
     // DELETE method - deletes a notification from the database.
@@ -95,9 +81,11 @@ public class NotificationController {
      * @param id id number of the target notification
      * @return success
      */
-    @DeleteMapping(path = "/notifications/{id}")
+    @DeleteMapping(path = "users/{username}/notifications/{id}")
     @Operation(summary = "Delete a Notification by Id", description = "Deletes a notification from the repository")
-    public String deleteNotification(@PathVariable int id) {
+    public String deleteNotification(@PathVariable String username, @PathVariable int id) {
+        User user = userService.findUserByUsername(username);
+        user.getNotifications().remove(notificationService.getNotificationById(id));
         return notificationService.deleteNotification(id);
     }
 }

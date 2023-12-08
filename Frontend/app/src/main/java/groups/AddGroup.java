@@ -10,14 +10,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
 import api.VolleySingleton;
+import websockets.WebSocketManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +55,12 @@ public class AddGroup extends AppCompatActivity {
     /**
      * URL for making calls.
      */
-    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams";
+    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
+
+    private String CHAT_URL = "http://coms-309-024.class.las.iastate.edu:8080/createTeamChat/";
+
+    private String teamID;
+
 
     /**
      * Initializes the activity and sets up UI components.
@@ -64,11 +73,12 @@ public class AddGroup extends AppCompatActivity {
         setContentView(R.layout.activity_add_group);
 
         // Initialization
-        create_group_button = findViewById(R.id.create_button);
+        create_group_button = findViewById(R.id.create_group_button);
         group_name = findViewById(R.id.group_name);
         group_description = findViewById(R.id.group_description);
-        back_button = findViewById(R.id.back_button);
+        back_button = findViewById(R.id.add_group_back_button);
         create_group_button.setEnabled(false); // Set the initial state to disabled
+        Log.d("URL", TEAMS_URL);
 
         // Sets the on click listener for the creating group button. So, we can
         // an epic group.
@@ -76,6 +86,7 @@ public class AddGroup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createGroup();
+                //getGroupsRequest();
                 Intent intent = new Intent(AddGroup.this, MemberViewer.class);
                 startActivity(intent);
             }
@@ -162,6 +173,7 @@ public class AddGroup extends AppCompatActivity {
         try {
             requestBody.put("name", input_group_value);
             requestBody.put("description", input_group_description_value);
+            requestBody.put("chat", input_group_value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -174,7 +186,21 @@ public class AddGroup extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        // Log the entire response for debugging
                         Log.d("Server response", response.toString());
+                        // Extract the "message" field from the JSON object
+                        String message = response.optString("message", "");
+
+                        // Use regular expressions to extract the number from the "message" string
+                        String numberString = message.replaceAll("[^0-9]", "");
+
+                        // Convert the extracted string to an integer
+                        int idNumber = Integer.parseInt(numberString);
+
+                        // Now, idNumber contains the extracted integer value (44 in this case)
+                        Log.d("ID Number", String.valueOf(idNumber));
+
+                        createChat(String.valueOf(idNumber), input_group_value);
                     }
                 },
                 new Response.ErrorListener() {
@@ -190,4 +216,89 @@ public class AddGroup extends AppCompatActivity {
         // Add to volley request queue
         VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);
     }
+
+    private void createChat(String teamID, String name) {
+        // Find the values of each field
+
+        // Create JSON object
+        JSONObject requestBody = new JSONObject();
+
+        // Puts in the values of these variables.
+        try {
+            requestBody.put("chat", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Making the request
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+                Request.Method.POST,
+                CHAT_URL + teamID,
+                requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Server response", response.toString());
+                        Toast.makeText(AddGroup.this, "Chat created!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Uh oh not good", "Error: " + error.getMessage());
+                        Log.d("URL", CHAT_URL);
+                    }
+                }
+        ) {
+
+        };
+
+        // Add to volley request queue
+        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);
+    }
+
+
+    /*private void getGroupsRequest() {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                TEAMS_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+                            responseArray = new JSONArray(response);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        // Iterate
+                        for (int i = 0; i < responseArray.length(); i++) {
+                            try {
+                                JSONObject jsonObject = responseArray.getJSONObject(i);
+                                String name = jsonObject.getString("name");
+                                String id = jsonObject.getString("id");
+                                teamID = id;
+                                createChat(teamID, name);
+                                Log.d("List", id);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e("A server error has occurred", error.toString());
+                    }
+                }
+        );
+
+        // Adding request to request queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    } */
+
+
 }

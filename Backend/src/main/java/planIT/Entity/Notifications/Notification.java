@@ -2,6 +2,8 @@ package planIT.Entity.Notifications;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +38,18 @@ public class Notification {
     @Schema(description = "Description of notification")
     private String description;
 
+    // type of Notification
+    @Schema(description = "Type of notification")
+    private String type;
+
+    // type id of Notification
+    @Schema(description = "TypeId of notification")
+    private int typeId;
+
+    // type of Notification
+    @Schema(description = "If the notification has been seen or not")
+    private boolean seen = false;
+
     @JsonIgnoreProperties("notifications")
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,9 +60,11 @@ public class Notification {
      * @param title notification title
      * @param description notification description
      */
-    public Notification(String title, String description) {
+    public Notification(String title, String description, String type, int typeId) {
         this.title = title;
         this.description = description;
+        this.type = type;
+        this.typeId = typeId;
     }
 
     // Notification constructor (without parameters)
@@ -110,6 +126,20 @@ public class Notification {
      */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public int getTypeId() { return typeId; }
+    public void setTypeId(int typeId) { this.typeId = typeId; }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen() {
+        seen = true;
     }
 
 }

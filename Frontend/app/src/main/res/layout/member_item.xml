@@ -16,14 +16,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <Button
-            android:id="@+id/delete_group_button"
-            android:layout_width="111dp"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            android:translationX="200dp"
-            android:translationY="70dp" />
-
         <TextView
             android:id="@+id/group_name"
             android:layout_width="328dp"
@@ -31,14 +23,14 @@
             android:layout_marginTop="8dp"
             android:textSize="16sp"
             android:translationX="30dp"
-            android:translationY="-33dp" />
+            android:translationY="-5dp" />
 
         <ImageButton
             android:id="@+id/drag_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:translationY="-70dp"
+            android:translationY="-30dp"
             app:srcCompat="@drawable/baseline_list_24" />
 
     </LinearLayout>

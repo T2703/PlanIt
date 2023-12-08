@@ -1,5 +1,6 @@
 package planIT.Entity.Chats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import planIT.Entity.Messages.Message;
+import planIT.Entity.Teams.Team;
 import planIT.Entity.Users.User;
 
 /**
@@ -45,6 +47,10 @@ public class Chat {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "chat_messages", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "message_id"))
     private Set<Message> messages = new HashSet<>();
+
+    @JsonIgnoreProperties({"users", "admin", "chat"})   //{"team", "chat", "messages"}
+    @OneToOne(mappedBy = "chat", cascade = CascadeType.ALL)
+    private Team team;
 
 
     /**
@@ -115,4 +121,21 @@ public class Chat {
         return users.size();
     }
 
+    /**
+     * Sets the associated team
+     * @param team
+     */
+    public void setTeam(Team team){
+        this.team = team;
+    }
+
+    /**
+     * Gets the associated team
+     * @return team
+     */
+    public Team getTeam(){
+        return team;
+    }
+
 }
+

@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import planIT.Entity.Chats.ChatRepository;
+import planIT.Entity.Chats.ChatService;
 import planIT.Entity.Users.User;
 import planIT.Entity.Users.UserRepository;
 
@@ -26,6 +28,9 @@ public class TeamService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ChatService chatService;
 
     private String success = "{\"message\":\"success\"}";
     private String failure = "{\"message\":\"failure\"}";
@@ -55,9 +60,17 @@ public class TeamService {
      * @param team The Team entity to be created.
      * @return A success or failure message as a JSON string.
      */
-    public String createTeam(Team team) {
+    public String createTeam(String username, Team team) {
+        User user = userRepository.findByUsername(username);
+        team.setAdmin(user);
+        team.getUsers().add(user);
+        user.getTeams().add(team);
+
         teamRepository.save(team);
-        return success;
+        userRepository.save(user);
+
+        return "{\"message\":\"success_" +team.getId()  +"\"}";
+        //return success;
     }
 
     /**
@@ -67,16 +80,16 @@ public class TeamService {
      * @param request The updated Team entity.
      * @return The updated Team entity or null if the Team with the provided ID is not found.
      */
-    public Team updateTeam(int id, Team request) {
+    public String updateTeam(int id, Team request) {
         Team team = teamRepository.findById(id);
         if (team == null)
-            return null;
+            return failure;
 
         team.setName(request.getName());
         team.setDescription(request.getDescription());
 
         teamRepository.save(team);
-        return teamRepository.findById(id);
+        return success;
     }
 
     /**
@@ -86,6 +99,9 @@ public class TeamService {
      * @return A success or failure message as a JSON string.
      */
     public String deleteTeam(int id) {
+        if(teamRepository.findById(id).getChat() != null) {
+            chatService.deleteChat(teamRepository.findById(id).getChat().getId()); //?
+        }
         teamRepository.deleteById(id);
         return success;
     }
@@ -103,6 +119,35 @@ public class TeamService {
         Team team = teamRepository.findById(id);
         team.getUsers().add(user);
         user.getTeams().add(team);
+
+        if(team.getChat() != null){
+            chatService.addUserToChat(username, team.getChat().getId());
+        }
+
+        teamRepository.save(team);
+        userRepository.save(user);
+
+        return success;
+    }
+
+    /**
+     * Removes a user from a specific team
+     *
+     * @param id The unique identifier of the Team.
+     * @param username The username of the user to be removed.
+     * @return A success or failure message as a JSON string.
+     */
+    public String removeUserFromTeam(int id, String username){
+
+        User user = userRepository.findByUsername(username);
+        Team team = teamRepository.findById(id);
+        team.getUsers().remove(user);
+        user.getTeams().remove(team);
+
+        if(team.getChat() != null){
+            chatService.removeUserFromChat(username, team.getChat().getId());
+        }
+
         teamRepository.save(team);
         userRepository.save(user);
 

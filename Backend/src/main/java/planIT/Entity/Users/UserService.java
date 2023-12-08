@@ -60,17 +60,52 @@ public class UserService {
      * @param request The updated User entity.
      * @return The updated User entity or null if the user with the provided ID is not found.
      */
-    public User updateUser(int id, User request) {
+    public String updateUser(int id, User request) {
         User user = userRepository.findById(id);
         if (user == null)
-            return null;
+            return failure;
 
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
         user.setEmail(request.getEmail());
 
         userRepository.save(user);
-        return userRepository.findById(id);
+        return success;
+    }
+
+    public String addFollower(String name1, String name2) {
+        User user = userRepository.findByUsername(name1);
+        User follower = userRepository.findByUsername(name2);
+
+        List<User> following = user.getFollowing();
+
+        if (following.contains(follower)) return "You already follow " + follower.getUsername() + ".";
+
+        user.getFollowing().add(follower);
+        userRepository.save(user);
+
+        follower.getFollowers().add(user);
+        userRepository.save(follower);
+
+        return success;
+    }
+
+    public String removeFollower(String name1, String name2) {
+        User user = userRepository.findByUsername(name1);
+        User follower = userRepository.findByUsername(name2);
+
+        List<User> following = user.getFollowing();
+
+        if (following.contains(follower)) {
+            user.getFollowing().remove(follower);
+            follower.getFollowers().remove(user);
+
+            userRepository.save(user);
+            userRepository.save(follower);
+
+            return success;
+        }
+
+        return "You do not follow " + name2 + ".";
     }
 
     /**
@@ -92,5 +127,9 @@ public class UserService {
      */
     public User findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }

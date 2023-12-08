@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,12 +23,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 
-import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import homepage.HomePage;
-import websockets.WebSocketListener;
 import websockets.WebSocketManager;
 
 /**
@@ -129,6 +128,7 @@ public class LoginFormPage extends AppCompatActivity {
 
                 sendPostRequest(username, password);
 
+                WebSocketManager.getInstance().setUsername(username);
                 WebSocketManager.getInstance().setUsername(username);
             }
         });

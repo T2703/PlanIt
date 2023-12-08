@@ -4,6 +4,10 @@
         android:title="To Chats"
         />
     <item
+        android:id="@+id/add_users_option"
+        android:title="Add Users"
+        />
+    <item
         android:id="@+id/edit_option"
         android:title="Edit Group"
         />

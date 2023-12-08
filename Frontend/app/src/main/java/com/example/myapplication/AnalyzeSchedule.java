@@ -2,8 +2,11 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -16,25 +19,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import api.VolleySingleton;
+import calendar.CalendarWeeklyPage;
 import events.Event;
+import groups.GroupInfo;
+import groups.MemberViewer;
+import profile.UserManager;
 
 
 public class AnalyzeSchedule extends AppCompatActivity {
 
+    /**
+     * Back button.
+     */
+    private ImageButton back_button;
     private TextView textView;
 
-    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/scheduleAnalysis/"+1;  //userId
-
     private String result ="";
+
+    private static final String URL= "http://coms-309-024.class.las.iastate.edu:8080/scheduleAnalysis/";  //userId
+
+    UserManager userManager = UserManager.getInstance();
 
     private void getRequest(){
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                URL,
+                URL + userManager.getUserID(),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
                         Log.d("result", response);
 
                         try {
@@ -63,8 +75,18 @@ public class AnalyzeSchedule extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //textView = findViewById(R.id.textView);
         setContentView(R.layout.activity_analyze_schedule);
+        back_button = findViewById(R.id.back_button_two2);
         getRequest();
         //textView.setText(result);
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(AnalyzeSchedule.this, CalendarWeeklyPage.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

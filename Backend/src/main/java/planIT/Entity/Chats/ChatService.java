@@ -92,7 +92,8 @@ public class ChatService {
         Chat chat = chatRepository.findById(chatId);
         user.getChats().add(chat);
         chat.getUsers().add(user);
-        chatRepository.save(chat);
+        userRepository.save(user);
+        //chatRepository.save(chat);
         return success;
     }
 
@@ -117,6 +118,10 @@ public class ChatService {
      * @return success
      */
     public String deleteChat(int id) {
+        for(User user: chatRepository.findById(id).getUsers()){
+            removeUserFromChat(user.getUsername(), id);
+        }
+
         chatRepository.deleteById(id);
         return success;
     }
@@ -177,15 +182,18 @@ public class ChatService {
     /**
      * Creates a new chat entity and adds all members of a team to the chat
      * @param teamId id number of target team
-     * @param chat chat entity supplied by request body
      * @return success
      */
-    public String createTeamChat(int teamId, Chat chat){
+    public String createTeamChat(int teamId){
         Team team = teamRepository.findById(teamId);
+        Chat chat = new Chat(team.getName());
         for(User user: team.getUsers()){
             chat.getUsers().add(user);
         }
+        chat.setTeam(team);
+        team.setChat(chat);
         chatRepository.save(chat);
+        teamRepository.save(team);
 
         return success;
     }

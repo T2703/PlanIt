@@ -18,8 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +49,10 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
      */
     private Context context;
 
+    private String CHAT_URL = "http://coms-309-024.class.las.iastate.edu:8080/createTeamChat/";
+
+    private String teamUrl;
+
     /**
      * Constructor for the MemberAdapter class.
      *
@@ -54,6 +62,10 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     public MemberAdapter(List<Member> member_list, Context context) {
         this.member_list = member_list;
         this.context = context;
+    }
+
+    public List<Member> getMemberList() {
+        return this.member_list;
     }
 
     /**
@@ -107,6 +119,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         holder.group_name.setText(member.getGroupName());
         //holder.description.setText(member.getDescription());
 
+
         // Makes the list function as button (plus null checker).
         // Set a click listener for the entire item view (in a nutshell each item acts like button)
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +133,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
                 if (position != RecyclerView.NO_POSITION) {
                     Member clicked_group = member_list.get(position);
                     String group_id = clicked_group.getGroupId();
-                    String put_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + group_id;
+                    //createChat(CHAT_URL + group_id, member.getGroupName());
 
                     Log.d("TAG", group_id);
 
@@ -136,36 +149,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
                 view.getContext().startActivity(intent);
 
-            }
-        });
-
-        // How this button functions as a delete. So, basically this button should delete
-        // the group.
-        holder.delete_button.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Called when the specified view is clicked. Retrieves the position of the clicked item
-             * in the RecyclerView, extracts the group ID from the corresponding Member, constructs a delete URL,
-             * and makes a delete request to the server to remove the associated group.
-             *
-             * @param view The view that was clicked.
-             *             It can be used to identify which view triggered the click event.
-             */
-            @Override
-            public void onClick(View view) {
-                int position = holder.getAdapterPosition();
-
-                if (position != RecyclerView.NO_POSITION) {
-                    Member clickedEvent = member_list.get(position);
-
-                    String group_id = clickedEvent.getGroupId();
-
-                    String delete_url = "http://coms-309-024.class.las.iastate.edu:8080/teams/" + group_id;
-
-                    //Log.d("TAG", delete_url);
-
-                    makeDeleteRequest(delete_url, group_id);
-
-                }
             }
         });
     }
@@ -253,6 +236,45 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
         }
     }
 
+    /*private void createChat(String URL_CHAT, String name) {
+        // Find the values of each field
+
+        // Create JSON object
+        JSONObject requestBody = new JSONObject();
+
+        // Puts in the values of these variables.
+        try {
+            requestBody.put("chat", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Making the request
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+                Request.Method.POST,
+                URL_CHAT,
+                requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Server response", response.toString());
+                        Toast.makeText(context.getApplicationContext(), "Chat created!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Uh oh not good", "Error: " + error.getMessage());
+                        Log.d("URL", URL_CHAT);
+                    }
+                }
+        ) {
+
+        };
+
+        // Add to volley request queue
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonObjectReq);
+    } */
 
     /**
      * This class is for holding the variables in place for the group members.
@@ -291,7 +313,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
             //username = item_view.findViewById(R.id.username);
             group_name = item_view.findViewById(R.id.group_name);
             //description = item_view.findViewById(R.id.description);
-            delete_button = item_view.findViewById(R.id.delete_group_button);
+            //delete_button = item_view.findViewById(R.id.delete_group_button);
             drag_handle = item_view.findViewById(R.id.drag_handle);
         }
     }

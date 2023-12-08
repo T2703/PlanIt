@@ -27,14 +27,6 @@ public class NotificationService {
     private String failure = "{\"message\":\"failure\"}";
 
     /**
-     * Gets all notifications from the repository and returns them as a List object
-     * @return notification List
-     */
-    public List<Notification> getAllNotifications() {
-        return notificationRepository.findAll();
-    }
-
-    /**
      * Gets a notification from the repository by its id number
      * @param id id number of target notification
      * @return notification
@@ -56,42 +48,6 @@ public class NotificationService {
     }
 
     /**
-     * Updates a notification in the database
-     * @param id id number of target notification
-     * @param request notification object with the updated details
-     * @return notification
-     */
-    public Notification updateNotification(int id, Notification request) {
-        Notification notification = notificationRepository.findById(id);
-        if (notification == null)
-            return null;
-
-        notification.setTitle(request.getTitle());
-        notification.setDescription(request.getDescription());
-
-        notificationRepository.save(notification);
-        return notificationRepository.findById(id);
-    }
-
-    /**
-     * Adds a preexisting user to a preexisting notification
-     * @param userId id number of target user
-     * @param notificationId id number of target notification
-     * @return success
-     */
-    public String addUserToNotification(int userId, int notificationId) {
-        User user = userRepository.findById(userId);
-        Notification notification = notificationRepository.findById(notificationId);
-
-        user.getNotifications().add(notification);
-        notification.setUser(user);
-
-        notificationRepository.save(notification);
-
-        return success;
-    }
-
-    /**
      * Deletes notification from repository
      * @param id id number for target notification
      * @return success
@@ -108,5 +64,21 @@ public class NotificationService {
      */
     public List<Notification> getNotificationByUser(String username) {
         return userRepository.findByUsername(username).getNotifications();
+    }
+
+    public int getUnreadNotificationByUser(String username) {
+        User user = userRepository.findByUsername(username);
+
+        List<Notification> notifications = user.getNotifications();
+
+        int count = 0;
+
+        for (int i = 0; i < notifications.size(); i++) {
+            if (!notifications.get(i).isSeen()) {
+                count++;
+            }
+        }
+
+        return count;
     }
 }

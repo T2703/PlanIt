@@ -81,6 +81,8 @@ public class EventsListViewer extends AppCompatActivity {
         recycler_view.setLayoutManager(layout_manager);
         recycler_view.setAdapter(adapter);
 
+        getSupportActionBar().setTitle("");
+
         // Request events from server
         getEventsRequest();
 
@@ -267,6 +269,7 @@ public class EventsListViewer extends AppCompatActivity {
                                 String end_date = jsonObject.getString("endDate");
 
                                 event_list.add(new Event(id, name, description, eventType, start_date, end_date));
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
