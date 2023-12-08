@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EventAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">events</a> &gt; <span class="el_source">EventAdapter.java</span></div><h1>EventAdapter.java</h1><pre class="source lang-java linenums">package events;
+
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.R;
+import api.VolleySingleton;
+import websockets.WebSocketManager;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Joshua Gutierrez
+ * The {@code EventAdapter} class extends {@link RecyclerView.Adapter} and is responsible for managing
+ * the display and interaction with a list of events in a {@link RecyclerView}.
+ * &lt;p&gt;
+ * It provides a bridge between the data set, represented by a list of {@link Event} objects,
+ * and the UI elements displayed in each item of the {@code RecyclerView}.
+ * &lt;/p&gt;
+ */
+public class EventAdapter extends RecyclerView.Adapter&lt;EventAdapter.EventViewHolder&gt; {
+    /**
+     * The list of events to be displayed in the RecyclerView.
+     */
+    private List&lt;Event&gt; event_list;
+
+    /**
+     * The context associated with the adapter.
+     */
+    private Context context;
+
+
+    /**
+     * Constructs an {@code EventAdapter} with the specified context and list of events.
+     *
+     * @param context    The context associated with the adapter.
+     * @param event_list The list of events to be displayed.
+     */
+<span class="fc" id="L52">    public EventAdapter(Context context, List&lt;Event&gt; event_list) {</span>
+<span class="fc" id="L53">        this.context = context;</span>
+<span class="fc" id="L54">        this.event_list = event_list;</span>
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * Called when RecyclerView needs a new {@link EventViewHolder} of the given type to represent
+     * an event.
+     *
+     * @param parent   The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The type of the new View.
+     * @return A new {@code EventViewHolder} that holds a View of the given view type.
+     */
+    @NonNull
+    @Override
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<span class="nc" id="L68">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);</span>
+<span class="nc" id="L69">        return new EventViewHolder(view);</span>
+    }
+
+    /**
+     * Called by RecyclerView to display the data at the specified position. This method updates the
+     * contents of the {@code EventViewHolder} to reflect the event at the given position.
+     *
+     * @param holder   The {@code EventViewHolder} which should be updated to represent the contents of the item at the given position.
+     * @param position The position of the item within the adapter's data set.
+     */
+    @Override
+    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
+<span class="nc" id="L81">        Event event = event_list.get(position);</span>
+<span class="nc" id="L82">        holder.event_name.setText(event.getName());</span>
+<span class="nc" id="L83">        holder.event_description.setText(event.getDescription());</span>
+
+
+        // Delete button is clicked
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (holder.delete_button != null) {</span>
+<span class="nc" id="L88">            holder.delete_button.setOnClickListener(new View.OnClickListener() {</span>
+                @Override
+                public void onClick(View view) {
+<span class="nc" id="L91">                    int position = holder.getAdapterPosition();</span>
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">                    if (position != RecyclerView.NO_POSITION) {</span>
+<span class="nc" id="L94">                        Event clickedEvent = event_list.get(position);</span>
+
+<span class="nc" id="L96">                        String eventId = clickedEvent.getId();</span>
+
+<span class="nc" id="L98">                        String username = WebSocketManager.getInstance().getUsername();</span>
+
+<span class="nc" id="L100">                        String delete_url = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot; + username + &quot;/events/&quot; + eventId;</span>
+
+<span class="nc" id="L102">                        makeDeleteRequest(delete_url, eventId);</span>
+                    }
+<span class="nc" id="L104">                }</span>
+            });
+
+            // Makes the list function as button (plus null checker).
+            // Set a click listener for the entire item view (in a nutshell each item acts like button)
+<span class="nc" id="L109">            holder.itemView.setOnClickListener(new View.OnClickListener() {</span>
+                @Override
+                public void onClick(View view) {
+<span class="nc" id="L112">                    Log.d(&quot;TAG&quot;, &quot;Item clicked: &quot; + event.getName());</span>
+                    // TO-DO: Add a page for this that show the event and such.
+<span class="nc" id="L114">                }</span>
+            });
+        }
+
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (holder.edit_button != null) {</span>
+<span class="nc" id="L119">            holder.edit_button.setOnClickListener(new View.OnClickListener() {</span>
+                @Override
+                public void onClick(View v) {
+<span class="nc" id="L122">                    int position = holder.getAdapterPosition();</span>
+
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                    if (position != RecyclerView.NO_POSITION) {</span>
+<span class="nc" id="L125">                        Event clickedEvent = event_list.get(position);</span>
+
+<span class="nc" id="L127">                        String eventId = clickedEvent.getId();</span>
+
+<span class="nc" id="L129">                        getEvent(eventId);</span>
+                    }
+<span class="nc" id="L131">                }</span>
+            });
+        }
+<span class="nc" id="L134">    }</span>
+
+    private void makeDeleteRequest(String deleteUrl, String eventId) {
+<span class="nc" id="L137">        int positionToDelete = -1;</span>
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (int i = 0; i &lt; event_list.size(); i++) {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (event_list.get(i).getId().equals(eventId)) {</span>
+<span class="nc" id="L141">                positionToDelete = i;</span>
+<span class="nc" id="L142">                break;</span>
+            }
+        }
+
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (positionToDelete != -1) {</span>
+<span class="nc" id="L147">            int finalPositionToDelete = positionToDelete;</span>
+
+<span class="nc" id="L149">            StringRequest stringRequest = new StringRequest(</span>
+                    Request.Method.DELETE,
+                    deleteUrl,
+<span class="nc" id="L152">                    new Response.Listener&lt;String&gt;() {</span>
+                        @Override
+                        public void onResponse(String response) {
+<span class="nc" id="L155">                            Log.d(&quot;response&quot;, response);</span>
+
+<span class="nc" id="L157">                            event_list.remove(finalPositionToDelete);</span>
+
+<span class="nc" id="L159">                            notifyItemRemoved(finalPositionToDelete);</span>
+<span class="nc" id="L160">                        }</span>
+                    },
+<span class="nc" id="L162">                    new Response.ErrorListener() {</span>
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle any errors that occur during the request
+<span class="nc" id="L166">                            Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="nc" id="L167">                        }</span>
+                    }
+            );
+<span class="nc" id="L170">        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);</span>
+        }
+
+<span class="nc" id="L173">    }</span>
+
+    private void getEvent(String eventId) {
+<span class="nc" id="L176">        String URL_STRING_REQ = &quot;http://coms-309-024.class.las.iastate.edu:8080/events/&quot; + eventId;</span>
+
+<span class="nc" id="L178">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                URL_STRING_REQ,
+<span class="nc" id="L181">                new Response.Listener&lt;String&gt;() {</span>
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+<span class="nc" id="L185">                            JSONObject jsonObject = new JSONObject(response);</span>
+<span class="nc" id="L186">                            Intent intent = new Intent(context, EditEventPage.class);</span>
+
+<span class="nc" id="L188">                            intent.putExtra(&quot;type&quot;, jsonObject.getString(&quot;type&quot;));</span>
+<span class="nc" id="L189">                            intent.putExtra(&quot;name&quot;, jsonObject.getString(&quot;name&quot;));</span>
+<span class="nc" id="L190">                            intent.putExtra(&quot;startDate&quot;, jsonObject.getString(&quot;startDate&quot;));</span>
+<span class="nc" id="L191">                            intent.putExtra(&quot;endDate&quot;, jsonObject.getString(&quot;endDate&quot;));</span>
+<span class="nc" id="L192">                            intent.putExtra(&quot;location&quot;, jsonObject.getString(&quot;location&quot;));</span>
+<span class="nc" id="L193">                            intent.putExtra(&quot;description&quot;, jsonObject.getString(&quot;description&quot;));</span>
+<span class="nc" id="L194">                            intent.putExtra(&quot;id&quot;, jsonObject.getString(&quot;id&quot;));</span>
+
+<span class="nc" id="L196">                            context.startActivity(intent);</span>
+
+<span class="nc" id="L198">                        } catch(JSONException err) {</span>
+<span class="nc" id="L199">                            err.printStackTrace();</span>
+<span class="nc" id="L200">                        }</span>
+<span class="nc" id="L201">                    }</span>
+                },
+<span class="nc" id="L203">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+<span class="nc" id="L207">                        Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="nc" id="L208">                    }</span>
+                }
+        );
+
+        // Adding request to request queue
+<span class="nc" id="L213">        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="nc" id="L214">    }</span>
+
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L218">        return event_list.size();</span>
+    }
+
+    public void filterEventList(ArrayList&lt;Event&gt; filterList) {
+<span class="nc" id="L222">        event_list = filterList;</span>
+<span class="nc" id="L223">        notifyDataSetChanged();</span>
+<span class="nc" id="L224">    }</span>
+
+    /**
+     * The {@code EventViewHolder} class represents each item view in the {@link RecyclerView}.
+     * It holds references to the UI elements within the item layout.
+     */
+    static class EventViewHolder extends RecyclerView.ViewHolder {
+        Button delete_button;
+
+        Button edit_button;
+        TextView event_name;
+        TextView event_description;
+        EventViewHolder(View item_view) {
+<span class="nc" id="L237">            super(item_view);</span>
+<span class="nc" id="L238">            event_name = item_view.findViewById(R.id.event_time_month);</span>
+<span class="nc" id="L239">            event_description = item_view.findViewById(R.id.event_title);</span>
+<span class="nc" id="L240">            edit_button = item_view.findViewById(R.id.edit_button);</span>
+<span class="nc" id="L241">            delete_button = item_view.findViewById(R.id.delete_button);</span>
+<span class="nc" id="L242">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

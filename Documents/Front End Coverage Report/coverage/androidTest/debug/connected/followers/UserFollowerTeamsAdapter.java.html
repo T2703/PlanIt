@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserFollowerTeamsAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">followers</a> &gt; <span class="el_source">UserFollowerTeamsAdapter.java</span></div><h1>UserFollowerTeamsAdapter.java</h1><pre class="source lang-java linenums">package followers;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.myapplication.R;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import websockets.WebSocketManager;
+
+
+/**
+ * The adapter items for the users.
+ *
+ * @author Tristan Nono
+ */
+public class UserFollowerTeamsAdapter extends RecyclerView.Adapter&lt;UserFollowerTeamsAdapter.UserFollowerViewHolder&gt; {
+    /**
+     * The list of users.
+     */
+    private List&lt;UserFollower&gt; user_list;
+
+    /**
+     * The context variable.
+     */
+    private Context context;
+
+    /**
+     * The user that will be followed.
+     */
+    private String follow_user;
+
+    /**
+     * ID.
+     */
+    private String group_id;
+
+    /**
+     * The url for adding followers.
+     */
+    private static final String ADD_FOLLOWERS_TO_TEAM_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/teams/&quot;;
+
+    /**
+     * The url for unfollowing followers.
+     */
+    private static final String UNFOLLOW_FOLLOWERS_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/teams/&quot;;
+
+
+<span class="nc" id="L67">    public UserFollowerTeamsAdapter(Context context, List&lt;UserFollower&gt; user_list, String group_id) {</span>
+<span class="nc" id="L68">        this.context = context;</span>
+<span class="nc" id="L69">        this.user_list = user_list;</span>
+<span class="nc" id="L70">        this.group_id = group_id;</span>
+<span class="nc" id="L71">    }</span>
+
+    @NonNull
+    @Override
+    public UserFollowerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<span class="nc" id="L76">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_follower_team_item, parent, false);</span>
+<span class="nc" id="L77">        return new UserFollowerTeamsAdapter.UserFollowerViewHolder(view);</span>
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull UserFollowerViewHolder holder, int position) {
+<span class="nc" id="L82">        UserFollower userFollower = user_list.get(position);</span>
+<span class="nc" id="L83">        holder.username.setText(userFollower.getUserName());</span>
+
+<span class="nc" id="L85">        holder.followButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L88">                follow_user = userFollower.getUserName();</span>
+<span class="nc" id="L89">                String follow_url = ADD_FOLLOWERS_TO_TEAM_URL + group_id + &quot;/add-user/&quot; + follow_user;</span>
+<span class="nc" id="L90">                addFollowers(follow_url);</span>
+<span class="nc" id="L91">                Log.d(&quot;User&quot;, &quot;Item clicked: &quot; + userFollower.getUserName());</span>
+<span class="nc" id="L92">            }</span>
+        });
+
+<span class="nc" id="L95">        holder.unfollowButton.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L98">                follow_user = userFollower.getUserName();</span>
+<span class="nc" id="L99">                String unfollow_url = UNFOLLOW_FOLLOWERS_URL + group_id + &quot;/remove-user/&quot; + follow_user;</span>
+<span class="nc" id="L100">                unfollowFollowers(unfollow_url);</span>
+<span class="nc" id="L101">                Log.d(&quot;User&quot;, &quot;Item clicked: &quot; + userFollower.getUserName());</span>
+<span class="nc" id="L102">            }</span>
+        });
+
+<span class="nc" id="L105">    }</span>
+
+    public void filterUserList(ArrayList&lt;UserFollower&gt; filterList) {
+<span class="nc" id="L108">        user_list = filterList;</span>
+<span class="nc" id="L109">        notifyDataSetChanged();</span>
+<span class="nc" id="L110">    }</span>
+
+    @Override
+    public int getItemCount() {
+<span class="nc" id="L114">        return user_list.size();</span>
+    }
+
+    private void addFollowers(String URL_GUY) {
+        // Find the values of each field
+
+        // Create JSON object
+<span class="nc" id="L121">        JSONObject requestBody = new JSONObject();</span>
+
+        // Making the request
+<span class="nc" id="L124">        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(</span>
+                Request.Method.PUT,  // Use PUT method instead of POST
+                URL_GUY,  // Specify the specific group ID in the URL
+                requestBody,
+<span class="nc" id="L128">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L131">                        Log.d(&quot;Server response&quot;, response.toString());</span>
+<span class="nc" id="L132">                        Toast.makeText(context.getApplicationContext(), &quot;Followed&quot; + &quot; &quot; + follow_user, Toast.LENGTH_SHORT).show();</span>
+
+<span class="nc" id="L134">                    }</span>
+                },
+<span class="nc" id="L136">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L139">                        Log.e(&quot;Server error&quot;, &quot;Error: &quot; + error.getMessage());</span>
+<span class="nc" id="L140">                    }</span>
+                }
+<span class="nc" id="L142">        ) {</span>
+
+        };
+
+        // Add the request to the RequestQueue
+<span class="nc" id="L147">        Volley.newRequestQueue(context).add(jsonObjectReq);</span>
+<span class="nc" id="L148">    }</span>
+
+    private void unfollowFollowers(String URL_GUY) {
+        // Find the values of each field
+
+        // Create JSON object
+<span class="nc" id="L154">        JSONObject requestBody = new JSONObject();</span>
+
+        // Making the request
+<span class="nc" id="L157">        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(</span>
+                Request.Method.PUT,  // Use PUT method instead of POST
+                URL_GUY,  // Specify the specific group ID in the URL
+                requestBody,
+<span class="nc" id="L161">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L164">                        Log.d(&quot;Server response&quot;, response.toString());</span>
+<span class="nc" id="L165">                        Toast.makeText(context.getApplicationContext(), &quot;Unfollowed&quot; + &quot; &quot; + follow_user, Toast.LENGTH_SHORT).show();</span>
+
+<span class="nc" id="L167">                    }</span>
+                },
+<span class="nc" id="L169">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L172">                        Log.e(&quot;Server error&quot;, &quot;Error: &quot; + error.getMessage());</span>
+<span class="nc" id="L173">                    }</span>
+                }
+<span class="nc" id="L175">        ) {</span>
+
+        };
+
+        // Add the request to the RequestQueue
+<span class="nc" id="L180">        Volley.newRequestQueue(context).add(jsonObjectReq);</span>
+<span class="nc" id="L181">    }</span>
+
+    /**
+     * This class is for holding the variables in place for the group members.
+     */
+    static class UserFollowerViewHolder extends RecyclerView.ViewHolder {
+        TextView username;
+
+        ImageButton followButton;
+
+        ImageButton unfollowButton;
+        public UserFollowerViewHolder(@NonNull View itemView) {
+<span class="nc" id="L193">            super(itemView);</span>
+<span class="nc" id="L194">            username = itemView.findViewById(R.id.user_name);</span>
+<span class="nc" id="L195">            followButton = itemView.findViewById(R.id.follow_button);</span>
+<span class="nc" id="L196">            unfollowButton = itemView.findViewById(R.id.unfollow_button);</span>
+<span class="nc" id="L197">        }</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

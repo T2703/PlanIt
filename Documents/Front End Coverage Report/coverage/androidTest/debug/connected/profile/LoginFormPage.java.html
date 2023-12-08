@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoginFormPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">profile</a> &gt; <span class="el_source">LoginFormPage.java</span></div><h1>LoginFormPage.java</h1><pre class="source lang-java linenums">package profile;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Button;
+import android.widget.Toast;
+
+import homepage.User;
+import profile.UserManager;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.myapplication.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import homepage.HomePage;
+import websockets.WebSocketManager;
+
+/**
+ * The LoginFormPage class represents the activity where users can log in to the application.
+ * It allows users to input their username and password, sends a POST request to the server for authentication,
+ * and navigates to the HomePage upon successful login.
+ *
+ * &lt;p&gt;The class includes methods for handling user interactions, such as clicking the create account button,
+ * logging in, checking for empty values in the input fields, and sending a POST request for authentication.
+ *
+ * &lt;p&gt;This class uses Volley for network requests and interacts with a backend server for user authentication.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L44">public class LoginFormPage extends AppCompatActivity {</span>
+    /**
+     * The URL for the POST request to authenticate user login.
+     */
+    private static final String URL_POST_REQUEST = &quot;http://coms-309-024.class.las.iastate.edu:8080/login&quot;;
+
+    /**
+     * WebSocket manager instance.
+     */
+    private WebSocketManager webSocketManager;
+
+    /**
+     * Create account button.
+     */
+    private TextView create_account_button;
+
+    /**
+     * Login button.
+     */
+    private Button login_button;
+
+    /**
+     * The email that the user will use for logging in.
+     */
+    private EditText user_username;
+
+    /**
+     * The password that the user will use.
+     */
+    private EditText user_password;
+    private String userID;
+
+    /**
+     * Called when the activity is first created. Responsible for initializing the activity,
+     * setting up UI components, and defining event listeners for user interactions.
+     *
+     * &lt;p&gt;This method is part of the Android Activity lifecycle and is invoked when the activity is launched.
+     * It is used to perform one-time setup tasks, such as inflating the layout, initializing variables,
+     * and setting up event listeners for user interactions.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state,
+     *                           or null if no saved state exists. This parameter is used to restore the activity's state
+     *                           when it is recreated after being destroyed. If the activity has never existed
+     *                           or has been explicitly set to null, this parameter is null.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L91">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L92">        setContentView(R.layout.login_form);</span>
+
+<span class="fc" id="L94">        create_account_button = findViewById(R.id.create_account_button);</span>
+<span class="fc" id="L95">        login_button = findViewById(R.id.login_button);</span>
+<span class="fc" id="L96">        login_button.setEnabled(false); // Set this to false for checking the inputs of the user.</span>
+<span class="fc" id="L97">        user_username = findViewById(R.id.login_username_field);</span>
+<span class="fc" id="L98">        user_password = findViewById(R.id.login_password_field);</span>
+
+<span class="fc" id="L100">        create_account_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Called when the specified {@code v} is clicked. Initiates the creation of an Intent to navigate
+             * from the LoginFormPage to the CreateAccountPage activity and starts the activity.
+             *
+             * @param v The view that was clicked, triggering the onClick event.
+             *          It can be used to identify which view triggered the click event.
+             */
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L110">                Intent intent = new Intent(LoginFormPage.this, CreateAccountPage.class);</span>
+<span class="fc" id="L111">                startActivity(intent);</span>
+<span class="fc" id="L112">            }</span>
+        });
+
+<span class="fc" id="L115">        login_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Called when the specified {@code v} is clicked. Retrieves the text entered by the user
+             * in the username and password input fields, sends a POST request to the server for authentication,
+             * and sets the username in the WebSocketManager instance.
+             *
+             * @param v The view that was clicked, triggering the onClick event.
+             *          It can be used to identify which view triggered the click event.
+             */
+            @Override
+            public void onClick(View v) {
+<span class="nc" id="L126">                String username = user_username.getText().toString();</span>
+<span class="nc" id="L127">                String password = user_password.getText().toString();</span>
+
+<span class="nc" id="L129">                sendPostRequest(username, password);</span>
+
+<span class="nc" id="L131">                WebSocketManager.getInstance().setUsername(username);</span>
+<span class="nc" id="L132">                WebSocketManager.getInstance().setUsername(username);</span>
+<span class="nc" id="L133">            }</span>
+        });
+
+        // This is for the user's email to see if anything is in it or not.
+<span class="fc" id="L137">        user_username.addTextChangedListener(new TextWatcher() {</span>
+            /**
+             * Called to notify you that the characters within {@code charSequence} are about to be replaced
+             * with new text with a specified range.
+             *
+             * @param charSequence The sequence of characters before the change.
+             * @param i The starting position of the characters to be replaced.
+             * @param i1 The number of characters to be replaced.
+             * @param i2 The length of the new text that will replace the characters.
+             */
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L149">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code charSequence}, the text has been changed.
+             * It is legitimate to make further changes to {@code charSequence} from this callback.
+             *
+             * @param charSequence The sequence of characters after the change.
+             * @param i The starting position of the changed text.
+             * @param i1 The length of the text that has been changed.
+             * @param i2 The length of the new text that has replaced the old text.
+             */
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L162">                checkFieldsForEmptyValues();</span>
+<span class="fc" id="L163">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code editable}, the text has been changed.
+             * It is legitimate to make further changes to {@code editable} from this callback.
+             *
+             * @param editable The Editable containing the modified text.
+             */
+            @Override
+            public void afterTextChanged(Editable editable) {
+<span class="fc" id="L173">            }</span>
+        });
+
+        // This is for the user's password to see if anything is in it or not.
+<span class="fc" id="L177">        user_password.addTextChangedListener(new TextWatcher() {</span>
+            /**
+             * Called to notify you that the characters within {@code charSequence} are about to be replaced
+             * with new text with a specified range.
+             *
+             * @param charSequence The sequence of characters before the change.
+             * @param i The starting position of the characters to be replaced.
+             * @param i1 The number of characters to be replaced.
+             * @param i2 The length of the new text that will replace the characters.
+             */
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L189">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code charSequence}, the text has been changed.
+             * It is legitimate to make further changes to {@code charSequence} from this callback.
+             *
+             * @param charSequence The sequence of characters after the change.
+             * @param i The starting position of the changed text.
+             * @param i1 The length of the text that has been changed.
+             * @param i2 The length of the new text that has replaced the old text.
+             */
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L202">                checkFieldsForEmptyValues();</span>
+<span class="fc" id="L203">            }</span>
+
+            /**
+             * Called to notify you that somewhere within {@code editable}, the text has been changed.
+             * It is legitimate to make further changes to {@code editable} from this callback.
+             *
+             * @param editable The Editable containing the modified text.
+             */
+            @Override
+            public void afterTextChanged(Editable editable) {
+<span class="fc" id="L213">            }</span>
+        });
+<span class="fc" id="L215">    }</span>
+
+    /**
+     * Sends a POST request to the server to authenticate user login.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     */
+    private void sendPostRequest(String username, String password) {
+<span class="nc" id="L224">        RequestQueue requestQueue = Volley.newRequestQueue(this);</span>
+<span class="nc" id="L225">        JSONObject body = new JSONObject();</span>
+
+        try {
+<span class="nc" id="L228">            body.put(&quot;username&quot;, username);</span>
+<span class="nc" id="L229">            body.put(&quot;password&quot;, password);</span>
+
+<span class="nc" id="L231">        } catch (JSONException e) {</span>
+<span class="nc" id="L232">            e.printStackTrace();</span>
+<span class="nc" id="L233">        }</span>
+
+        // Make the request
+<span class="nc" id="L236">        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(</span>
+                Request.Method.POST,
+                URL_POST_REQUEST,
+                body,
+<span class="nc" id="L240">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+<span class="nc" id="L251">                            String userId = response.getString(&quot;id&quot;);</span>
+
+<span class="nc" id="L253">                            UserManager userManager = UserManager.getInstance();</span>
+<span class="nc" id="L254">                            userManager.setUserID(userId);</span>
+
+<span class="nc" id="L256">                            Intent intent = new Intent(LoginFormPage.this, HomePage.class);</span>
+<span class="nc" id="L257">                            startActivity(intent);</span>
+<span class="nc" id="L258">                        } catch (JSONException e) {</span>
+<span class="nc" id="L259">                            e.printStackTrace();</span>
+<span class="nc" id="L260">                            Toast.makeText(getApplicationContext(), &quot;Error parsing server response&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L261">                        }</span>
+<span class="nc" id="L262">                    }</span>
+                },
+<span class="nc" id="L264">                new Response.ErrorListener() {</span>
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L274">                        Toast.makeText(getApplicationContext(), &quot;Username or password is incorrect.&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L275">                    }</span>
+                }
+        );
+
+<span class="nc" id="L279">        requestQueue.add(jsonObjectRequest);</span>
+<span class="nc" id="L280">    }</span>
+
+    /**
+     * Checks for empty values in the input fields, enabling or disabling the login button accordingly.
+     */
+    private void checkFieldsForEmptyValues() {
+<span class="fc" id="L286">        String user_email_login = user_username.getText().toString();</span>
+<span class="fc" id="L287">        String password = user_password.getText().toString();</span>
+
+<span class="pc bpc" id="L289" title="1 of 4 branches missed.">        if (!user_email_login.isEmpty() &amp;&amp; !password.isEmpty()) {</span>
+<span class="fc" id="L290">            login_button.setEnabled(true);</span>
+        }
+
+        else {
+<span class="fc" id="L294">            login_button.setEnabled(false);</span>
+        }
+<span class="fc" id="L296">    }</span>
+
+<span class="nc" id="L298">    public String getUserID() { return userID; }</span>
+
+    public void setUserID(String userID) {
+<span class="nc" id="L301">        this.userID = userID;</span>
+<span class="nc" id="L302">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

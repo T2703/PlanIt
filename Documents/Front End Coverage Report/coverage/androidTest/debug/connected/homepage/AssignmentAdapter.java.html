@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssignmentAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">homepage</a> &gt; <span class="el_source">AssignmentAdapter.java</span></div><h1>AssignmentAdapter.java</h1><pre class="source lang-java linenums">package homepage;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.myapplication.R;
+import java.util.List;
+
+/**
+ * Adapter class for displaying a list of assignments in a RecyclerView.
+ *
+ * @author Joshua Gutierrez
+ *
+ * &lt;p&gt;The adapter binds assignment data to the corresponding views in the RecyclerView.&lt;/p&gt;
+ */
+public class AssignmentAdapter extends RecyclerView.Adapter&lt;AssignmentAdapter.AssignmentViewHolder&gt; {
+    /**
+     * List of assignments to be displayed.
+     */
+    private List&lt;Assignment&gt; assignments;
+
+    /**
+     * Constructs an AssignmentAdapter with the given list of assignments.
+     *
+     * @param assignments The list of assignments to be displayed.
+     */
+<span class="fc" id="L30">    public AssignmentAdapter(List&lt;Assignment&gt; assignments) {</span>
+<span class="fc" id="L31">        this.assignments = assignments;</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent
+     * an assignment view.
+     *
+     * @param parent The parent view group that will contain the new view.
+     * @param viewType The view type of the new View.
+     * @return A new AssignmentViewHolder that holds the assignment view.
+     */
+    @NonNull
+    @Override
+    public AssignmentAdapter.AssignmentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+<span class="nc" id="L45">        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_assignments, parent, false);</span>
+<span class="nc" id="L46">        return new AssignmentAdapter.AssignmentViewHolder(itemView);</span>
+    }
+
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     *
+     * @param holder The AssignmentViewHolder that should be updated to represent
+     *               the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
+    @Override
+    public void onBindViewHolder(@NonNull AssignmentAdapter.AssignmentViewHolder holder, int position) {
+<span class="nc" id="L58">        Assignment assignment = assignments.get(position);</span>
+<span class="nc" id="L59">        holder.assignmentClass.setText(assignment.getAssignmentClass());</span>
+<span class="nc" id="L60">        holder.assignmentTitle.setText(assignment.getAssignmentTitle());</span>
+<span class="nc" id="L61">        holder.assignmentDueDate.setText(assignment.getDueDate());</span>
+<span class="nc" id="L62">    }</span>
+
+    /**
+     * Returns the total number of assignments in the data set held by the adapter.
+     *
+     * @return The total number of assignments.
+     */
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L71">        return assignments.size();</span>
+    }
+
+    /**
+     * ViewHolder class representing an assignment view in the RecyclerView.
+     */
+    public static class AssignmentViewHolder extends RecyclerView.ViewHolder {
+        TextView assignmentClass, assignmentTitle, assignmentDueDate;
+
+        /**
+         * Constructs an AssignmentViewHolder with the given item view.
+         *
+         * @param itemView The view representing an assignment.
+         */
+        public AssignmentViewHolder(View itemView) {
+<span class="nc" id="L86">            super(itemView);</span>
+<span class="nc" id="L87">            assignmentClass = itemView.findViewById(R.id.assignmentClass);</span>
+<span class="nc" id="L88">            assignmentTitle = itemView.findViewById(R.id.assignmentTitle);</span>
+<span class="nc" id="L89">            assignmentDueDate = itemView.findViewById(R.id.assignmentDueDate);</span>
+<span class="nc" id="L90">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

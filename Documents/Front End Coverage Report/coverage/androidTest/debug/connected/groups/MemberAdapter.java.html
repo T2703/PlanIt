@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MemberAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">groups</a> &gt; <span class="el_source">MemberAdapter.java</span></div><h1>MemberAdapter.java</h1><pre class="source lang-java linenums">package groups;
+
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import api.VolleySingleton;
+import events.Event;
+
+/**
+ * This is responsible for implementing/inflating the item layout.
+ * Also, treats the functionally of said individual list.
+ *
+ * @author Tristan Nono
+ */
+public class MemberAdapter extends RecyclerView.Adapter&lt;MemberAdapter.MemberViewHolder&gt; implements ItemTouchHelperAdapter {
+    /**
+     * The list of group members.
+     */
+    private List&lt;Member&gt; member_list;
+
+    /**
+     * The context variable.
+     */
+    private Context context;
+
+<span class="fc" id="L52">    private String CHAT_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/createTeamChat/&quot;;</span>
+
+    private String teamUrl;
+
+    /**
+     * Constructor for the MemberAdapter class.
+     *
+     * @param member_list The list of group members.
+     * @param context The context.
+     */
+<span class="fc" id="L62">    public MemberAdapter(List&lt;Member&gt; member_list, Context context) {</span>
+<span class="fc" id="L63">        this.member_list = member_list;</span>
+<span class="fc" id="L64">        this.context = context;</span>
+<span class="fc" id="L65">    }</span>
+
+    public List&lt;Member&gt; getMemberList() {
+<span class="nc" id="L68">        return this.member_list;</span>
+    }
+
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+     *
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
+    @Override
+    public MemberViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+<span class="nc" id="L80">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.member_item, parent, false);</span>
+<span class="nc" id="L81">        return new MemberViewHolder(view);</span>
+    }
+
+    /**
+     * Called to check whether two items have the same data.
+     *
+     * @param fromPosition The first item to compare.
+     * @param toPosition The second item to compare.
+     * @return True if the two items represent the same object or false if they are different.
+     */
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        // Reorder your list items when an item is dragged and dropped
+<span class="nc" id="L94">        Collections.swap(member_list, fromPosition, toPosition);</span>
+<span class="nc" id="L95">        notifyItemMoved(fromPosition, toPosition);</span>
+<span class="nc" id="L96">        return true;</span>
+    }
+
+    /**
+     * Called when an item has been dismissed.
+     *
+     * @param position The position of the item dismissed.
+     */
+    @Override
+    public void onItemDismiss(int position) {
+        // If needed.
+<span class="nc" id="L107">    }</span>
+
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     *
+     * @param holder The ViewHolder that should be updated to represent the contents of the item at the given position.
+     * @param position The position of the item within the adapter's data set.
+     */
+    @Override
+    public void onBindViewHolder(@NonNull MemberViewHolder holder, int position) {
+<span class="nc" id="L117">        Member member = member_list.get(position);</span>
+        //holder.username.setText(member.getUsername());
+<span class="nc" id="L119">        holder.group_name.setText(member.getGroupName());</span>
+        //holder.description.setText(member.getDescription());
+
+
+        // Makes the list function as button (plus null checker).
+        // Set a click listener for the entire item view (in a nutshell each item acts like button)
+<span class="nc" id="L125">        holder.itemView.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View view) {
+<span class="nc" id="L128">                Log.d(&quot;TAG&quot;, &quot;Item clicked: &quot; + member.getGroupName());</span>
+                //int group_id = Integer.parseInt(member.getGroupId());
+                // This gets the position of the item.
+<span class="nc" id="L131">                int position = holder.getAdapterPosition();</span>
+
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                if (position != RecyclerView.NO_POSITION) {</span>
+<span class="nc" id="L134">                    Member clicked_group = member_list.get(position);</span>
+<span class="nc" id="L135">                    String group_id = clicked_group.getGroupId();</span>
+                    //createChat(CHAT_URL + group_id, member.getGroupName());
+
+<span class="nc" id="L138">                    Log.d(&quot;TAG&quot;, group_id);</span>
+
+                }
+
+
+<span class="nc" id="L143">                Intent intent = new Intent(view.getContext(), GroupInfo.class);</span>
+
+                //This should pass the data into the next page.
+<span class="nc" id="L146">                intent.putExtra(&quot;group_id&quot;, member.getGroupId());</span>
+<span class="nc" id="L147">                intent.putExtra(&quot;group_name&quot;, member.getGroupName());</span>
+<span class="nc" id="L148">                intent.putExtra(&quot;group_description&quot;, member.getDescription());</span>
+
+<span class="nc" id="L150">                view.getContext().startActivity(intent);</span>
+
+<span class="nc" id="L152">            }</span>
+        });
+<span class="nc" id="L154">    }</span>
+
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in this adapter.
+     */
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L163">        return member_list.size();</span>
+    }
+
+    /**
+     * Filters the group member list.
+     *
+     * @param filterList The filtered list of group members.
+     */
+    public void filterEventList(ArrayList&lt;Member&gt; filterList) {
+<span class="nc" id="L172">        member_list = filterList;</span>
+<span class="nc" id="L173">        notifyDataSetChanged();</span>
+<span class="nc" id="L174">    }</span>
+
+    /**
+     * Makes the delete request call.
+     *
+     * @param deleteUrl The URL for the delete request.
+     * @param group_id The ID of the group to be deleted.
+     */
+    private void makeDeleteRequest(String deleteUrl, String group_id) {
+        // Find the position of the item with the given group_id
+<span class="nc" id="L184">        int positionToDelete = -1;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        for (int i = 0; i &lt; member_list.size(); i++) {</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">            if (member_list.get(i).getGroupId().equals(group_id)) {</span>
+<span class="nc" id="L187">                positionToDelete = i;</span>
+<span class="nc" id="L188">                break; // Stop searching once found</span>
+            }
+        }
+
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (positionToDelete != -1) {</span>
+<span class="nc" id="L193">            int finalPositionToDelete = positionToDelete;</span>
+<span class="nc" id="L194">            StringRequest stringRequest = new StringRequest(</span>
+                    Request.Method.DELETE,
+                    deleteUrl,
+<span class="nc" id="L197">                    new Response.Listener&lt;String&gt;() {</span>
+                        /**
+                         * Callback method that is invoked when a network request succeeds and returns a response.
+                         *
+                         * @param response The response received from the network request.
+                         *                 It is expected to be a JSON string representing an array.
+                         * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                         */
+                        @Override
+                        public void onResponse(String response) {
+<span class="nc" id="L207">                            Log.d(&quot;response&quot;, response);</span>
+
+                            // Remove the item from the list based on its position
+<span class="nc" id="L210">                            member_list.remove(finalPositionToDelete);</span>
+
+                            // Notify the adapter that the item has been removed
+<span class="nc" id="L213">                            notifyItemRemoved(finalPositionToDelete);</span>
+
+<span class="nc" id="L215">                            Toast.makeText(context.getApplicationContext(), &quot;Group Deleted&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L216">                        }</span>
+                    },
+<span class="nc" id="L218">                    new Response.ErrorListener() {</span>
+                        /**
+                         * Callback method that is invoked when a network request encounters an error.
+                         *
+                         * @param error The VolleyError object containing information about the error.
+                         *              This can include details such as the error message, network response, and more.
+                         *              It can be used for debugging and handling specific error scenarios.
+                         */
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle any errors that occur during the request
+<span class="nc" id="L229">                            Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="nc" id="L230">                            Toast.makeText(context.getApplicationContext(), &quot;Something went wrong. Please try again&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L231">                        }</span>
+                    }
+            );
+
+<span class="nc" id="L235">            VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);</span>
+        }
+<span class="nc" id="L237">    }</span>
+
+    /*private void createChat(String URL_CHAT, String name) {
+        // Find the values of each field
+
+        // Create JSON object
+        JSONObject requestBody = new JSONObject();
+
+        // Puts in the values of these variables.
+        try {
+            requestBody.put(&quot;chat&quot;, name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Making the request
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
+                Request.Method.POST,
+                URL_CHAT,
+                requestBody,
+                new Response.Listener&lt;JSONObject&gt;() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(&quot;Server response&quot;, response.toString());
+                        Toast.makeText(context.getApplicationContext(), &quot;Chat created!&quot;, Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(&quot;Uh oh not good&quot;, &quot;Error: &quot; + error.getMessage());
+                        Log.d(&quot;URL&quot;, URL_CHAT);
+                    }
+                }
+        ) {
+
+        };
+
+        // Add to volley request queue
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonObjectReq);
+    } */
+
+    /**
+     * This class is for holding the variables in place for the group members.
+     */
+    static class MemberViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * The user's name.
+         */
+        TextView username;
+
+        /**
+         * Group's name.
+         */
+        TextView group_name;
+
+        /**
+         * Information.
+         */
+        TextView description;
+
+        /**
+         * Delete button guy.
+         */
+        Button delete_button;
+
+        /**
+         * Drag handle man.
+         */
+        ImageButton drag_handle;
+
+        /**
+         * This holds all the variables in place for the events.
+         */
+        MemberViewHolder(View item_view) {
+<span class="nc" id="L312">            super(item_view);</span>
+            //username = item_view.findViewById(R.id.username);
+<span class="nc" id="L314">            group_name = item_view.findViewById(R.id.group_name);</span>
+            //description = item_view.findViewById(R.id.description);
+            //delete_button = item_view.findViewById(R.id.delete_group_button);
+<span class="nc" id="L317">            drag_handle = item_view.findViewById(R.id.drag_handle);</span>
+<span class="nc" id="L318">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

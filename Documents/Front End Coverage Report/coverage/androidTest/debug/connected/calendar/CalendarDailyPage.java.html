@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CalendarDailyPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">calendar</a> &gt; <span class="el_source">CalendarDailyPage.java</span></div><h1>CalendarDailyPage.java</h1><pre class="source lang-java linenums">package calendar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.AnalyzeSchedule;
+import com.example.myapplication.NavBarView;
+import com.example.myapplication.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import api.VolleySingleton;
+import events.CreateEventPage;
+import events.Event;
+import events.EventsListViewer;
+import groups.MemberViewer;
+import homepage.HomePage;
+import profile.ProfilePage;
+import websockets.WebSocketManager;
+
+/**
+ * This class represents the daily view for the calendar page in a mobile application.
+ * It extends AppCompatActivity and implements NavBarView.OnButtonClickListener for button click events.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L55">public class CalendarDailyPage extends AppCompatActivity implements NavBarView.OnButtonClickListener {</span>
+    /**
+     * The buttons for going to the next or previous day.
+     */
+    private ImageButton dayButtonNext, dayButtonPrev;
+
+    /**
+     * The day it is.
+     */
+    private TextView dayOfMonth;
+
+    /**
+     * This grabs the date.
+     */
+    private static String date_getter;
+
+    /**
+     * Calendar thing.
+     */
+    private Calendar calendar, currentWeek;
+
+    /**
+     * It's our navbar.
+     */
+    private NavBarView navbar_view;
+
+    /**
+     * The event adapter for the event list.
+     */
+    private EventCalendarMonthlyAdapter adapter;
+
+    /**
+     * Array list.
+     */
+    private List&lt;Event&gt; event_list;
+
+    /**
+     * This manages the layout.
+     */
+    private LinearLayoutManager layout_manager;
+
+    /**
+     * Recycler view aka from what I know it's how we display the list of items.
+     */
+    private RecyclerView recycler_view;
+
+    /**
+     * The button that brings up the popup menu displaying the views of the calendars.
+     */
+    private ImageButton menu_button;
+
+    /**
+     * Url request for making the calls to the api.
+     */
+    private static final String URL_STRING_REQ = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot;;
+
+    /**
+     * Method called when the activity is created.
+     * Initializes components, sets up listeners, and makes an initial request for events.
+     *
+     * @param savedInstanceState Bundle object containing the activity's previously saved state.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L119">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L120">        setContentView(R.layout.activity_calendar_daily_page);</span>
+
+        //Initialize the components
+<span class="fc" id="L123">        dayButtonNext = findViewById(R.id.nextDayButton);</span>
+<span class="fc" id="L124">        dayButtonPrev = findViewById(R.id.prevDayButton);</span>
+<span class="fc" id="L125">        dayOfMonth = findViewById(R.id.dayOfMonthText);</span>
+<span class="fc" id="L126">        navbar_view = findViewById(R.id.navbar);</span>
+<span class="fc" id="L127">        navbar_view.setSelectedButton(navbar_view.getCalendarButton());</span>
+<span class="fc" id="L128">        menu_button = findViewById(R.id.menu_calendar_button);</span>
+<span class="fc" id="L129">        navbar_view.setOnButtonClickListener(this);</span>
+<span class="fc" id="L130">        navbar_view.setSelectedButton(navbar_view.getCalendarButton());</span>
+<span class="fc" id="L131">        event_list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L132">        adapter = new EventCalendarMonthlyAdapter(this, event_list);</span>
+<span class="fc" id="L133">        layout_manager = new LinearLayoutManager(this);</span>
+
+<span class="fc" id="L135">        recycler_view = findViewById(R.id.liste);</span>
+<span class="fc" id="L136">        recycler_view.setLayoutManager(layout_manager);</span>
+<span class="fc" id="L137">        recycler_view.setAdapter(adapter);</span>
+
+<span class="fc" id="L139">        calendar = Calendar.getInstance();</span>
+<span class="fc" id="L140">        currentWeek = (Calendar) calendar.clone();</span>
+
+
+<span class="fc" id="L143">        SimpleDateFormat sdf = new SimpleDateFormat(&quot;d&quot;, Locale.getDefault());</span>
+<span class="fc" id="L144">        SimpleDateFormat monthSdf = new SimpleDateFormat(&quot;MMMM&quot;, Locale.getDefault());</span>
+<span class="fc" id="L145">        SimpleDateFormat yearSdf = new SimpleDateFormat(&quot;yyyy&quot;, Locale.getDefault());</span>
+<span class="fc" id="L146">        dayOfMonth.setText(monthSdf.format(calendar.getTime()) + &quot; &quot; + sdf.format(calendar.getTime()) + &quot;,&quot; + &quot; &quot; + yearSdf.format(calendar.getTime()));</span>
+
+<span class="fc" id="L148">        getEventsRequest();</span>
+
+        // Buttons
+<span class="fc" id="L151">        dayButtonNext.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * This onClick advances the day forward.
+             *
+             * @param v view that has been clicked
+             */
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L159">                calendar.add(Calendar.DAY_OF_MONTH, 1);</span>
+                //currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
+<span class="fc" id="L161">                date_getter = getDateForDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK), calendar);</span>
+<span class="fc" id="L162">                getEventsRequest();</span>
+<span class="fc" id="L163">                Log.d(&quot;DATE&quot;, date_getter);</span>
+<span class="fc" id="L164">                updateDateText();</span>
+<span class="fc" id="L165">            }</span>
+        });
+
+<span class="fc" id="L168">        dayButtonPrev.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * This onClick advances the day backward.
+             *
+             * @param v view that has been clicked
+             */
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L176">                calendar.add(Calendar.DAY_OF_MONTH, -1);</span>
+                //currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
+<span class="fc" id="L178">                date_getter = getDateForDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK), calendar);</span>
+<span class="fc" id="L179">                getEventsRequest();</span>
+<span class="fc" id="L180">                Log.d(&quot;DATE&quot;, date_getter);</span>
+<span class="fc" id="L181">                updateDateText();</span>
+<span class="fc" id="L182">            }</span>
+        });
+
+<span class="fc" id="L185">        menu_button.setOnClickListener(new View.OnClickListener() {</span>
+            /**
+             * Called when the specified {@code view} is clicked. Creates and displays a PopupMenu
+             * anchored to the clicked view, inflates the options menu for the calendar, and shows the popup menu.
+             *
+             * @param view The view that was clicked.
+             *             It can be used to identify which view triggered the click event.
+             */
+            @Override
+            public void onClick(View view) {
+<span class="fc" id="L195">                PopupMenu popup_menu = new PopupMenu(CalendarDailyPage.this, view);</span>
+<span class="fc" id="L196">                popup_menu.getMenuInflater().inflate(R.menu.options_menu_calendar, popup_menu.getMenu());</span>
+<span class="fc" id="L197">                popup_menu.show();</span>
+
+<span class="fc" id="L199">                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {</span>
+                    /**
+                     * Called when a menu item in the options menu is clicked.
+                     * Performs actions based on the selected menu item, such as starting a new activity.
+                     *
+                     * @param menuItem The menu item that was clicked.
+                     *                 It can be used to identify which menu item triggered the click event.
+                     * @return true if the menu item click has been handled, false otherwise.
+                     */
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">                        if (menuItem.getItemId() == R.id.monthly_view) {</span>
+<span class="nc" id="L211">                            Intent intent = new Intent(CalendarDailyPage.this, CalendarMonthlyPage.class);</span>
+<span class="nc" id="L212">                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L213">                            startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L214">                        }</span>
+
+<span class="fc bfc" id="L216" title="All 2 branches covered.">                        else if (menuItem.getItemId() == R.id.weekly_view) {</span>
+<span class="fc" id="L217">                            Intent intent = new Intent(CalendarDailyPage.this, CalendarWeeklyPage.class);</span>
+<span class="fc" id="L218">                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="fc" id="L219">                            startActivity(intent, options.toBundle());</span>
+<span class="fc" id="L220">                        }</span>
+
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                        else if (menuItem.getItemId() == R.id.all_events) {</span>
+<span class="fc" id="L223">                            Intent intent = new Intent(CalendarDailyPage.this, EventsListViewer.class);</span>
+<span class="fc" id="L224">                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="fc" id="L225">                            startActivity(intent, options.toBundle());</span>
+<span class="fc" id="L226">                        }</span>
+
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">                        else if (menuItem.getItemId() == R.id.schedule_analyze) {</span>
+<span class="fc" id="L229">                            Intent intent = new Intent(CalendarDailyPage.this, AnalyzeSchedule.class);</span>
+<span class="fc" id="L230">                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="fc" id="L231">                            startActivity(intent, options.toBundle());</span>
+                        }
+
+<span class="fc" id="L234">                        return true;</span>
+                    }
+                });
+
+<span class="fc" id="L238">                popup_menu.show();</span>
+<span class="fc" id="L239">            }</span>
+        });
+
+        //calendar.add(Calendar.DAY_OF_MONTH, 0);
+<span class="fc" id="L243">        date_getter = getDateForDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK), calendar);</span>
+<span class="fc" id="L244">    }</span>
+
+    /**
+     * Updates the displayed date text on the UI.
+     */
+    private void updateDateText() {
+<span class="fc" id="L250">        SimpleDateFormat sdf = new SimpleDateFormat(&quot;MMMM d, yyyy&quot;, Locale.getDefault());</span>
+<span class="fc" id="L251">        String formattedDate = sdf.format(calendar.getTime());</span>
+<span class="fc" id="L252">        dayOfMonth.setText(formattedDate);</span>
+<span class="fc" id="L253">    }</span>
+
+    /**
+     * Gets the current date for the given day of the week.
+     *
+     * @param dayOfWeek Integer representing the day of the week.
+     * @return String containing the formatted date.
+     */
+    private String getCurrentDateForDay(int dayOfWeek) {
+<span class="nc" id="L262">        Calendar calendar = Calendar.getInstance();</span>
+<span class="nc" id="L263">        calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek); // Set to the selected day of the week</span>
+<span class="nc" id="L264">        SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;, Locale.getDefault());</span>
+<span class="nc" id="L265">        return dateFormat.format(calendar.getTime());</span>
+    }
+
+    /**
+     * Gets the date for the specified day of the week based on the provided base date.
+     *
+     * @param dayOfWeek Integer representing the day of the week.
+     * @param baseDate  Calendar object representing the base date.
+     * @return String containing the formatted date.
+     */
+    private String getDateForDayOfWeek(int dayOfWeek, Calendar baseDate) {
+<span class="fc" id="L276">        Calendar date = (Calendar) baseDate.clone();</span>
+
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        while (date.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {</span>
+<span class="nc" id="L279">            date.add(Calendar.DAY_OF_MONTH, 1);</span>
+        }
+
+<span class="fc" id="L282">        SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;, Locale.getDefault());</span>
+<span class="fc" id="L283">        return dateFormat.format(date.getTime());</span>
+    }
+
+    /**
+     * Handles the click event on the calendar button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCalendarButtonClick() {
+        /*Intent intent = new Intent(this, CalendarMonthlyPage.class);
+        startActivity(intent);*/
+        //Log.d(&quot;Date&quot;, date_getter);
+<span class="nc" id="L295">    }</span>
+
+    /**
+     * Handles the click event on the home button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onHomeButtonClick() {
+<span class="nc" id="L303">        Intent intent = new Intent(CalendarDailyPage.this, HomePage.class);</span>
+<span class="nc" id="L304">        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L305">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L306">    }</span>
+
+    /**
+     * Handles the click event on the messages button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onMessagesButtonClick() {
+<span class="nc" id="L314">        Intent intent = new Intent(CalendarDailyPage.this, MemberViewer.class);</span>
+<span class="nc" id="L315">        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L316">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L317">    }</span>
+
+    /**
+     * Handles the click event on the profile button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onProfileButtonClick() {
+<span class="nc" id="L325">        Intent intent = new Intent(CalendarDailyPage.this, ProfilePage.class);</span>
+<span class="nc" id="L326">        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarDailyPage.this, R.anim.empty_anim, R.anim.empty_anim);</span>
+<span class="nc" id="L327">        startActivity(intent, options.toBundle());</span>
+<span class="nc" id="L328">    }</span>
+
+    /**
+     * Handles the click event on the create button in the navigation bar.
+     * This method is part of the NavBarView.OnButtonClickListener interface.
+     */
+    @Override
+    public void onCreateEventButtonClick() {
+        // Navigate to Create Events page
+<span class="nc" id="L337">        Intent intent = new Intent(CalendarDailyPage.this, CreateEventPage.class);</span>
+<span class="nc" id="L338">        startActivity(intent);</span>
+<span class="nc" id="L339">    }</span>
+
+    /**
+     * Makes a request to the server to get events for the currently logged-in user.
+     */
+    private void getEventsRequest() {
+<span class="fc" id="L345">        String username = WebSocketManager.getInstance().getUsername();</span>
+<span class="fc" id="L346">        StringRequest stringRequest = new StringRequest(</span>
+                Request.Method.GET,
+                URL_STRING_REQ + username + &quot;/events&quot;,
+<span class="fc" id="L349">                new Response.Listener&lt;String&gt;() {</span>
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+<span class="nc" id="L362">                            responseArray = new JSONArray(response);</span>
+<span class="nc" id="L363">                        } catch (JSONException e) {</span>
+<span class="nc" id="L364">                            throw new RuntimeException(e);</span>
+<span class="nc" id="L365">                        }</span>
+
+                        // Clear the event list to refresh it
+<span class="nc" id="L368">                        event_list.clear();</span>
+
+                        // Iterate
+<span class="nc bnc" id="L371" title="All 2 branches missed.">                        for (int i = 0; i &lt; responseArray.length(); i++) {</span>
+                            try {
+<span class="nc" id="L373">                                JSONObject jsonObject = responseArray.getJSONObject(i);</span>
+<span class="nc" id="L374">                                String id = jsonObject.getString(&quot;id&quot;);</span>
+<span class="nc" id="L375">                                String name = jsonObject.getString(&quot;name&quot;);</span>
+<span class="nc" id="L376">                                String description = jsonObject.getString(&quot;description&quot;);</span>
+<span class="nc" id="L377">                                String eventType = jsonObject.getString(&quot;type&quot;);</span>
+<span class="nc" id="L378">                                String startDateStr  = jsonObject.getString(&quot;startDate&quot;);</span>
+<span class="nc" id="L379">                                String endDateStr  = jsonObject.getString(&quot;endDate&quot;);</span>
+
+<span class="nc" id="L381">                                SimpleDateFormat inputDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, Locale.getDefault());</span>
+<span class="nc" id="L382">                                inputDateFormat.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));</span>
+
+<span class="nc" id="L384">                                Date startDate = inputDateFormat.parse(startDateStr);</span>
+<span class="nc" id="L385">                                Date endDate = inputDateFormat.parse(endDateStr);</span>
+
+<span class="nc" id="L387">                                Log.d(&quot;StartDate&quot;, startDate.toString());</span>
+
+                                // Convert to local time zone
+<span class="nc" id="L390">                                SimpleDateFormat outputFormat = new SimpleDateFormat(&quot;h:mm a&quot;, Locale.getDefault());</span>
+<span class="nc" id="L391">                                outputFormat.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));</span>
+
+<span class="nc" id="L393">                                String startTime = outputFormat.format(startDate);</span>
+<span class="nc" id="L394">                                String endTime = outputFormat.format(endDate);</span>
+
+<span class="nc" id="L396">                                Log.d(&quot;StartDate&quot;, startDate.toString());</span>
+
+<span class="nc bnc" id="L398" title="All 2 branches missed.">                                if (startDateStr.startsWith(date_getter)) {</span>
+<span class="nc" id="L399">                                    event_list.add(new Event(id, name, description, eventType, startTime, endTime));</span>
+                                }
+
+<span class="nc" id="L402">                            } catch (JSONException | ParseException e) {</span>
+<span class="nc" id="L403">                                e.printStackTrace();</span>
+<span class="nc" id="L404">                            }</span>
+                        }
+
+<span class="nc" id="L407">                        Collections.sort(event_list, new Comparator&lt;Event&gt;() {</span>
+                            @Override
+                            public int compare(Event event1, Event event2) {
+<span class="nc" id="L410">                                SimpleDateFormat timeFormat = new SimpleDateFormat(&quot;h:mm a&quot;, Locale.getDefault());</span>
+
+                                try {
+<span class="nc" id="L413">                                    Date startTime1 = timeFormat.parse(event1.getStartTime());</span>
+<span class="nc" id="L414">                                    Date startTime2 = timeFormat.parse(event2.getStartTime());</span>
+
+<span class="nc" id="L416">                                    return startTime1.compareTo(startTime2);</span>
+<span class="nc" id="L417">                                } catch (ParseException e) {</span>
+<span class="nc" id="L418">                                    e.printStackTrace();</span>
+<span class="nc" id="L419">                                    return 0;</span>
+                                }
+                            }
+                        });
+
+<span class="nc" id="L424">                        adapter.notifyDataSetChanged();</span>
+<span class="nc" id="L425">                    }</span>
+                },
+<span class="fc" id="L427">                new Response.ErrorListener() {</span>
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+<span class="fc" id="L438">                        Log.e(&quot;A server error has occurred&quot;, error.toString());</span>
+<span class="fc" id="L439">                    }</span>
+                }
+        );
+
+        // Adding request to request queue
+<span class="fc" id="L444">        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);</span>
+<span class="fc" id="L445">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

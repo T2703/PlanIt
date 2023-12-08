@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddGroup.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">groups</a> &gt; <span class="el_source">AddGroup.java</span></div><h1>AddGroup.java</h1><pre class="source lang-java linenums">package groups;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.R;
+import api.VolleySingleton;
+import websockets.WebSocketManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * Welcome to the add group page where we can add groups by creating them ofc!
+ * Overall, this is where the new groups gets created.
+ *
+ * @author Tristan Nono
+ */
+<span class="fc" id="L34">public class AddGroup extends AppCompatActivity {</span>
+    /**
+     * Button that creates the group.
+     */
+    private Button create_group_button;
+
+    /**
+     * Button to go back.
+     */
+    private ImageButton back_button;
+
+    /**
+     * Input for the group name from the user.
+     */
+    private EditText group_name;
+
+    /**
+     * Input for the group description from the user.
+     */
+    private EditText group_description;
+
+    /**
+     * URL for making calls.
+     */
+<span class="fc" id="L58">    private static final String TEAMS_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/users/&quot; + WebSocketManager.getInstance().getUsername() + &quot;/teams&quot;;</span>
+
+<span class="fc" id="L60">    private String CHAT_URL = &quot;http://coms-309-024.class.las.iastate.edu:8080/createTeamChat/&quot;;</span>
+
+    private String teamID;
+
+
+    /**
+     * Initializes the activity and sets up UI components.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previously saved state, or null if there was none.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L72">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L73">        setContentView(R.layout.activity_add_group);</span>
+
+        // Initialization
+<span class="fc" id="L76">        create_group_button = findViewById(R.id.create_group_button);</span>
+<span class="fc" id="L77">        group_name = findViewById(R.id.group_name);</span>
+<span class="fc" id="L78">        group_description = findViewById(R.id.group_description);</span>
+<span class="fc" id="L79">        back_button = findViewById(R.id.add_group_back_button);</span>
+<span class="fc" id="L80">        create_group_button.setEnabled(false); // Set the initial state to disabled</span>
+<span class="fc" id="L81">        Log.d(&quot;URL&quot;, TEAMS_URL);</span>
+
+        // Sets the on click listener for the creating group button. So, we can
+        // an epic group.
+<span class="fc" id="L85">        create_group_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L88">                createGroup();</span>
+                //getGroupsRequest();
+<span class="fc" id="L90">                Intent intent = new Intent(AddGroup.this, MemberViewer.class);</span>
+<span class="fc" id="L91">                startActivity(intent);</span>
+<span class="fc" id="L92">            }</span>
+        });
+
+        // How we go back the functionally/behind the scenes.
+        // Oh yeah this just functions the same without creating the group.
+<span class="fc" id="L97">        back_button.setOnClickListener(new View.OnClickListener() {</span>
+            @Override
+            public void onClick(View v) {
+<span class="fc" id="L100">                Intent intent = new Intent(AddGroup.this, MemberViewer.class);</span>
+<span class="fc" id="L101">                startActivity(intent);</span>
+<span class="fc" id="L102">            }</span>
+        });
+
+        // This is for the user's name to see if anything is in it or not.
+<span class="fc" id="L106">        group_name.addTextChangedListener(new TextWatcher() {</span>
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L109">            }</span>
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L113">                checkFieldsForEmptyValues();</span>
+<span class="fc" id="L114">            }</span>
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+<span class="fc" id="L118">            }</span>
+        });
+
+        // This is for the user's email to see if anything is in it or not.
+<span class="fc" id="L122">        group_description.addTextChangedListener(new TextWatcher() {</span>
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L125">            }</span>
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+<span class="fc" id="L129">                checkFieldsForEmptyValues();</span>
+<span class="fc" id="L130">            }</span>
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+<span class="fc" id="L134">            }</span>
+        });
+
+
+<span class="fc" id="L138">    }</span>
+
+    /**
+     * This checks for empty values in the edit text variables so in other words,
+     * if there's nothing in both the group name and description then, it shouldn't go through.
+     */
+    private void checkFieldsForEmptyValues() {
+<span class="fc" id="L145">        String group_name_input = group_name.getText().toString();</span>
+<span class="fc" id="L146">        String group_description_input = group_description.getText().toString();</span>
+
+<span class="pc bpc" id="L148" title="1 of 4 branches missed.">        if (!group_name_input.isEmpty() &amp;&amp; !group_description_input.isEmpty()) {</span>
+<span class="fc" id="L149">            create_group_button.setEnabled(true);</span>
+        }
+
+        else {
+<span class="fc" id="L153">            create_group_button.setEnabled(false);</span>
+        }
+<span class="fc" id="L155">    }</span>
+
+    /**
+     * This is the request for creating a group (well we call it teams or whatever).
+     * This POSTs the group on to the server.
+     */
+    private void createGroup() {
+        // Find the values of each field
+<span class="fc" id="L163">        EditText input_group_name = findViewById(R.id.group_name);</span>
+<span class="fc" id="L164">        EditText input_group_description = findViewById(R.id.group_description);</span>
+
+<span class="fc" id="L166">        String input_group_value = input_group_name.getText().toString();</span>
+<span class="fc" id="L167">        String input_group_description_value = input_group_description.getText().toString();</span>
+
+        // Create JSON object
+<span class="fc" id="L170">        JSONObject requestBody = new JSONObject();</span>
+
+        // Puts in the values of these variables.
+        try {
+<span class="fc" id="L174">            requestBody.put(&quot;name&quot;, input_group_value);</span>
+<span class="fc" id="L175">            requestBody.put(&quot;description&quot;, input_group_description_value);</span>
+<span class="fc" id="L176">            requestBody.put(&quot;chat&quot;, input_group_value);</span>
+<span class="nc" id="L177">        } catch (JSONException e) {</span>
+<span class="nc" id="L178">            e.printStackTrace();</span>
+<span class="fc" id="L179">        }</span>
+
+        // Making the request
+<span class="fc" id="L182">        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(</span>
+                Request.Method.POST,
+                TEAMS_URL,
+                requestBody,
+<span class="fc" id="L186">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Log the entire response for debugging
+<span class="nc" id="L190">                        Log.d(&quot;Server response&quot;, response.toString());</span>
+                        // Extract the &quot;message&quot; field from the JSON object
+<span class="nc" id="L192">                        String message = response.optString(&quot;message&quot;, &quot;&quot;);</span>
+
+                        // Use regular expressions to extract the number from the &quot;message&quot; string
+<span class="nc" id="L195">                        String numberString = message.replaceAll(&quot;[^0-9]&quot;, &quot;&quot;);</span>
+
+                        // Convert the extracted string to an integer
+<span class="nc" id="L198">                        int idNumber = Integer.parseInt(numberString);</span>
+
+                        // Now, idNumber contains the extracted integer value (44 in this case)
+<span class="nc" id="L201">                        Log.d(&quot;ID Number&quot;, String.valueOf(idNumber));</span>
+
+<span class="nc" id="L203">                        createChat(String.valueOf(idNumber), input_group_value);</span>
+<span class="nc" id="L204">                    }</span>
+                },
+<span class="fc" id="L206">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="fc" id="L209">                        Log.e(&quot;Server error&quot;, &quot;Error: &quot; + error.getMessage());</span>
+<span class="fc" id="L210">                    }</span>
+                }
+<span class="fc" id="L212">        ) {</span>
+
+        };
+
+        // Add to volley request queue
+<span class="fc" id="L217">        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);</span>
+<span class="fc" id="L218">    }</span>
+
+    private void createChat(String teamID, String name) {
+        // Find the values of each field
+
+        // Create JSON object
+<span class="nc" id="L224">        JSONObject requestBody = new JSONObject();</span>
+
+        // Puts in the values of these variables.
+        try {
+<span class="nc" id="L228">            requestBody.put(&quot;chat&quot;, name);</span>
+<span class="nc" id="L229">        } catch (JSONException e) {</span>
+<span class="nc" id="L230">            e.printStackTrace();</span>
+<span class="nc" id="L231">        }</span>
+
+        // Making the request
+<span class="nc" id="L234">        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(</span>
+                Request.Method.POST,
+                CHAT_URL + teamID,
+                requestBody,
+<span class="nc" id="L238">                new Response.Listener&lt;JSONObject&gt;() {</span>
+                    @Override
+                    public void onResponse(JSONObject response) {
+<span class="nc" id="L241">                        Log.d(&quot;Server response&quot;, response.toString());</span>
+<span class="nc" id="L242">                        Toast.makeText(AddGroup.this, &quot;Chat created!&quot;, Toast.LENGTH_SHORT).show();</span>
+<span class="nc" id="L243">                    }</span>
+                },
+<span class="nc" id="L245">                new Response.ErrorListener() {</span>
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+<span class="nc" id="L248">                        Log.e(&quot;Uh oh not good&quot;, &quot;Error: &quot; + error.getMessage());</span>
+<span class="nc" id="L249">                        Log.d(&quot;URL&quot;, CHAT_URL);</span>
+<span class="nc" id="L250">                    }</span>
+                }
+<span class="nc" id="L252">        ) {</span>
+
+        };
+
+        // Add to volley request queue
+<span class="nc" id="L257">        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectReq);</span>
+<span class="nc" id="L258">    }</span>
+
+
+    /*private void getGroupsRequest() {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                TEAMS_URL,
+                new Response.Listener&lt;String&gt;() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray responseArray;
+
+                        try {
+                            responseArray = new JSONArray(response);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        // Iterate
+                        for (int i = 0; i &lt; responseArray.length(); i++) {
+                            try {
+                                JSONObject jsonObject = responseArray.getJSONObject(i);
+                                String name = jsonObject.getString(&quot;name&quot;);
+                                String id = jsonObject.getString(&quot;id&quot;);
+                                teamID = id;
+                                createChat(teamID, name);
+                                Log.d(&quot;List&quot;, id);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e(&quot;A server error has occurred&quot;, error.toString());
+                    }
+                }
+        );
+
+        // Adding request to request queue
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    } */
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>

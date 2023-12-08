@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationAdapter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debug</a> &gt; <a href="index.source.html" class="el_package">notifications</a> &gt; <span class="el_source">NotificationAdapter.java</span></div><h1>NotificationAdapter.java</h1><pre class="source lang-java linenums">package notifications;
+
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.R;
+
+import java.util.List;
+
+/**
+ * The {@code NotificationAdapter} class is a custom adapter for managing the display of
+ * notifications in a RecyclerView. It extends the RecyclerView.Adapter class and provides
+ * methods to bind notification data to individual views within the RecyclerView.
+ * &lt;p&gt;
+ * The adapter is designed to work with the {@code NotificationViewHolder} class, which defines
+ * the layout of each notification item in the RecyclerView.
+ * &lt;/p&gt;
+ *
+ * @see RecyclerView.Adapter
+ * @see NotificationAdapter.NotificationViewHolder
+ * @author Joshua Gutierrez
+ * @version 1.0
+ */
+public class NotificationAdapter extends RecyclerView.Adapter&lt;NotificationAdapter.NotificationViewHolder&gt; {
+    private List&lt;Notification&gt; notificationList;
+
+    /**
+     * Constructs a new {@code NotificationAdapter} with the specified list of notifications.
+     *
+     * @param notificationList The list of notifications to be displayed.
+     */
+<span class="fc" id="L40">    public NotificationAdapter(List&lt;Notification&gt; notificationList) {</span>
+<span class="fc" id="L41">        this.notificationList = notificationList;</span>
+<span class="fc" id="L42">    }</span>
+
+    /**
+     * Called when RecyclerView needs a new {@code NotificationViewHolder} of the given type to
+     * represent an item.
+     *
+     * @param parent   The ViewGroup into which the new View will be added after it is bound to
+     *                 an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new {@code NotificationViewHolder} that holds a View of the given view type.
+     * @see NotificationViewHolder
+     */
+    @NonNull
+    @Override
+    public NotificationAdapter.NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+<span class="fc" id="L57">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_notification_item, parent, false);</span>
+<span class="fc" id="L58">        return new NotificationAdapter.NotificationViewHolder(view);</span>
+    }
+
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     *
+     * @param holder   The {@code NotificationViewHolder} that holds the view for each notification item.
+     * @param position The position of the item within the adapter's data set.
+     */
+    @Override
+    public void onBindViewHolder(NotificationAdapter.NotificationViewHolder holder, int position) {
+<span class="fc" id="L69">        Notification notification = notificationList.get(position);</span>
+
+<span class="fc" id="L71">        holder.notificationTitle.setText(notification.getTitle());</span>
+<span class="fc" id="L72">        holder.notificationDescription.setText(notification.getDescription());</span>
+
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (!notification.getIsRead()) {</span>
+<span class="nc" id="L75">            holder.itemView.setBackgroundColor(Color.parseColor(&quot;#C5C5C5&quot;));</span>
+        }
+
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (notification.getIsSelected()) {</span>
+<span class="nc" id="L79">            holder.itemView.setBackgroundColor(Color.parseColor(&quot;#FFF5E0&quot;));</span>
+        } else {
+<span class="fc" id="L81">            holder.itemView.setBackgroundColor(Color.parseColor(&quot;#FFFFFF&quot;));</span>
+        }
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in the data set.
+     */
+    @Override
+    public int getItemCount() {
+<span class="fc" id="L92">        return notificationList.size();</span>
+    }
+
+    /**
+     * The {@code NotificationViewHolder} class represents a single item view within the RecyclerView.
+     * It holds references to individual UI components for displaying notification information.
+     */
+    public static class NotificationViewHolder extends RecyclerView.ViewHolder {
+        ImageView userAvatarImage;
+        TextView notificationTitle;
+        TextView notificationDescription;
+        Button acceptButton;
+        Button denyButton;
+
+        /**
+         * Constructs a new {@code NotificationViewHolder} with the specified item view.
+         *
+         * @param itemView The view representing a single item within the RecyclerView.
+         */
+        public NotificationViewHolder(View itemView) {
+<span class="fc" id="L112">            super(itemView);</span>
+
+
+<span class="fc" id="L115">            userAvatarImage = itemView.findViewById(R.id.sentBy);</span>
+<span class="fc" id="L116">            notificationTitle = itemView.findViewById(R.id.notificationTitle);</span>
+<span class="fc" id="L117">            notificationDescription = itemView.findViewById(R.id.notificationDescription);</span>
+<span class="fc" id="L118">            acceptButton = itemView.findViewById(R.id.acceptButton);</span>
+<span class="fc" id="L119">            denyButton = itemView.findViewById(R.id.denyButton);</span>
+<span class="fc" id="L120">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span>Generated by the Android Gradle plugin 8.1.1</div></body></html>
