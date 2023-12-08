@@ -32,6 +32,7 @@ import profile.Settings;
  *
  * @author Tristan Nono
  */
+@RunWith(AndroidJUnit4.class)
 public class LightDarkModeTest {
     @Rule
     public ActivityScenarioRule<Settings> activityRule = new ActivityScenarioRule<>(Settings.class);
