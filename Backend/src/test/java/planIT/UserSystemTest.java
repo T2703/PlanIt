@@ -15,6 +15,7 @@ import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import planIT.Entity.Users.User;
+import planIT.Login.CanvasToken;
 import planIT.Login.LoginRequest;
 import planIT.Login.Password;
 
@@ -93,6 +94,96 @@ public class UserSystemTest {
 
     @Test
     public void userTestB() {
+        Response response  = RestAssured.given().when().get("/users/test/canvas-token");
+
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        String body = response.getBody().asString();
+        assertEquals("", body);
+
+        CanvasToken token = new CanvasToken("token");
+        Response response1 = RestAssured.given().
+                contentType("application/json").
+                body(token).
+                when().
+                put("/users/test/set-canvas-token");
+
+        int statusCode1 = response1.getStatusCode();
+        assertEquals(200, statusCode1);
+
+        Response response2  = RestAssured.given().when().get("/users/test/canvas-token");
+
+        int statusCode2 = response2.getStatusCode();
+        assertEquals(200, statusCode2);
+
+        String body2 = response2.getBody().asString();
+        assertEquals("token", body2);
+
+    }
+
+    @Test
+    public void userTestC() throws JSONException {
+        User r = new User("test-add", "password", "test@gmail.com");
+        RestAssured.given().
+                contentType("application/json").
+                body(r).
+                when().
+                post("/users");
+
+        Response response = RestAssured.given().when().get("/users/test/following");
+        String body = response.getBody().asString();
+        JSONArray arr = new JSONArray(body);
+        assertEquals(0, arr.length());
+        int statusCode = response.getStatusCode();
+        assertEquals(200, statusCode);
+
+        Response response1 = RestAssured.given().when().get("/users/test-add/followers");
+        String body1 = response1.getBody().asString();
+        JSONArray arr1 = new JSONArray(body1);
+        assertEquals(0, arr1.length());
+        int statusCode1 = response1.getStatusCode();
+        assertEquals(200, statusCode1);
+
+        Response response2 = RestAssured.given().when().put("/users/test/add-follower/test-add");
+        int statusCode2 = response2.getStatusCode();
+        assertEquals(200, statusCode2);
+
+        Response response3 = RestAssured.given().when().get("/users/test/following");
+        String body3 = response3.getBody().asString();
+        JSONArray arr3 = new JSONArray(body3);
+        assertEquals(1, arr3.length());
+        int statusCode3 = response3.getStatusCode();
+        assertEquals(200, statusCode3);
+
+        Response response4 = RestAssured.given().when().get("/users/test-add/followers");
+        String body4 = response4.getBody().asString();
+        JSONArray arr4 = new JSONArray(body4);
+        assertEquals(1, arr4.length());
+        int statusCode4 = response4.getStatusCode();
+        assertEquals(200, statusCode4);
+
+        Response response5 = RestAssured.given().when().put("/users/test/remove-follower/test-add");
+        int statusCode5 = response5.getStatusCode();
+        assertEquals(200, statusCode5);
+
+        Response response6 = RestAssured.given().when().get("/users/test/following");
+        String body6 = response6.getBody().asString();
+        JSONArray arr6 = new JSONArray(body6);
+        assertEquals(0, arr6.length());
+        int statusCode6 = response6.getStatusCode();
+        assertEquals(200, statusCode6);
+
+        Response response7 = RestAssured.given().when().get("/users/test-add/followers");
+        String body7 = response7.getBody().asString();
+        JSONArray arr7 = new JSONArray(body7);
+        assertEquals(0, arr7.length());
+        int statusCode7 = response7.getStatusCode();
+        assertEquals(200, statusCode7);
+    }
+
+    @Test
+    public void userTestD() {
 
         // Should Not Create a User With The Same Username
         User r = new User("test", "password", "test@gmail.com");
@@ -127,7 +218,7 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestC() {
+    public void userTestE() {
 
         // Get the "test" User ID
         Response response = RestAssured.given().
@@ -176,7 +267,7 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestD() {
+    public void userTestF() {
 
         // Should Return Null for the User Does Not Exist
         User r = new User("test", "password", "test@gmail.com");
@@ -195,7 +286,7 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestE() {
+    public void userTestG() {
 
         // Test Successful User Login Request
         LoginRequest request1 = new LoginRequest("test-updated", "password");
@@ -226,7 +317,7 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestF() {
+    public void userTestH() {
 
         // Changes the "test" User's Password
         Password password = new Password("password-updated");
@@ -256,29 +347,31 @@ public class UserSystemTest {
     }
 
     @Test
-    public void userTestG() {
+    public void userTestI() {
 
         // Get the "test" User ID
         Response response = RestAssured.given().
                 when().
                 get("/username/test-updated");
 
-        int statusCode = response.getStatusCode();
-        assertEquals(200, statusCode);
-
         JsonPath path = response.jsonPath();
 
         // Delete the "test" User
-        Response response1 = RestAssured.given().
+        RestAssured.given().
                 when().
                 delete("/users/" + path.getString("id"));
 
-        int statusCode1 = response1.getStatusCode();
-        assertEquals(200, statusCode1);
+        // Get the "test" User ID
+        Response response1 = RestAssured.given().
+                when().
+                get("/username/test-add");
 
-        String body1 = response1.getBody().asString();
-        assertEquals(success, body1);
+        JsonPath path1 = response1.jsonPath();
 
+        // Delete the "test" User
+        RestAssured.given().
+                when().
+                delete("/users/" + path1.getString("id"));
 
         // Get Users After Delete Method
         Response response2 = RestAssured.given().

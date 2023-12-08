@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.media.Image;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -109,6 +110,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     private GestureDetector gestureDetector;
 
     /**
+     * The selected day to store.
+     */
+    private int selectedDay;
+
+    /**
      * Calendar instance.
      */
     private Calendar calendar, currentWeek;
@@ -170,7 +176,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         setContentView(R.layout.activity_calendar_weekly_page);
 
         // Initialize
-        analyzeWeek = findViewById(R.id.analyzeWeek);
+        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         sunDate = findViewById(R.id.sunDate);
         monDate = findViewById(R.id.monDate);
         tueDate = findViewById(R.id.tueDate);
@@ -210,6 +216,8 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
             currentDayOfWeek = (currentDayOfWeek - 1) % 7;
         }
 
+        date_getter = getCurrentDateForDay(Calendar.DAY_OF_MONTH);
+
         // Calculate days of the week and month using the 'calendar' object
         for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -234,7 +242,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         currentMonth.setText(monthYear);
         currentYear.setText(yearSdf.format(calendar.getTime()));
 
-        date_getter = getCurrentDateForDay(Calendar.DAY_OF_MONTH - 1);
+        date_getter = getCurrentDateForDay(Calendar.DAY_OF_MONTH + 1);
 
 
         menu_button.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +288,12 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
                             startActivity(intent, options.toBundle());
                         }
 
+                        else if (menuItem.getItemId() == R.id.schedule_analyze) {
+                            Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+                            startActivity(intent, options.toBundle());
+                        }
+
                         return true;
                     }
                 });
@@ -298,10 +312,11 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View v) {
+                selectedDay = 0;
                 currentWeek.add(Calendar.WEEK_OF_YEAR, 1);
                 Calendar date = (Calendar) currentWeek.clone();
                 // This pretty much updates the date_getter.
-                date_getter = getDateForDayOfWeek(Calendar.DAY_OF_MONTH, currentWeek);
+                date_getter = getDateForDayOfWeek(Calendar.DAY_OF_MONTH + 1, currentWeek);
                 updateCalendarView();
                 getEventsRequest();
             }
@@ -317,9 +332,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View v) {
+                selectedDay = 0;
                 currentWeek.add(Calendar.WEEK_OF_YEAR, -1);
                 Calendar date = (Calendar) currentWeek.clone();
-                date_getter = getDateForDayOfWeek(Calendar.DAY_OF_MONTH - 1, currentWeek);
+                date_getter = getDateForDayOfWeek(Calendar.DAY_OF_MONTH + 1, currentWeek);
                 updateCalendarView();
                 getEventsRequest();
             }
@@ -335,6 +351,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View view) {
+                updateSelectedDay(Calendar.SUNDAY);
                 date_getter = getDateForDayOfWeek(Calendar.SUNDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Sunday", date_getter);
@@ -351,6 +368,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View view) {
+                updateSelectedDay(Calendar.MONDAY);
                 date_getter = getDateForDayOfWeek(Calendar.MONDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Monday", date_getter);
@@ -367,6 +385,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View view) {
+                updateSelectedDay(Calendar.TUESDAY);
                 date_getter = getDateForDayOfWeek(Calendar.TUESDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Day", "Tue");
@@ -383,6 +402,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View view) {
+                updateSelectedDay(Calendar.WEDNESDAY);
                 date_getter = getDateForDayOfWeek(Calendar.WEDNESDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Wednesday", date_getter);
@@ -399,6 +419,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View view) {
+                updateSelectedDay(Calendar.THURSDAY);
                 date_getter = getDateForDayOfWeek(Calendar.THURSDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Thursday", date_getter);
@@ -415,6 +436,7 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View view) {
+                updateSelectedDay(Calendar.FRIDAY);
                 date_getter = getDateForDayOfWeek(Calendar.FRIDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Friday", date_getter);
@@ -431,25 +453,10 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
              */
             @Override
             public void onClick(View view) {
+                updateSelectedDay(Calendar.SATURDAY);
                 date_getter = getDateForDayOfWeek(Calendar.SATURDAY, currentWeek);
                 getEventsRequest();
                 Log.d("Saturday", date_getter);
-            }
-        });
-
-        analyzeWeek.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Called when the specified view is clicked. Launches an Intent to navigate
-             * from the current CalendarWeeklyPage to the AnalyzeSchedule activity.
-             *
-             * @param view The view that was clicked.
-             *             It can be used to identify which view triggered the click event.
-             */
-            @Override
-            public void onClick(View view) {
-               Intent intent = new Intent(CalendarWeeklyPage.this, AnalyzeSchedule.class);
-               startActivity(intent);
-                //Log.d("TEST", "TEST2");
             }
         });
 
@@ -486,6 +493,15 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
         String monthYear = monthSdf.format(currentWeek.getTime()) + " " + yearSdf.format(calendar.getTime());
         currentMonth.setText(monthYear);
         currentYear.setText(yearSdf.format(currentWeek.getTime()));
+
+        highlightSelectedDay();
+
+        Calendar currentCalendar = Calendar.getInstance();
+        if (currentWeek.get(Calendar.WEEK_OF_YEAR) == currentCalendar.get(Calendar.WEEK_OF_YEAR)
+                && currentWeek.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR)) {
+            selectedDay = currentCalendar.get(Calendar.DAY_OF_WEEK);
+            highlightSelectedDay();
+        }
 
     }
 
@@ -539,7 +555,8 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
     public void onCreateEventButtonClick() {
         // Navigate to Create Events page
         Intent intent = new Intent(CalendarWeeklyPage.this, CreateEventPage.class);
-        startActivity(intent);
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(CalendarWeeklyPage.this, R.anim.empty_anim, R.anim.empty_anim);
+        startActivity(intent, options.toBundle());
     }
 
     /**
@@ -678,6 +695,22 @@ public class CalendarWeeklyPage extends AppCompatActivity implements NavBarView.
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return dateFormat.format(date.getTime());
+    }
+
+
+    private void highlightSelectedDay() {
+        sunDate.setTextColor(selectedDay == Calendar.SUNDAY ? Color.BLUE : Color.BLACK);
+        monDate.setTextColor(selectedDay == Calendar.MONDAY ? Color.BLUE : Color.BLACK);
+        tueDate.setTextColor(selectedDay == Calendar.TUESDAY ? Color.BLUE : Color.BLACK);
+        wedDate.setTextColor(selectedDay == Calendar.WEDNESDAY ? Color.BLUE : Color.BLACK);
+        thuDate.setTextColor(selectedDay == Calendar.THURSDAY ? Color.BLUE : Color.BLACK);
+        friDate.setTextColor(selectedDay == Calendar.FRIDAY ? Color.BLUE : Color.BLACK);
+        satDate.setTextColor(selectedDay == Calendar.SATURDAY ? Color.BLUE : Color.BLACK);
+    }
+
+    private void updateSelectedDay(int dayOfWeek) {
+        selectedDay = dayOfWeek;
+        highlightSelectedDay();
     }
 
 }

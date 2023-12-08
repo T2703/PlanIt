@@ -6,6 +6,30 @@
     android:layout_height="match_parent"
     tools:context="calendar.CalendarMonthlyPage">
 
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/primary_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    <!-- Add your header content here -->
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Monthly View"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:translationX="135dp" />
+
+    <!-- You can add more views as needed -->
+    </LinearLayout>
+
     <com.example.myapplication.NavBarView
         android:id="@+id/navbar"
         android:layout_width="match_parent"
@@ -18,9 +42,10 @@
             android:id="@+id/menu_calendar_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@null"
             android:translationX="360dp"
-            android:layout_marginTop="10dp"
+            android:translationY="10dp"
             app:srcCompat="@drawable/baseline_menu_24" />
     </com.example.myapplication.NavBarView>
 

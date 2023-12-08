@@ -36,15 +36,6 @@ public class TeamService {
     private String failure = "{\"message\":\"failure\"}";
 
     /**
-     * Retrieves all Teams from the repository.
-     *
-     * @return List of Team entities.
-     */
-    public List<Team> getAllTeams() {
-        return teamRepository.findAll();
-    }
-
-    /**
      * Retrieves a specific Team from the repository based on the provided ID.
      *
      * @param id The unique identifier of the Team.

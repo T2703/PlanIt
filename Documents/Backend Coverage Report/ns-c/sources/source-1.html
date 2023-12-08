@@ -1,0 +1,322 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > scheduleAnalysis</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">planIT.ScheduleAnalysis</a>
+</div>
+
+<h1>Coverage Summary for Class: scheduleAnalysis (planIT.ScheduleAnalysis)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">scheduleAnalysis</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/50)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">scheduleAnalysis$startDateComparator</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">scheduleAnalysis$startDayComparator</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/68)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package planIT.ScheduleAnalysis;
+&nbsp;
+&nbsp;import planIT.Entity.Events.*;
+&nbsp;import planIT.Entity.Users.*;
+&nbsp;import planIT.ScheduleCompare.scheduleCompare;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;/**
+&nbsp; * Utility class for analyzing a user&#39;s schedule and measuring weekly activity.
+&nbsp; * It provides a method to measure and display the number and duration of events for each day of the week.
+&nbsp; *
+&nbsp; * @author Chris Smith
+&nbsp; *
+&nbsp; */
+<b class="nc">&nbsp;public class scheduleAnalysis {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Measures and displays the weekly activity of a user based on their schedule.
+&nbsp;     *
+&nbsp;     * @param user The user for whom to measure weekly activity.
+&nbsp;     * @return A formatted string representing the weekly activity, including the number and total duration of events for each day.
+&nbsp;     */
+&nbsp;    static public String measureWeeklyActivity(User user){
+<b class="nc">&nbsp;        if(user == null){</b>
+<b class="nc">&nbsp;            return &quot;Invalid user&quot;;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Event&gt; userSchedule = new ArrayList&lt;&gt;(user.getEvents());</b>
+<b class="nc">&nbsp;        int[] dayNum = new int[7];</b>
+<b class="nc">&nbsp;        int[] dayCount = new int[7];</b>
+<b class="nc">&nbsp;        int[] dayLength = new int[7];</b>
+<b class="nc">&nbsp;        int weekCount = 1;</b>
+&nbsp;
+<b class="nc">&nbsp;        if(userSchedule.isEmpty()){</b>
+<b class="nc">&nbsp;            return &quot;Schedule is Empty&quot;;</b>
+&nbsp;        }
+&nbsp;        //SORT EVENT BY DAY OF THE WEEK
+&nbsp;        //userSchedule.sort(new scheduleAnalysis.startDayComparator());
+<b class="nc">&nbsp;        userSchedule.sort(new scheduleAnalysis.startDateComparator());</b>
+&nbsp;
+&nbsp;
+&nbsp;//        for(Event event: userSchedule) {    //DEBUG
+&nbsp;//            System.out.println(event.getStartDate());
+&nbsp;//        }
+&nbsp;        //COLLECT DATA
+<b class="nc">&nbsp;        Calendar cal = Calendar.getInstance();</b>
+&nbsp;
+&nbsp;        //for(Event event: userSchedule){
+<b class="nc">&nbsp;        for(int i=0; i&lt; userSchedule.size(); ++i){</b>
+<b class="nc">&nbsp;            cal.setTime(userSchedule.get(i).getStartDate());</b>
+<b class="nc">&nbsp;            dayNum[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;</b>
+<b class="nc">&nbsp;            dayLength[cal.get(Calendar.DAY_OF_WEEK)-1] += eventLength(userSchedule.get(i));</b>
+<b class="nc">&nbsp;            if(userSchedule.size()-1 &gt; i) {</b>
+<b class="nc">&nbsp;                if (userSchedule.get(i).getStartDate().getDate() != userSchedule.get(i + 1).getStartDate().getDate()) {</b>
+<b class="nc">&nbsp;                    dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;//        for(int day: dayCount){ //no div by 0
+&nbsp;//            if(day&lt;=1){
+&nbsp;//                day=1;
+&nbsp;//            }
+&nbsp;//        }
+<b class="nc">&nbsp;        for(int i=0; i&lt;7; ++i){</b>
+<b class="nc">&nbsp;            if(dayCount[i]&lt;=0){</b>
+<b class="nc">&nbsp;                dayCount[i] =1;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if(dayCount[i]&gt;weekCount){</b>
+<b class="nc">&nbsp;                weekCount = dayCount[i];</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        String week =</b>
+&nbsp;                &quot;Sunday&quot; + dayCount[0]+&quot;:\n    &quot; +dayNum[0] +&quot; Events, Average of &quot; +dayLength[0]/60/weekCount +&quot; Hours &quot; +dayLength[0]%60 +&quot; Minutes across &quot; +weekCount+&quot; week(s)\n&quot;
+<b class="nc">&nbsp;                        +toLine(dayLength[0]/weekCount)</b>
+&nbsp;                        +&quot;Monday&quot; + dayCount[1]+&quot;:\n    &quot; +dayNum[1] +&quot; Events, Average of &quot; +dayLength[1]/60/weekCount +&quot; Hours &quot; +dayLength[1]%60 +&quot; Minutes across &quot; +weekCount+&quot; week(s)\n&quot;
+<b class="nc">&nbsp;                        +toLine(dayLength[1]/weekCount)</b>
+&nbsp;                        +&quot;Tuesday&quot; + dayCount[2]+&quot;:\n   &quot; +dayNum[2] +&quot; Events, Average of &quot; +dayLength[2]/60/weekCount +&quot; Hours &quot; +dayLength[2]%60 +&quot; Minutes across &quot; +weekCount+&quot; week(s)\n&quot;
+<b class="nc">&nbsp;                        +toLine(dayLength[2]/weekCount)</b>
+&nbsp;                        +&quot;Wednesday&quot; + dayCount[3]+&quot;:\n &quot; +dayNum[3] +&quot; Events, Average of &quot; +dayLength[3]/60/weekCount +&quot; Hours &quot; +dayLength[3]%60 +&quot; Minutes across &quot; +weekCount+&quot; week(s)\n&quot;
+<b class="nc">&nbsp;                        +toLine(dayLength[3]/weekCount)</b>
+&nbsp;                        +&quot;Thursday&quot; + dayCount[4]+&quot;:\n  &quot; +dayNum[4] +&quot; Events, Average of &quot; +dayLength[4]/60/weekCount +&quot; Hours &quot; +dayLength[4]%60 +&quot; Minutes across &quot; +weekCount+&quot; week(s)\n&quot;
+<b class="nc">&nbsp;                        +toLine(dayLength[4]/weekCount)</b>
+&nbsp;                        +&quot;Friday&quot; + dayCount[5]+&quot;:\n    &quot; +dayNum[5] +&quot; Events, Average of &quot; +dayLength[5]/60/weekCount +&quot; Hours &quot; +dayLength[5]%60 +&quot; Minutes across &quot; +weekCount+&quot; week(s)\n&quot;
+<b class="nc">&nbsp;                        +toLine(dayLength[5]/weekCount)</b>
+&nbsp;                        +&quot;Saturday&quot; + dayCount[6]+&quot;:\n  &quot; +dayNum[6] +&quot; Events, Average of &quot; +dayLength[6]/60/weekCount +&quot; Hours &quot; +dayLength[6]%60 +&quot; Minutes across &quot; +weekCount+&quot; week(s)\n&quot;
+<b class="nc">&nbsp;                        +toLine(dayLength[6]/weekCount)</b>
+&nbsp;                ;
+&nbsp;
+<b class="nc">&nbsp;        return week;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the duration of an event in minutes.
+&nbsp;     *
+&nbsp;     * @param event The event for which to calculate the duration.
+&nbsp;     * @return The duration of the event in minutes.
+&nbsp;     */
+&nbsp;    static private int eventLength(Event event) {
+<b class="nc">&nbsp;        int start = 0;</b>
+<b class="nc">&nbsp;        int end = 0;</b>
+<b class="nc">&nbsp;        int length =0;</b>
+<b class="nc">&nbsp;        if (event.getStartDate().getDate() != event.getEndDate().getDate()){</b>
+<b class="nc">&nbsp;            Date temp = event.getStartDate();</b>
+<b class="nc">&nbsp;            while(temp.getDate()!=event.getEndDate().getDate()){</b>
+<b class="nc">&nbsp;                length += 1440;</b>
+<b class="nc">&nbsp;                temp.setDate(temp.getDate()+1);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        start = event.getStartDate().getHours() * 60 + event.getStartDate().getMinutes();</b>
+<b class="nc">&nbsp;        end = event.getEndDate().getHours() * 60 + event.getEndDate().getMinutes();</b>
+<b class="nc">&nbsp;        length = length + end-start;</b>
+<b class="nc">&nbsp;        return length;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Generates a line of dashes representing the duration of an event.
+&nbsp;     *
+&nbsp;     * @param length The length of the line.
+&nbsp;     * @return A string representing the line of dashes.
+&nbsp;     */
+&nbsp;    static private String toLine(int length){
+<b class="nc">&nbsp;        String line =&quot;[&quot;;</b>
+<b class="nc">&nbsp;        for(int i=0; i&lt;length/10; ++i){</b>
+<b class="nc">&nbsp;            line += &quot;-&quot;;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        line += &quot;]\n&quot;;</b>
+<b class="nc">&nbsp;        return line;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Comparator for sorting events based on the day of the week.
+&nbsp;     */
+<b class="nc">&nbsp;    static private class startDayComparator implements Comparator&lt;Event&gt; {</b>
+&nbsp;        public int compare(Event event1, Event event2){
+<b class="nc">&nbsp;            Calendar cal1 = Calendar.getInstance();</b>
+<b class="nc">&nbsp;            Calendar cal2 = Calendar.getInstance();</b>
+<b class="nc">&nbsp;            cal1.setTime(event1.getStartDate());</b>
+<b class="nc">&nbsp;            cal2.setTime(event2.getStartDate());</b>
+&nbsp;
+<b class="nc">&nbsp;            if(cal1.get(Calendar.DAY_OF_WEEK) == cal2.get(Calendar.DAY_OF_WEEK)){</b>
+<b class="nc">&nbsp;                return 0;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            else if(cal1.get(Calendar.DAY_OF_WEEK) &gt; cal2.get(Calendar.DAY_OF_WEEK)){</b>
+<b class="nc">&nbsp;                return 1;</b>
+&nbsp;            }
+&nbsp;            else{
+<b class="nc">&nbsp;                return -1;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //COMPARATOR FOR EVENTS, based on startDate
+&nbsp;    /**
+&nbsp;     * Enables events to be compared and sorted based on their start dates
+&nbsp;     */
+<b class="nc">&nbsp;    static private class startDateComparator implements Comparator&lt;Event&gt; {</b>
+&nbsp;        public int compare(Event event1, Event event2) {
+<b class="nc">&nbsp;            if (event1.getStartDate() == null || event2.getStartDate() == null) {</b>
+<b class="nc">&nbsp;                return 0;</b>
+<b class="nc">&nbsp;            } else if (event1.getStartDate().equals(event2.getStartDate())) {</b>
+<b class="nc">&nbsp;                return 0;</b>
+<b class="nc">&nbsp;            } else if (event1.getStartDate().after(event2.getStartDate())) {</b>
+<b class="nc">&nbsp;                return 1;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                return -1;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-07 23:50</div>
+</div>
+</body>
+</html>
