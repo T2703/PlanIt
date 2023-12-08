@@ -148,6 +148,7 @@ public class GroupInfo extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.to_chat_option) {
                             Intent intent = new Intent(GroupInfo.this, MessageView.class);
+                            intent.putExtra("group_id", getting_group_id);
                             startActivity(intent);
                         }
 
