@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import api.VolleySingleton;
 import homepage.HomePage;
@@ -78,6 +81,63 @@ public class FollowersPage extends AppCompatActivity {
                 startActivity(intent, options.toBundle());
             }
         });
+    }
+
+    /**
+     * Creates the options menu for the activity, including the search bar.
+     *
+     * @param menu The options menu in which the items are placed.
+     * @return {@code true} if the menu is to be displayed; {@code false} otherwise.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // So yeah basically creates the search bar.
+        getMenuInflater().inflate(R.menu.event_search_bar, menu);
+        MenuItem search_event = menu.findItem(R.id.searchBar);
+        search_view = (SearchView) search_event.getActionView();
+
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterText(newText, eventTextTypes);
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    /**
+     * Filters the list of events based on the entered text and selected event types.
+     *
+     * @param text       The text to be searched in event names.
+     * @param eventTypes The set of selected event types for filtering.
+     */
+    private void filterText(String text, Set<String> eventTypes) {
+        // List to filter the data.
+        ArrayList<UserFollower> filtered_user_list = new ArrayList<UserFollower>();
+
+        Pattern pattern = Pattern.compile("\\b" + Pattern.quote(text), Pattern.CASE_INSENSITIVE);
+
+        // Iterate we are using this to compare each event.
+        // And this is how we shared.
+        for (UserFollower user_item : user_list) {
+            if (pattern.matcher(user_item.getUserName()).find()) {
+                filtered_user_list.add(user_item);
+            }
+        }
+
+        // Well I mean there is nothing lol so you'll get this.
+        if (filtered_user_list.isEmpty()) {
+            Log.d("We Are The Empty", "DeSense"); // This a cool song you should totally check it out!
+        } else {
+            adapter.filterUserList(filtered_user_list);
+        }
     }
 
     /**
