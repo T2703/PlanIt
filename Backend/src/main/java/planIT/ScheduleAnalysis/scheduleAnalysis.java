@@ -51,7 +51,7 @@ public class scheduleAnalysis {
             cal.setTime(userSchedule.get(i).getStartDate());
             dayNum[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             dayLength[cal.get(Calendar.DAY_OF_WEEK)-1] += eventLength(userSchedule.get(i));
-            if(userSchedule.size()-2 >= i) {
+            if(userSchedule.size()-1 > i) {
                 if (userSchedule.get(i).getStartDate().getDate() != userSchedule.get(i + 1).getStartDate().getDate()) {
                     dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
                 }
@@ -73,19 +73,19 @@ public class scheduleAnalysis {
         }
 
         String week =
-                "Sunday" + dayCount[0]+":    " +dayNum[0] +" Events, Average of " +dayLength[0]/60/weekCount +" Hours " +dayLength[0]%60 +" Minutes across " +weekCount+" week(s)\n"
+                "Sunday" + dayCount[0]+":\n    " +dayNum[0] +" Events, Average of " +dayLength[0]/60/weekCount +" Hours " +dayLength[0]%60 +" Minutes across " +weekCount+" week(s)\n"
                         +toLine(dayLength[0]/weekCount)
-                        +"Monday" + dayCount[1]+":    " +dayNum[1] +" Events, Average of " +dayLength[1]/60/weekCount +" Hours " +dayLength[1]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +"Monday" + dayCount[1]+":\n    " +dayNum[1] +" Events, Average of " +dayLength[1]/60/weekCount +" Hours " +dayLength[1]%60 +" Minutes across " +weekCount+" week(s)\n"
                         +toLine(dayLength[1]/weekCount)
-                        +"Tuesday" + dayCount[2]+":   " +dayNum[2] +" Events, Average of " +dayLength[2]/60/weekCount +" Hours " +dayLength[2]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +"Tuesday" + dayCount[2]+":\n   " +dayNum[2] +" Events, Average of " +dayLength[2]/60/weekCount +" Hours " +dayLength[2]%60 +" Minutes across " +weekCount+" week(s)\n"
                         +toLine(dayLength[2]/weekCount)
-                        +"Wednesday" + dayCount[3]+": " +dayNum[3] +" Events, Average of " +dayLength[3]/60/weekCount +" Hours " +dayLength[3]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +"Wednesday" + dayCount[3]+":\n " +dayNum[3] +" Events, Average of " +dayLength[3]/60/weekCount +" Hours " +dayLength[3]%60 +" Minutes across " +weekCount+" week(s)\n"
                         +toLine(dayLength[3]/weekCount)
-                        +"Thursday" + dayCount[4]+":  " +dayNum[4] +" Events, Average of " +dayLength[4]/60/weekCount +" Hours " +dayLength[4]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +"Thursday" + dayCount[4]+":\n  " +dayNum[4] +" Events, Average of " +dayLength[4]/60/weekCount +" Hours " +dayLength[4]%60 +" Minutes across " +weekCount+" week(s)\n"
                         +toLine(dayLength[4]/weekCount)
-                        +"Friday" + dayCount[5]+":    " +dayNum[5] +" Events, Average of " +dayLength[5]/60/weekCount +" Hours " +dayLength[5]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +"Friday" + dayCount[5]+":\n    " +dayNum[5] +" Events, Average of " +dayLength[5]/60/weekCount +" Hours " +dayLength[5]%60 +" Minutes across " +weekCount+" week(s)\n"
                         +toLine(dayLength[5]/weekCount)
-                        +"Saturday" + dayCount[6]+":  " +dayNum[6] +" Events, Average of " +dayLength[6]/60/weekCount +" Hours " +dayLength[6]%60 +" Minutes across " +weekCount+" week(s)\n"
+                        +"Saturday" + dayCount[6]+":\n  " +dayNum[6] +" Events, Average of " +dayLength[6]/60/weekCount +" Hours " +dayLength[6]%60 +" Minutes across " +weekCount+" week(s)\n"
                         +toLine(dayLength[6]/weekCount)
                 ;
 
