@@ -157,7 +157,7 @@ public class scheduleCompare {
 
         //IF NO EVENTS
         if (available.isEmpty()) {
-            return ("Available: \n  " + rangeStart.toString() + " - " + rangeEnd.toString() + "\n");
+            return ("Available: \n  " + formatDate(rangeStart) + " - " + formatDate(rangeEnd) + "\n");
         }
         //OTHERWISE
         StringBuilder availability = new StringBuilder("Available: \n");
