@@ -89,7 +89,7 @@ public class ScheduleCompareSystemTest {
                 contentType("application/json").
                 body(event2).
                 when().
-                get("/compareSchedule/1/dates");
+                put("/compareSchedule/1/dates");
         int statusCode3 = response3.getStatusCode();
         assertEquals(200, statusCode3);
         System.out.println(response3.getBody());
@@ -120,7 +120,7 @@ public class ScheduleCompareSystemTest {
                 contentType("application/json").
                 body(event2).
                 when().
-                get("/compareBy30/1/dates");
+                put("/compareBy30/1/dates");
         int statusCode3 = response3.getStatusCode();
         assertEquals(200, statusCode3);
         System.out.println(response3.getBody());

@@ -1,5 +1,6 @@
 package planIT.ScheduleCompare;
 
+import org.json.JSONObject;
 import planIT.Entity.Events.Event;
 import planIT.Entity.Teams.Team;
 import planIT.Entity.Users.User;
@@ -156,9 +157,8 @@ public class scheduleCompare {
 
         //IF NO EVENTS
         if (available.isEmpty()) {
-            return ("Available: \n  " + rangeStart.toString() + " - " + rangeEnd.toString() + '\n');
+            return ("Available: \n  " + rangeStart.toString() + " - " + rangeEnd.toString() + "\n");
         }
-
         //OTHERWISE
         StringBuilder availability = new StringBuilder("Available: \n");
         for (Event event : available) {
@@ -166,6 +166,19 @@ public class scheduleCompare {
         }
 
         return availability.toString();
+    }
+
+    static public JSONObject compareStandard2(Team team, Date rangeStart, Date rangeEnd) {
+        List<Event> available = compareSchedule(team, rangeStart, rangeEnd);
+
+        List<String> available2 = new ArrayList<>();
+
+        for(Event event: available){
+            available2.add(formatDate(event.getStartDate())+" - " +formatDate(event.getEndDate()));
+        }
+
+        JSONObject temp = new JSONObject();
+        return temp;
     }
 
     //RETURNS AVAILABILITY IN HALF HOUR INCREMENTS
@@ -245,7 +258,7 @@ public class scheduleCompare {
      * @return String based on specified format
      */
     private static String formatDate(Date inputDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd hh:mm a yyyy", Locale.US);
         return sdf.format(inputDate);
     }
 

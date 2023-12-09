@@ -2,6 +2,7 @@ package planIT.ScheduleCompare;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import planIT.Entity.Events.Event;
@@ -25,7 +26,7 @@ public class scheduleCompareController {
         this.teamRepository = teamRepository;
     }
 
-    @GetMapping(path = "/compareSchedule/{teamId}/dates")
+    @PutMapping(path = "/compareSchedule/{teamId}/dates")
     @Operation(summary = "Compares team schedules, returns Event List", description = "Compares the events of a team and returns the availability as an Event List")
     public List<Event> compareSchedule(@PathVariable int teamId, @RequestBody Event event) {
 
@@ -48,14 +49,32 @@ public class scheduleCompareController {
         Team target = teamRepository.findById(teamId);
         String returnString = scheduleCompare.compareStandard(target, start, end);
 
-        System.out.println(returnString);
-
         String success = "{\"message\":\"" +returnString.substring(12) +"\"}";
+        //returnString = returnString.substring(12);
 
         return success;
     }
 
-    @GetMapping(path = "/compareBy30/{teamId}/dates")
+    /**
+     * Returns available times as pairs of dates in string objects
+     * @param teamId
+     * @param event
+     * @return
+     */
+    @PutMapping(path = "/compareStandard2/{teamId}/dates")
+    @Operation(summary = "Compares team schedules, returns a String", description = "Compares the events of a team and returns the availability as a String")
+    public JSONObject compareStandard2(@PathVariable int teamId, @RequestBody Event event) {
+
+        Date start = event.getStartDate();
+        Date end = event.getEndDate();
+
+        Team target = teamRepository.findById(teamId);
+        JSONObject available = scheduleCompare.compareStandard2(target, start, end);
+
+        return available;
+    }
+
+    @PutMapping(path = "/compareBy30/{teamId}/dates")
     @Operation(summary = "Compares team schedules by 30 mins, returns a String", description = "Compares the events of a team in 30 minute increments and returns the availability as a String")
     public String compareBy30(@PathVariable int teamId, @RequestBody Event event) {
 
