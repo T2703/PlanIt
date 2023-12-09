@@ -73,20 +73,20 @@ public class scheduleAnalysis {
         }
 
         String week =
-                "Sunday:\n" +dayNum[0] +" Events, Average of " +dayLength[0]/60/weekCount +" Hours " +dayLength[0]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[0]/weekCount) +"\n"
-                        +"Monday:\n" +dayNum[1] +" Events, Average of " +dayLength[1]/60/weekCount +" Hours " +dayLength[1]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[1]/weekCount) +"\n"
-                        +"Tuesday:\n" +dayNum[2] +" Events, Average of " +dayLength[2]/60/weekCount +" Hours " +dayLength[2]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[2]/weekCount) +"\n"
-                        +"Wednesday:\n" +dayNum[3] +" Events, Average of " +dayLength[3]/60/weekCount +" Hours " +dayLength[3]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[3]/weekCount) +"\n"
-                        +"Thursday:\n" +dayNum[4] +" Events, Average of " +dayLength[4]/60/weekCount +" Hours " +dayLength[4]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[4]/weekCount) +"\n"
-                        +"Friday:\n" +dayNum[5] +" Events, Average of " +dayLength[5]/60/weekCount +" Hours " +dayLength[5]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[5]/weekCount) +"\n"
-                        +"Saturday:\n" +dayNum[6] +" Events, Average of " +dayLength[6]/60/weekCount +" Hours " +dayLength[6]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[6]/weekCount)
+                "Sunday:\n" +dayNum[0] +" Events, Average of " +dayLength[0]/60/dayCount[0] +" Hours " +dayLength[0]%60 +" Minutes across " +dayCount[0]+" day(s)\n"
+                        +toLine(dayLength[0]/dayCount[0]) +"\n"
+                        +"Monday:\n" +dayNum[1] +" Events, Average of " +dayLength[1]/60/dayCount[1] +" Hours " +dayLength[1]%60 +" Minutes across " +dayCount[1]+" day(s)\n"
+                        +toLine(dayLength[1]/dayCount[1]) +"\n"
+                        +"Tuesday:\n" +dayNum[2] +" Events, Average of " +dayLength[2]/60/dayCount[2] +" Hours " +dayLength[2]%60 +" Minutes across " +dayCount[2]+" day(s)\n"
+                        +toLine(dayLength[2]/dayCount[2]) +"\n"
+                        +"Wednesday:\n" +dayNum[3] +" Events, Average of " +dayLength[3]/60/dayCount[3] +" Hours " +dayLength[3]%60 +" Minutes across " +dayCount[3]+" day(s)\n"
+                        +toLine(dayLength[3]/dayCount[3]) +"\n"
+                        +"Thursday:\n" +dayNum[4] +" Events, Average of " +dayLength[4]/60/dayCount[4] +" Hours " +dayLength[4]%60 +" Minutes across " +dayCount[4]+" day(s)\n"
+                        +toLine(dayLength[4]/dayCount[4]) +"\n"
+                        +"Friday:\n" +dayNum[5] +" Events, Average of " +dayLength[5]/60/dayCount[5] +" Hours " +dayLength[5]%60 +" Minutes across " +dayCount[5]+" day(s)\n"
+                        +toLine(dayLength[5]/dayCount[5]) +"\n"
+                        +"Saturday:\n" +dayNum[6] +" Events, Average of " +dayLength[6]/60/dayCount[6] +" Hours " +dayLength[6]%60 +" Minutes across " +dayCount[6]+" day(s)\n"
+                        +toLine(dayLength[6]/dayCount[6])
                 ;
 
         return week;
