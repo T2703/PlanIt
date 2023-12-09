@@ -30,63 +30,56 @@ public class scheduleAnalysis {
         int[] dayNum = new int[7];
         int[] dayCount = new int[7];
         int[] dayLength = new int[7];
-        int weekCount = 1;
+
 
         if(userSchedule.isEmpty()){
             return "Schedule is Empty";
         }
-        //SORT EVENT BY DAY OF THE WEEK
-        //userSchedule.sort(new scheduleAnalysis.startDayComparator());
+        //SORT Event BY DAY OF THE WEEK
         userSchedule.sort(new scheduleAnalysis.startDateComparator());
+        //userSchedule.sort(new scheduleAnalysis.startDayComparator());
 
-
-//        for(Event event: userSchedule) {    //DEBUG
-//            System.out.println(event.getStartDate());
-//        }
         //COLLECT DATA
         Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
 
-        //for(Event event: userSchedule){
         for(int i=0; i< userSchedule.size(); ++i){
             cal.setTime(userSchedule.get(i).getStartDate());
             dayNum[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             dayLength[cal.get(Calendar.DAY_OF_WEEK)-1] += eventLength(userSchedule.get(i));
             if(userSchedule.size()-1 > i) {
-                if (userSchedule.get(i).getStartDate().getDate() != userSchedule.get(i + 1).getStartDate().getDate()) {
-                    dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
+                cal2.setTime(userSchedule.get(i+1).getStartDate());
+                if (!isSameDay(cal, cal2)) {
+                    dayCount[cal.get(Calendar.DAY_OF_WEEK)-1] += 1;
                 }
+            }else{
+                dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             }
+
         }
 
-//        for(int day: dayCount){ //no div by 0
-//            if(day<=1){
-//                day=1;
-//            }
-//        }
-        for(int i=0; i<7; ++i){
+
+        for(int i=0; i<7; ++i){  //no div by zero
             if(dayCount[i]<=0){
                 dayCount[i] =1;
-            }
-            if(dayCount[i]>weekCount){
-                weekCount = dayCount[i];
             }
         }
 
         String week =
-                "Sunday:\n" +dayNum[0] +" Events, Average of " +dayLength[0]/60/weekCount +" Hours " +dayLength[0]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[0]/weekCount) +"\n"
-                        +"Monday:\n" +dayNum[1] +" Events, Average of " +dayLength[1]/60/weekCount +" Hours " +dayLength[1]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[1]/weekCount) +"\n"
-                        +"Tuesday:\n" +dayNum[2] +" Events, Average of " +dayLength[2]/60/weekCount +" Hours " +dayLength[2]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[2]/weekCount) +"\n"
-                        +"Wednesday:\n" +dayNum[3] +" Events, Average of " +dayLength[3]/60/weekCount +" Hours " +dayLength[3]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[3]/weekCount) +"\n"
-                        +"Thursday:\n" +dayNum[4] +" Events, Average of " +dayLength[4]/60/weekCount +" Hours " +dayLength[4]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[4]/weekCount) +"\n"
-                        +"Friday:\n" +dayNum[5] +" Events, Average of " +dayLength[5]/60/weekCount +" Hours " +dayLength[5]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[5]/weekCount) +"\n"
-                        +"Saturday:\n" +dayNum[6] +" Events, Average of " +dayLength[6]/60/weekCount +" Hours " +dayLength[6]%60 +" Minutes across " +weekCount+" week(s)\n"
-                        +toLine(dayLength[6]/weekCount)
+                "Sunday:\n" +dayNum[0] +" Events, Average of " +dayLength[0]/60/dayCount[0] +" Hours " +dayLength[0]%60 +" Minutes across " +dayCount[0]+" day(s)\n"
+                        +toLine(dayLength[0]/dayCount[0]) +"\n"
+                        +"Monday:\n" +dayNum[1] +" Events, Average of " +dayLength[1]/60/dayCount[1] +" Hours " +dayLength[1]%60 +" Minutes across " +dayCount[1]+" day(s)\n"
+                        +toLine(dayLength[1]/dayCount[1]) +"\n"
+                        +"Tuesday:\n" +dayNum[2] +" Events, Average of " +dayLength[2]/60/dayCount[2] +" Hours " +dayLength[2]%60 +" Minutes across " +dayCount[2]+" day(s)\n"
+                        +toLine(dayLength[2]/dayCount[2]) +"\n"
+                        +"Wednesday:\n" +dayNum[3] +" Events, Average of " +dayLength[3]/60/dayCount[3] +" Hours " +dayLength[3]%60 +" Minutes across " +dayCount[3]+" day(s)\n"
+                        +toLine(dayLength[3]/dayCount[3]) +"\n"
+                        +"Thursday:\n" +dayNum[4] +" Events, Average of " +dayLength[4]/60/dayCount[4] +" Hours " +dayLength[4]%60 +" Minutes across " +dayCount[4]+" day(s)\n"
+                        +toLine(dayLength[4]/dayCount[4]) +"\n"
+                        +"Friday:\n" +dayNum[5] +" Events, Average of " +dayLength[5]/60/dayCount[5] +" Hours " +dayLength[5]%60 +" Minutes across " +dayCount[5]+" day(s)\n"
+                        +toLine(dayLength[5]/dayCount[5]) +"\n"
+                        +"Saturday:\n" +dayNum[6] +" Events, Average of " +dayLength[6]/60/dayCount[6] +" Hours " +dayLength[6]%60 +" Minutes across " +dayCount[6]+" day(s)\n"
+                        +toLine(dayLength[6]/dayCount[6])
                 ;
 
         return week;
@@ -169,6 +162,12 @@ public class scheduleAnalysis {
                 return -1;
             }
         }
+    }
+
+    // Helper method to check if two Calendar instances represent the same day
+    private static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
 }
