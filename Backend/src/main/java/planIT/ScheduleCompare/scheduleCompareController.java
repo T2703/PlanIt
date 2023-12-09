@@ -50,7 +50,7 @@ public class scheduleCompareController {
 
         System.out.println(returnString);
 
-        String success = "{\"message\":\"" +returnString.substring(11) +"\"}";
+        String success = "{\"message\":\"" +returnString.substring(12) +"\"}";
 
         return success;
     }
