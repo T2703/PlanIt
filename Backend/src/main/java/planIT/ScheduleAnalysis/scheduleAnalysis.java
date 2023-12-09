@@ -36,8 +36,8 @@ public class scheduleAnalysis {
             return "Schedule is Empty";
         }
         //SORT EVENT BY DAY OF THE WEEK
-        //userSchedule.sort(new scheduleAnalysis.startDayComparator());
         userSchedule.sort(new scheduleAnalysis.startDateComparator());
+        userSchedule.sort(new scheduleAnalysis.startDayComparator());
 
 
 //        for(Event event: userSchedule) {    //DEBUG
@@ -55,8 +55,11 @@ public class scheduleAnalysis {
                 if (userSchedule.get(i).getStartDate().getDate() != userSchedule.get(i + 1).getStartDate().getDate()) {
                     dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
                 }
+            }else{
+                dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             }
         }
+
 
 //        for(int day: dayCount){ //no div by 0
 //            if(day<=1){
