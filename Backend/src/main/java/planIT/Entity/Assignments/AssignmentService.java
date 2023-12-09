@@ -11,8 +11,8 @@ import planIT.Entity.Users.UserRepository;
  * Service class for assignment entity
  */
 @Service
-    @Transactional
-    public class AssignmentService {
+@Transactional
+public class AssignmentService {
 
         @Autowired
         private AssignmentRepository assignmentRepository;
@@ -38,12 +38,13 @@ import planIT.Entity.Users.UserRepository;
      * @return success
      */
     public Assignment getAssignmentById(int id) {
-            return assignmentRepository.findById(id);
-        }
+        return assignmentRepository.findById(id);
+    }
 
         public String createAssignment(String username, Assignment assignment) {
             assignment.setUser(userRepository.findByUsername(username));
             assignmentRepository.save(assignment);
+
             return success;
         }
 
