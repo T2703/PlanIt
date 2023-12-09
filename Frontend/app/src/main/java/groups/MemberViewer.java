@@ -89,7 +89,7 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
     /**
      * The URL for making the calls.
      */
-    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
+    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     /**
      * Initializes the MemberViewer activity, setting up the UI components and handling user interactions.
@@ -215,7 +215,7 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
     private void getGroupsRequest() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                TEAMS_URL,
+                TEAMS_URL + WebSocketManager.getInstance().getUsername() + "/teams",
                 new Response.Listener<String>() {
                     /**
                      * Callback method that is invoked when a network request succeeds and returns a response.
@@ -243,7 +243,7 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
                                 String id = jsonObject.getString("id");
 
                                 member_list.add(0, new Member(name, description, id));
-                                Log.d("List", id);
+                                Log.d("URLsz", TEAMS_URL);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

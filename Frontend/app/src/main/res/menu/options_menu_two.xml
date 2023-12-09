@@ -8,6 +8,10 @@
         android:title="Add Users"
         />
     <item
+        android:id="@+id/view_members"
+        android:title="Members"
+        />
+    <item
         android:id="@+id/edit_option"
         android:title="Edit Group"
         />
