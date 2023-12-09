@@ -1,5 +1,6 @@
 package calendar;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.List;
 import api.VolleySingleton;
 import events.EditEventPage;
 import events.Event;
+import events.EventInfoPage;
 import websockets.WebSocketManager;
 
 /**
@@ -45,6 +47,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
      * The context.
      */
     private Context context;
+
+    /**
+     * Is manager.
+     */
+    private Boolean isManager;
 
     /**
      * Adapter constructor for constructing the adapter.
@@ -149,7 +156,19 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                             }
                         }
                         else if (menuItem.getItemId() == R.id.info_option) {
-                            int position = holder.getAdapterPosition();
+                            Intent intent = new Intent(v.getContext(), EventInfoPage.class);
+
+                            //This should pass the data into the next page.
+                            intent.putExtra("id", event.getId());
+                            intent.putExtra("name", event.getName());
+                            intent.putExtra("description", event.getDescription());
+                            intent.putExtra("location", event.getLocation());
+                            intent.putExtra("type", event.getType());
+                            intent.putExtra("start_date", event.getStartTime());
+                            intent.putExtra("end_date", event.getEndTime());
+
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(v.getContext(), R.anim.empty_anim, R.anim.empty_anim);
+                            v.getContext().startActivity(intent, options.toBundle());
 
 
                         }
@@ -255,6 +274,50 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                             intent.putExtra("id", jsonObject.getString("id"));
 
                             context.startActivity(intent);
+
+                        } catch(JSONException err) {
+                            err.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    /**
+                     * Callback method that is invoked when a network request encounters an error.
+                     *
+                     * @param error The VolleyError object containing information about the error.
+                     *              This can include details such as the error message, network response, and more.
+                     *              It can be used for debugging and handling specific error scenarios.
+                     */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e("A server error has occurred", error.toString());
+                    }
+                }
+        );
+
+        // Adding request to request queue
+        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+
+    private void getEventManager(String eventId) {
+        String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                URL_STRING_REQ,
+                new Response.Listener<String>() {
+                    /**
+                     * Callback method that is invoked when a network request succeeds and returns a response.
+                     *
+                     * @param response The response received from the network request.
+                     *                 It is expected to be a JSON string representing an array.
+                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
+                     */
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
 
                         } catch(JSONException err) {
                             err.printStackTrace();

@@ -40,6 +40,7 @@ import events.CreateEventPage;
 import events.Event;
 import homepage.HomePage;
 import profile.ProfilePage;
+import profile.ProfilePageViewer;
 import websockets.WebSocketManager;
 
 /**
@@ -310,7 +311,7 @@ public class MemberViewer extends AppCompatActivity implements NavBarView.OnButt
      */
     @Override
     public void onProfileButtonClick() {
-        Intent intent = new Intent(MemberViewer.this, ProfilePage.class);
+        Intent intent = new Intent(MemberViewer.this, ProfilePageViewer.class);
         options = ActivityOptions.makeCustomAnimation(MemberViewer.this, R.anim.empty_anim, R.anim.empty_anim);
         startActivity(intent, options.toBundle());
     }
