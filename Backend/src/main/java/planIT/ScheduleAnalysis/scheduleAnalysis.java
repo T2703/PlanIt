@@ -30,14 +30,22 @@ public class scheduleAnalysis {
         int[] dayNum = new int[7];
         int[] dayCount = new int[7];
         int[] dayLength = new int[7];
+        ArrayList<Date> Sunday = new ArrayList<>();
+        ArrayList<Date> Monday = new ArrayList<>();
+        ArrayList<Date> Tuesday = new ArrayList<>();
+        ArrayList<Date> Wednesday = new ArrayList<>();
+        ArrayList<Date> Thursday = new ArrayList<>();
+        ArrayList<Date> Friday = new ArrayList<>();
+        ArrayList<Date> Saturday = new ArrayList<>();
+
         int weekCount = 1;
 
         if(userSchedule.isEmpty()){
             return "Schedule is Empty";
         }
-        //SORT EVENT BY DAY OF THE WEEK
+        //SORT Event BY DAY OF THE WEEK
         userSchedule.sort(new scheduleAnalysis.startDateComparator());
-        userSchedule.sort(new scheduleAnalysis.startDayComparator());
+        //userSchedule.sort(new scheduleAnalysis.startDayComparator());
 
 
 //        for(Event event: userSchedule) {    //DEBUG
@@ -45,27 +53,24 @@ public class scheduleAnalysis {
 //        }
         //COLLECT DATA
         Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
 
-        //for(Event event: userSchedule){
         for(int i=0; i< userSchedule.size(); ++i){
             cal.setTime(userSchedule.get(i).getStartDate());
             dayNum[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             dayLength[cal.get(Calendar.DAY_OF_WEEK)-1] += eventLength(userSchedule.get(i));
             if(userSchedule.size()-1 > i) {
-                if (userSchedule.get(i).getStartDate().getDate() != userSchedule.get(i + 1).getStartDate().getDate()) {
-                    dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
+                cal2.setTime(userSchedule.get(i+1).getStartDate());
+                if (!isSameDay(cal, cal2)) {
+                    dayCount[cal.get(Calendar.DAY_OF_WEEK)-1] += 1;
                 }
             }else{
                 dayCount[cal.get(Calendar.DAY_OF_WEEK) - 1] += 1;
             }
+
         }
 
 
-//        for(int day: dayCount){ //no div by 0
-//            if(day<=1){
-//                day=1;
-//            }
-//        }
         for(int i=0; i<7; ++i){
             if(dayCount[i]<=0){
                 dayCount[i] =1;
@@ -172,6 +177,12 @@ public class scheduleAnalysis {
                 return -1;
             }
         }
+    }
+
+    // Helper method to check if two Calendar instances represent the same day
+    private static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
 }
