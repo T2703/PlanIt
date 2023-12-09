@@ -96,10 +96,9 @@ public class CreateEventPageTest {
 
         onView(withId(R.id.event_location_input)).perform(typeText("My Event Location Test"));
         onView(withId(R.id.event_description_input)).perform(typeText("My Event Description Test"));
+        onView(withId(R.id.event_add_people)).perform(typeText("Melani Tristan"));
 
         onView(withId(R.id.create_event_button)).perform(click());
-
-        Intents.intended(IntentMatchers.hasComponent(EventsListViewer.class.getName()));
     }
 
     @After

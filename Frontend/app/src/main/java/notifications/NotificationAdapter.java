@@ -70,16 +70,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.notificationTitle.setText(notification.getTitle());
         holder.notificationDescription.setText(notification.getDescription());
-
-        if (!notification.getIsRead()) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#C5C5C5"));
-        }
-
-        if (notification.getIsSelected()) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFF5E0"));
-        } else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-        }
     }
 
     /**

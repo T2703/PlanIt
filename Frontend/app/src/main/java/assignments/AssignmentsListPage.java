@@ -1,6 +1,7 @@
 package assignments;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,7 +31,7 @@ public class AssignmentsListPage extends AppCompatActivity {
 
         AssignmentsHelper.populateAssignments(this);
 
-        assignmentsAdapter = new AssignmentAdapter(assignmentsList);
+        assignmentsAdapter = new AssignmentAdapter(assignmentsList, new TextView(this));
         assignmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         assignmentsRecyclerView.setAdapter(assignmentsAdapter);
     }
