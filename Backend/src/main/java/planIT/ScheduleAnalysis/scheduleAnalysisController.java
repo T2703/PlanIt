@@ -41,8 +41,6 @@ public class scheduleAnalysisController {
 
         User user = userRepository.findById(userId);
         String temp = scheduleAnalysis.measureWeeklyActivity(user);
-        System.out.println(user.getUsername() +" " +user.getEvents().size());
-        System.out.println(temp);
 
         return temp;
     }

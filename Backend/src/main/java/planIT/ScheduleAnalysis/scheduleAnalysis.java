@@ -30,15 +30,7 @@ public class scheduleAnalysis {
         int[] dayNum = new int[7];
         int[] dayCount = new int[7];
         int[] dayLength = new int[7];
-        ArrayList<Date> Sunday = new ArrayList<>();
-        ArrayList<Date> Monday = new ArrayList<>();
-        ArrayList<Date> Tuesday = new ArrayList<>();
-        ArrayList<Date> Wednesday = new ArrayList<>();
-        ArrayList<Date> Thursday = new ArrayList<>();
-        ArrayList<Date> Friday = new ArrayList<>();
-        ArrayList<Date> Saturday = new ArrayList<>();
 
-        int weekCount = 1;
 
         if(userSchedule.isEmpty()){
             return "Schedule is Empty";
@@ -47,10 +39,6 @@ public class scheduleAnalysis {
         userSchedule.sort(new scheduleAnalysis.startDateComparator());
         //userSchedule.sort(new scheduleAnalysis.startDayComparator());
 
-
-//        for(Event event: userSchedule) {    //DEBUG
-//            System.out.println(event.getStartDate());
-//        }
         //COLLECT DATA
         Calendar cal = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -71,12 +59,9 @@ public class scheduleAnalysis {
         }
 
 
-        for(int i=0; i<7; ++i){
+        for(int i=0; i<7; ++i){  //no div by zero
             if(dayCount[i]<=0){
                 dayCount[i] =1;
-            }
-            if(dayCount[i]>weekCount){
-                weekCount = dayCount[i];
             }
         }
 
