@@ -148,6 +148,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                                 Log.d("DELETE", "Delete");
                             }
                         }
+                        else if (menuItem.getItemId() == R.id.info_option) {
+                            int position = holder.getAdapterPosition();
+
+
+                        }
                         return true;
                     }
                 });

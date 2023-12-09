@@ -378,6 +378,7 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
                                 String eventType = jsonObject.getString("type");
                                 String startDateStr  = jsonObject.getString("startDate");
                                 String endDateStr  = jsonObject.getString("endDate");
+                                String location = jsonObject.getString("location");
 
                                 SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault());
                                 inputDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -397,7 +398,7 @@ public class CalendarDailyPage extends AppCompatActivity implements NavBarView.O
                                 Log.d("StartDate", startDate.toString());
 
                                 if (startDateStr.startsWith(date_getter)) {
-                                    event_list.add(new Event(id, name, description, eventType, startTime, endTime));
+                                    event_list.add(new Event(id, name, description, eventType, startTime, endTime, location));
                                 }
 
                             } catch (JSONException | ParseException e) {

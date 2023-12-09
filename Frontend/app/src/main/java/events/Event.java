@@ -44,6 +44,11 @@ public class Event {
     private String end_date;
 
     /**
+     * The location of the event.
+     */
+    private String location;
+
+    /**
      * Constructs an {@code Event} with the specified parameters.
      *
      * @param id          The unique identifier for the event.
@@ -53,13 +58,14 @@ public class Event {
      * @param start_date  The start date of the event.
      * @param end_date    The end date of the event.
      */
-    public Event(String id, String name, String description, String type, String start_date, String end_date) {
+    public Event(String id, String name, String description, String type, String start_date, String end_date, String location) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
         this.start_date = start_date;
         this.end_date = end_date;
+        this.location = location;
     }
 
     /**
@@ -115,6 +121,8 @@ public class Event {
     public String getType() {
         return this.type;
     }
+
+    public String getLocation() {return this.location; }
 
     /**
      * Returns a string representation of the event.

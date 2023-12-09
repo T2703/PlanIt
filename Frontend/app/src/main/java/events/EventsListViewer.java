@@ -267,8 +267,9 @@ public class EventsListViewer extends AppCompatActivity {
                                 String eventType = jsonObject.getString("type");
                                 String start_date = jsonObject.getString("startDate");
                                 String end_date = jsonObject.getString("endDate");
+                                String location = jsonObject.getString("location");
 
-                                event_list.add(new Event(id, name, description, eventType, start_date, end_date));
+                                event_list.add(new Event(id, name, description, eventType, start_date, end_date, location));
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
