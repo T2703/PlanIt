@@ -50,9 +50,9 @@ public class scheduleCompareController {
 
         System.out.println(returnString);
 
-        //String success = "{\"message\":\"" +returnString +"\"}";
+        String success = "{\"message\":\"" +returnString.substring(11) +"\"}";
 
-        return returnString;
+        return success;
     }
 
     @GetMapping(path = "/compareBy30/{teamId}/dates")
