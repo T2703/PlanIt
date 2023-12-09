@@ -109,9 +109,11 @@ public class GroupInfo extends AppCompatActivity {
     /**
      * The teams url for making the request.
      */
-    private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
+    private String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/teams/";
 
     private Button team_Availability_Button;
+
+    private Boolean isAdmin;
 
     /**
      * Initializes the activity and sets up UI components.
@@ -147,6 +149,8 @@ public class GroupInfo extends AppCompatActivity {
             public void onClick(View view) {
                 PopupMenu popup_menu = new PopupMenu(GroupInfo.this, view);
                 popup_menu.getMenuInflater().inflate(R.menu.options_menu_two, popup_menu.getMenu());
+                popup_menu.getMenu().findItem(R.id.edit_option).setVisible(isAdmin);
+                popup_menu.getMenu().findItem(R.id.delete_option).setVisible(isAdmin);
                 popup_menu.show();
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -168,6 +172,12 @@ public class GroupInfo extends AppCompatActivity {
 
                         else if (menuItem.getItemId() == R.id.add_users_option) {
                             Intent intent = new Intent(GroupInfo.this, AddFollowersToTeamPage.class);
+                            intent.putExtra("group_id", getting_group_id);
+                            startActivity(intent);
+                        }
+
+                        else if (menuItem.getItemId() == R.id.view_members) {
+                            Intent intent = new Intent(GroupInfo.this, TeamMembersPage.class);
                             intent.putExtra("group_id", getting_group_id);
                             startActivity(intent);
                         }
@@ -244,31 +254,36 @@ public class GroupInfo extends AppCompatActivity {
     private void getGroupsRequest() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                TEAMS_URL,
+                TEAMS_URL + getting_group_id,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        JSONArray responseArray;
+                        JSONObject responseObject;
 
                         try {
-                            responseArray = new JSONArray(response);
+                            responseObject = new JSONObject(response);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
 
                         // Iterate
-                        for (int i = 0; i < responseArray.length(); i++) {
-                            try {
-                                JSONObject jsonObject = responseArray.getJSONObject(i);
-                                String name = jsonObject.getString("name");
-                                String description = jsonObject.getString("description");
-                                String id = jsonObject.getString("id");
+                        try {
+                            String name = responseObject.getString("name");
+                            String description = responseObject.getString("description");
+                            String id = responseObject.getString("id");
 
-                                member_list.add(new Member(name, description, id));
-                                Log.d("List", id);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            // Extract admin information
+                            JSONObject adminObject = responseObject.getJSONObject("admin");
+                            String adminUsername = adminObject.getString("username");
+
+                            // Check if the logged-in user is the admin
+                            isAdmin = adminUsername.equals(WebSocketManager.getInstance().getUsername());
+
+                            member_list.add(new Member(name, description, id));
+                            Log.d("ADMIN OBJECT", String.valueOf(adminObject));
+                            Log.d("ADMIN", String.valueOf(isAdmin));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
                         adapter.notifyDataSetChanged();

@@ -141,7 +141,7 @@ public class ProfilePageViewer extends AppCompatActivity implements NavBarView.O
             /**
              * Handles the click event for navigating to the Settings page. This method is invoked when the user clicks
              * the settings button. It creates an Intent to start the Settings activity and applies custom animations
-             * for a smooth transition.
+             * for a smooth tFransition.
              *
              * @param view The View that was clicked (in this case, the settings button).
              */

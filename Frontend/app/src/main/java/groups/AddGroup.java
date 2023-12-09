@@ -55,7 +55,7 @@ public class AddGroup extends AppCompatActivity {
     /**
      * URL for making calls.
      */
-    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/" + WebSocketManager.getInstance().getUsername() + "/teams";
+    private static final String TEAMS_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
     private String CHAT_URL = "http://coms-309-024.class.las.iastate.edu:8080/createTeamChat/";
 
@@ -181,7 +181,7 @@ public class AddGroup extends AppCompatActivity {
         // Making the request
         JsonObjectRequest jsonObjectReq = new JsonObjectRequest(
                 Request.Method.POST,
-                TEAMS_URL,
+                TEAMS_URL + WebSocketManager.getInstance().getUsername() + "/teams",
                 requestBody,
                 new Response.Listener<JSONObject>() {
                     @Override
