@@ -12,15 +12,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.R;
 
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import homepage.HomePage;
 import websockets.WebSocketListener;
+import websockets.WebSocketManager;
 
 /**
  * The {@code NotificationPage} class represents the activity for displaying a list of notifications.
@@ -67,22 +77,6 @@ public class NotificationPage extends AppCompatActivity implements WebSocketList
         adapter = new NotificationAdapter(notificationsList);
         notificationItemRecycler.setAdapter(adapter);
 
-        // Select all
-        CheckBox selectAllCheckbox = findViewById(R.id.selectAllCheckbox);
-
-        selectAllCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                for (int i = 0; i < notificationItemRecycler.getAdapter().getItemCount(); i++) {
-                    Notification notification = notificationsList.get(i);
-
-                    notification.setIsSelected(!notification.getIsSelected());
-                }
-
-                notificationItemRecycler.getAdapter().notifyDataSetChanged();
-            }
-        });
-
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,11 +93,36 @@ public class NotificationPage extends AppCompatActivity implements WebSocketList
      */
     private List<Notification> createNotificationList() {
         List<Notification> notifications = new ArrayList<>();
+        final String BASE_URL = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String username = WebSocketManager.getInstance().getUsername();
 
-        notifications.add(new Notification("Demo 4", "You have been invited to a private event", true));
-        notifications.add(new Notification("Demo 5", "You have been invited to a private event", true));
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, BASE_URL + username + "/notifications", null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject jsonObject = response.getJSONObject(i);
 
+                                notifications.add(new Notification(jsonObject.getString("title"), jsonObject.getString("description")));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("An error occurred while getting notifications", error.toString());
+            }
+        });
+
+        requestQueue.add(jsonArrayRequest);
 
         return notifications;
     }
