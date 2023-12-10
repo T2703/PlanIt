@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import assignments.AssignmentsListPage;
 import assignments.AssignmentsPage;
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
@@ -153,8 +154,13 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 }
 
                 else if (itemId == R.id.list_of_assignments) {
-                    Intent intent = new Intent(HomePage.this, AssignmentsPage.class);
-                    startActivity(intent);
+                    if (WebSocketManager.getInstance().getAccessToken() == null) {
+                        Intent intent = new Intent(HomePage.this, AssignmentsPage.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(HomePage.this, AssignmentsListPage.class);
+                        startActivity(intent);
+                    }
                 }
                 return true;
             }
@@ -208,9 +214,10 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
     private void getAssignments() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String URL = "http://coms-309-024.class.las.iastate.edu:8080/assignments";
+        String username = WebSocketManager.getInstance().getUsername();
+        String URL = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, URL + username + "/assignments", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
