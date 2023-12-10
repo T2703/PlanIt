@@ -25,6 +25,7 @@ import java.util.List;
 import homepage.Assignment;
 import homepage.AssignmentAdapter;
 import utilities.AssignmentsHelper;
+import websockets.WebSocketManager;
 
 public class AssignmentsListPage extends AppCompatActivity {
     private RecyclerView assignmentsRecyclerView;
@@ -51,9 +52,10 @@ public class AssignmentsListPage extends AppCompatActivity {
 
     public void getAssignmentsFromDatabase() {
         RequestQueue queue = Volley.newRequestQueue(this);
+        String username = WebSocketManager.getInstance().getUsername();
 
         // Define the URL of your API endpoint.
-        String url = "http://coms-309-024.class.las.iastate.edu:8080/users/josh/assignments";
+        String url = "http://coms-309-024.class.las.iastate.edu:8080/users/" + username + "/assignments";
 
         // Create a JSON array request.
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(

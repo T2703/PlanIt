@@ -154,7 +154,7 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 }
 
                 else if (itemId == R.id.list_of_assignments) {
-                    if (WebSocketManager.getInstance().getAccessToken() != null) {
+                    if (WebSocketManager.getInstance().getAccessToken() == null) {
                         Intent intent = new Intent(HomePage.this, AssignmentsPage.class);
                         startActivity(intent);
                     } else {
@@ -214,9 +214,10 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
     private void getAssignments() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String URL = "http://coms-309-024.class.las.iastate.edu:8080/assignments";
+        String username = WebSocketManager.getInstance().getUsername();
+        String URL = "http://coms-309-024.class.las.iastate.edu:8080/users/";
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, URL + username + "/assignments", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 for (int i = 0; i < response.length(); i++) {
