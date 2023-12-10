@@ -104,6 +104,7 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         holder.event_name.setText(event.getName());
         holder.event_start_time.setText(event.getStartTime());
         holder.event_end_time.setText(event.getEndTime());
+        getEventManager(event.getId());
 
         holder.options_button.setOnClickListener(new View.OnClickListener() {
             /**
@@ -117,6 +118,8 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
             public void onClick(View v) {
                 PopupMenu popup_menu = new PopupMenu(context, v);
                 popup_menu.getMenuInflater().inflate(R.menu.options_menu, popup_menu.getMenu());
+                popup_menu.getMenu().findItem(R.id.edit_option).setVisible(isManager);
+                popup_menu.getMenu().findItem(R.id.delete_option).setVisible(isManager);
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     /**
@@ -307,17 +310,22 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                 Request.Method.GET,
                 URL_STRING_REQ,
                 new Response.Listener<String>() {
-                    /**
-                     * Callback method that is invoked when a network request succeeds and returns a response.
-                     *
-                     * @param response The response received from the network request.
-                     *                 It is expected to be a JSON string representing an array.
-                     * @throws RuntimeException If there is an error parsing the response as a JSON array.
-                     */
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
+                            JSONObject eventObject = new JSONObject(response);
+
+                            // Extract manager information
+                            JSONObject managerObject = eventObject.getJSONObject("manager");
+                            String managerUsername = managerObject.getString("username");
+
+                            isManager = managerUsername.equals(WebSocketManager.getInstance().getUsername());
+
+                            // Now you can use managerUsername as needed
+                            Log.d("Manager ID", eventId);
+                            Log.d("Manager Username", managerUsername);
+
+                            // Continue with other processing if needed
 
                         } catch(JSONException err) {
                             err.printStackTrace();
@@ -325,13 +333,6 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                     }
                 },
                 new Response.ErrorListener() {
-                    /**
-                     * Callback method that is invoked when a network request encounters an error.
-                     *
-                     * @param error The VolleyError object containing information about the error.
-                     *              This can include details such as the error message, network response, and more.
-                     *              It can be used for debugging and handling specific error scenarios.
-                     */
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle any errors that occur during the request
@@ -385,7 +386,7 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
          */
         EventViewHolder(View item_view) {
             super(item_view);
-            event_name = item_view.findViewById(R.id.event_title);
+            event_name = item_view.findViewById(R.id.event_time_month);
             event_start_time = item_view.findViewById(R.id.event_start_time);
             event_end_time = item_view.findViewById(R.id.event_end_time);
             options_button = item_view.findViewById(R.id.menu_button);

@@ -371,6 +371,7 @@ public class ProfilePage extends AppCompatActivity implements NavBarView.OnButto
                         Intent data = new Intent(ProfilePage.this, ProfilePageViewer.class);
                         data.putExtra("username", input_name_value);
                         data.putExtra("email", input_email_value);
+                        WebSocketManager.getInstance().setUsername(input_name_value);
 
                         startActivity(data);
                     }
