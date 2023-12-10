@@ -4,6 +4,10 @@
         android:title="Info"
         />
     <item
+        android:id="@+id/member_option"
+        android:title="Members"
+        />
+    <item
         android:id="@+id/edit_option"
         android:title="Edit"
         />

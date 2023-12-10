@@ -25,6 +25,7 @@ import api.VolleySingleton;
 import events.EditEventPage;
 import events.Event;
 import events.EventInfoPage;
+import events.EventMembersPage;
 import websockets.WebSocketManager;
 
 /**
@@ -173,6 +174,15 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(v.getContext(), R.anim.empty_anim, R.anim.empty_anim);
                             v.getContext().startActivity(intent, options.toBundle());
 
+
+                        }
+
+                        else if (menuItem.getItemId() == R.id.member_option) {
+                            Intent intent = new Intent(v.getContext(), EventMembersPage.class);
+                            intent.putExtra("id", event.getId());
+
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(v.getContext(), R.anim.empty_anim, R.anim.empty_anim);
+                            v.getContext().startActivity(intent, options.toBundle());
 
                         }
                         return true;

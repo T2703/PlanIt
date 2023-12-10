@@ -159,6 +159,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                             ActivityOptions options = ActivityOptions.makeCustomAnimation(v.getContext(), R.anim.empty_anim, R.anim.empty_anim);
                             v.getContext().startActivity(intent, options.toBundle());
 
+                        }
+                        else if (menuItem.getItemId() == R.id.member_option) {
+                            Intent intent = new Intent(v.getContext(), EventMembersPage.class);
+                            intent.putExtra("id", event.getId());
+
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(v.getContext(), R.anim.empty_anim, R.anim.empty_anim);
+                            v.getContext().startActivity(intent, options.toBundle());
 
                         }
                         return true;
