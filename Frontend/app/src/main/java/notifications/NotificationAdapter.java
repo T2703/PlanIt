@@ -15,6 +15,8 @@ import com.example.myapplication.R;
 
 import java.util.List;
 
+import websockets.WebSocketManager;
+
 /**
  * The {@code NotificationAdapter} class is a custom adapter for managing the display of
  * notifications in a RecyclerView. It extends the RecyclerView.Adapter class and provides
