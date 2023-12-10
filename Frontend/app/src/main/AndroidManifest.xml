@@ -17,6 +17,9 @@
             android:name="groups.TeamMembersPage"
             android:exported="false" />
         <activity
+            android:name="events.EventInfoPage"
+            android:exported="false" />
+        <activity
             android:name="groups.AddFollowersToTeamPage"
             android:exported="false" />
         <activity

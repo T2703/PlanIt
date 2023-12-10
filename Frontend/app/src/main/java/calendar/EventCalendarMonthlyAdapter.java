@@ -1,5 +1,6 @@
 package calendar;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.List;
 import api.VolleySingleton;
 import events.EditEventPage;
 import events.Event;
+import events.EventInfoPage;
 import websockets.WebSocketManager;
 
 /**
@@ -45,6 +47,11 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
      * The context.
      */
     private Context context;
+
+    /**
+     * Is manager.
+     */
+    private Boolean isManager;
 
     /**
      * Adapter constructor for constructing the adapter.
@@ -97,6 +104,7 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         holder.event_name.setText(event.getName());
         holder.event_start_time.setText(event.getStartTime());
         holder.event_end_time.setText(event.getEndTime());
+        getEventManager(event.getId());
 
         holder.options_button.setOnClickListener(new View.OnClickListener() {
             /**
@@ -110,6 +118,8 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
             public void onClick(View v) {
                 PopupMenu popup_menu = new PopupMenu(context, v);
                 popup_menu.getMenuInflater().inflate(R.menu.options_menu, popup_menu.getMenu());
+                popup_menu.getMenu().findItem(R.id.edit_option).setVisible(isManager);
+                popup_menu.getMenu().findItem(R.id.delete_option).setVisible(isManager);
 
                 popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     /**
@@ -147,6 +157,23 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
 
                                 Log.d("DELETE", "Delete");
                             }
+                        }
+                        else if (menuItem.getItemId() == R.id.info_option) {
+                            Intent intent = new Intent(v.getContext(), EventInfoPage.class);
+
+                            //This should pass the data into the next page.
+                            intent.putExtra("id", event.getId());
+                            intent.putExtra("name", event.getName());
+                            intent.putExtra("description", event.getDescription());
+                            intent.putExtra("location", event.getLocation());
+                            intent.putExtra("type", event.getType());
+                            intent.putExtra("start_date", event.getStartTime());
+                            intent.putExtra("end_date", event.getEndTime());
+
+                            ActivityOptions options = ActivityOptions.makeCustomAnimation(v.getContext(), R.anim.empty_anim, R.anim.empty_anim);
+                            v.getContext().startActivity(intent, options.toBundle());
+
+
                         }
                         return true;
                     }
@@ -276,6 +303,48 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
         VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
+    private void getEventManager(String eventId) {
+        String URL_STRING_REQ = "http://coms-309-024.class.las.iastate.edu:8080/events/" + eventId;
+
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                URL_STRING_REQ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject eventObject = new JSONObject(response);
+
+                            // Extract manager information
+                            JSONObject managerObject = eventObject.getJSONObject("manager");
+                            String managerUsername = managerObject.getString("username");
+
+                            isManager = managerUsername.equals(WebSocketManager.getInstance().getUsername());
+
+                            // Now you can use managerUsername as needed
+                            Log.d("Manager ID", eventId);
+                            Log.d("Manager Username", managerUsername);
+
+                            // Continue with other processing if needed
+
+                        } catch(JSONException err) {
+                            err.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle any errors that occur during the request
+                        Log.e("A server error has occurred", error.toString());
+                    }
+                }
+        );
+
+        // Adding request to request queue
+        VolleySingleton.getInstance(context.getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+
     /**
      * Gets the item count for the event list.
      *
@@ -317,7 +386,7 @@ public class EventCalendarMonthlyAdapter extends RecyclerView.Adapter<EventCalen
          */
         EventViewHolder(View item_view) {
             super(item_view);
-            event_name = item_view.findViewById(R.id.event_title);
+            event_name = item_view.findViewById(R.id.event_time_month);
             event_start_time = item_view.findViewById(R.id.event_start_time);
             event_end_time = item_view.findViewById(R.id.event_end_time);
             options_button = item_view.findViewById(R.id.menu_button);
