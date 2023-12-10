@@ -62,7 +62,7 @@ public class AssignmentsPage extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
 
-                Intent intent = new Intent(AssignmentsPage.this, AssignmentsListPage.class);
+                Intent intent = new Intent(AssignmentsPage.this, HomePage.class);
                 startActivity(intent);
             }
         });
