@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import assignments.AssignmentsListPage;
 import assignments.AssignmentsPage;
 import calendar.CalendarMonthlyPage;
 import events.CreateEventPage;
@@ -153,8 +154,13 @@ public class HomePage extends AppCompatActivity implements NavBarView.OnButtonCl
                 }
 
                 else if (itemId == R.id.list_of_assignments) {
-                    Intent intent = new Intent(HomePage.this, AssignmentsPage.class);
-                    startActivity(intent);
+                    if (WebSocketManager.getInstance().getAccessToken() != null) {
+                        Intent intent = new Intent(HomePage.this, AssignmentsPage.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(HomePage.this, AssignmentsListPage.class);
+                        startActivity(intent);
+                    }
                 }
                 return true;
             }
