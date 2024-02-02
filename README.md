@@ -30,6 +30,16 @@ _________________________
 - This is a demo of the app if you want to view how the app works. 
 - Link: https://youtu.be/nnHqzC9BAxg?si=BWut1s7_QmG4Y2KH
 
+# Developers
+_________________________
+Front-End-Developers:
+- Tristan Nono -> https://github.com/T2703
+- Joshua Gutierrez -> https://github.com/joshuabgutierrez
+
+Back-End-Developers:
+- Melani Hodge -> https://github.com/melanihodge
+- Chris Smith -> https://github.com/Chris94smith
+
 # Documentation
 _________________________
 For further documentation, please see the Documenations folder.
